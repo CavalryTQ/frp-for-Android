@@ -26,7 +26,8 @@
   --app-root-with: 1264;
   --app-root-height: 2780;
   --app-background-linght: #FAFAFA;
-  --app-background-dark: #0d1a26;
+  --app-background-dark-1: #0d1a26;
+  --app-background-dark-2: #121212;
   --app-btn-bg-linght: var(--vt-c-white);
   --app-btn-bg-dark-1: #2C3E50;
   --app-btn-bg-dark-2: #2F2F2F;
@@ -69,11 +70,11 @@
     --color-heading: var(--vt-c-text-dark-1);
     --color-text: var(--vt-c-text-dark-2);
 
-    --app-btn-bg: var(--app-btn-bg-dark-1);
+    --app-btn-bg: var(--app-btn-bg-dark-2);
     --app-btn-atctive: var(--app-btn-atctive-dark);
     --app-btn-hover: var(--app-btn-hover-dark);
     --app-text-color: var(--app-text-light);
-    --app-background: var(--app-background-dark);
+    --app-background: var(--app-background-dark-2);
   }
 }
 

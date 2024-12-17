@@ -16,6 +16,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
   .title{
     color: #fff;
     font-size: 1.25rem;

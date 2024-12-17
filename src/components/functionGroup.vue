@@ -2,16 +2,35 @@
 import {ref} from "vue";
 import Ripple from "@/components/ripple.vue";
 
-const funcBtn = ref(null);
+const group = ref([
+    {
+      text: "日志",
+      icon: "",
+      type: false,
+      isActive: false,
+    },
+    {
+      text: "设置",
+      icon: "",
+      type: false,
+      isActive: false,
+    },
+  {
+    text: "关于",
+    icon: "",
+    type: false,
+    isActive: false,
+  },
+])
 
 </script>
 
 <template>
-  <ripple :target-el="funcBtn">
+  <ripple >
       <div class="func-group">
-        <div class="func-button" @pointerdown.self="true" ref="funcBtn">
+        <div class="func-button" v-for="(item, index) in group" :key="index" @pointerdown.self="true">
           <div class="func-icon"></div>
-          <div class="func-text">设置</div>
+          <div class="func-text">{{item.text}}</div>
         </div>
       </div>
   </ripple>

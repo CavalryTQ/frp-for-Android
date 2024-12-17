@@ -13,7 +13,10 @@
 .body{
   box-sizing: border-box;
   height: 100vh;
-  overflow: hidden;
+  overflow: scroll;
+  /*滑动隐藏滑动条*/
+  -ms-overflow-style: none;
+  scrollbar-width: none;
   color: var(--app-text-color);
 }
 </style>

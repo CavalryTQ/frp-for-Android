@@ -16,11 +16,11 @@ const props = defineProps({
   },
 });
 const mainBtn = ref(null);
-
+const isDarkModel = window.matchMedia('(prefers-color-scheme: dark)').matches;
 </script>
 
 <template>
-  <div class="main-button" ref="mainBtn" @pointerdown="rippleEffect($event, mainBtn)">
+  <div class="main-button" ref="mainBtn" @pointerdown="rippleEffect($event, mainBtn, {isDark: isDarkModel})">
     <slot name="default">
       <div class="main-button-content">
         <div class="main-button-icon">
@@ -44,6 +44,7 @@ const mainBtn = ref(null);
   box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.10);
   border-radius: 30px;
   border: 1px solid var(--color-border);
+  overflow: hidden;
   .main-button-content{
     box-sizing: border-box;
     display: flex;
@@ -69,6 +70,19 @@ const mainBtn = ref(null);
          font-size: 40px;
        }
     }
+  }
+}
+/*超出768*/
+@media (min-width: 768px){
+  .main-button{
+    box-sizing: border-box;
+    width: 1054px;
+    height: 298px;
+    background: var(--app-btn-bg);
+    box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.10);
+    border-radius: 30px;
+    border: 1px solid var(--color-border);
+    overflow: hidden;
   }
 }
 </style>

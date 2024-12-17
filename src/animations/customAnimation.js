@@ -1,7 +1,8 @@
 
 export const rippleEffect = (event, element, options = {
     // 默认配置
-    color: 'rgba(255, 255, 255, 0.6)', // 涟漪颜色
+    isDark: false, // 是否为暗黑模式
+    color: 'rgba(0, 0, 0, 0.1)', // 涟漪颜色
     duration: 800, // 动画时长，单位 ms
     sizeFactor: 2.5, // 涟漪扩散倍数
 }) => {
@@ -10,10 +11,14 @@ export const rippleEffect = (event, element, options = {
          event.preventDefault(); // 阻止默认行为
      }
      const defaultOptions = {
-         color: 'rgba(255, 255, 255, 0.6)', // 涟漪颜色
+         isDark: false,
+         color: 'rgba(0, 0, 0, 0.1)', // 涟漪颜色
          duration: 800, // 动画时长，单位 ms
          sizeFactor: 2.5, // 涟漪扩散倍数
      };
+     if (options.isDark){
+         options.color = 'rgba(255, 255, 255, 0.3)';
+     }
     // console.log('rippleEffect', event, element, options)
     const config = Object.assign(defaultOptions, options);
 
