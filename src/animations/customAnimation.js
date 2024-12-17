@@ -2,9 +2,13 @@
 export const rippleEffect = (event, element, options = {
     // 默认配置
     color: 'rgba(255, 255, 255, 0.6)', // 涟漪颜色
-    duration: 500, // 动画时长，单位 ms
-    sizeFactor: 2.5, // 涟漪扩散倍数
+    duration: 800, // 动画时长，单位 ms
+    sizeFactor: 1.5, // 涟漪扩散倍数
 }) => {
+
+     if (event.cancelable){ // 判断是否可以取消默认行为
+         event.preventDefault(); // 阻止默认行为
+     }
     // console.log('rippleEffect', event, element, options)
     const config = {  ...options };
 
@@ -48,4 +52,5 @@ export const rippleEffect = (event, element, options = {
             { once: true }
         );
     }, config.duration);
+    console.log('rippleEffect', element);
 }

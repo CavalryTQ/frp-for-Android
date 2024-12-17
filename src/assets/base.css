@@ -20,10 +20,16 @@
   --vt-c-text-dark-1: var(--vt-c-white);
   --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
 
+  --app-text-light: #FFFFFF;
+  --app-text-dark: #000000;
 
   --app-root-with: 1264;
   --app-root-height: 2780;
-
+  --app-background-linght: #FAFAFA;
+  --app-background-dark: #0d1a26;
+  --app-btn-bg-linght: var(--vt-c-white);
+  --app-btn-bg-dark-1: #2C3E50;
+  --app-btn-bg-dark-2: #2F2F2F;
   --app-btn-atctive-light: #808080;
   --app-btn-atctive-dark: #30638E;
   --app-btn-hover-light: #E1E1E1;
@@ -44,8 +50,11 @@
 
   --section-gap: 160px;
 
+  --app-btn-bg: var(--app-btn-bg-linght);
   --app-btn-atctive: var(--app-btn-atctive-light);
   --app-btn-hover: var(--app-btn-hover-light);
+  --app-text-color: var(--app-text-dark);
+  --app-background: var(--app-background-linght);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -60,8 +69,11 @@
     --color-heading: var(--vt-c-text-dark-1);
     --color-text: var(--vt-c-text-dark-2);
 
+    --app-btn-bg: var(--app-btn-bg-dark-1);
     --app-btn-atctive: var(--app-btn-atctive-dark);
     --app-btn-hover: var(--app-btn-hover-dark);
+    --app-text-color: var(--app-text-light);
+    --app-background: var(--app-background-dark);
   }
 }
 
@@ -75,8 +87,8 @@
 
 body {
   min-height: 100vh;
-  color: var(--color-text);
-  background: var(--color-background-soft);
+  color: var(--app-text-color);
+  background: var(--app-background);
   transition:
     color 0.5s,
     background-color 0.5s;
@@ -98,4 +110,5 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
 }

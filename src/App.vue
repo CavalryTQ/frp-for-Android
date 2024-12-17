@@ -9,9 +9,11 @@
 </template>
 
 <style scoped lang="scss">
+@import "./assets/base.css";
 .body{
-  background-color: #fafafa;
   box-sizing: border-box;
   height: 100vh;
+  overflow: hidden;
+  color: var(--app-text-color);
 }
 </style>

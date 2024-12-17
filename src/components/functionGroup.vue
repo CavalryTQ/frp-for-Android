@@ -1,15 +1,20 @@
 <script setup>
+import {ref} from "vue";
+import Ripple from "@/components/ripple.vue";
 
-import {rippleEffect} from "@/animations/customAnimation.js";
+const funcBtn = ref(null);
+console.log(funcBtn);
 </script>
 
 <template>
-  <div class="func-group">
-    <div class="func-button" @pointerdown="rippleEffect($event, $event.target)">
-      <div class="func-icon" @pointerdown.stop = "true"></div>
-      <div class="func-text" @pointerdown.stop = "true">设置</div>
-    </div>
-  </div>
+  <ripple >
+      <div class="func-group">
+        <div class="func-button" ref="funcBtn">
+          <div class="func-icon"></div>
+          <div class="func-text">设置</div>
+        </div>
+      </div>
+  </ripple>
 </template>
 
 <style scoped>

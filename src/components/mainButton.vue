@@ -2,11 +2,24 @@
 import {ref, defineProps} from "vue";
 import {rippleEffect} from "@/animations/customAnimation.js";
 
+const props = defineProps({
+  title: String,
+  text: String,
+  icon: String,
+  type: {
+    type: Boolean, // 是否为激活类型按钮
+    default: false
+  },
+  isActive: {
+    type: Boolean, // 是否为激活状态
+    default: false
+  },
+})
 
 </script>
 
 <template>
-  <div class="main-button" @pointerdown="rippleEffect($event, $event.target, {color: '#30638E', duration: 500, sizeFactor: 2.5})">
+  <div class="main-button" @pointerdown="rippleEffect($event, $event.target)" @click="console.log('click')">
     <slot name="default">
       <div class="main-button-content">
         <div class="main-button-icon">
@@ -26,7 +39,7 @@ import {rippleEffect} from "@/animations/customAnimation.js";
   box-sizing: border-box;
   width: 1054px;
   height: 10.72vh;
-  background: #ffffff;
+  background: var(--app-btn-bg);
   box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.10);
   border-radius: 30px;
   border: 1px solid var(--color-border);
