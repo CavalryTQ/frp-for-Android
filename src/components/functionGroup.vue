@@ -3,13 +3,13 @@ import {ref} from "vue";
 import Ripple from "@/components/ripple.vue";
 
 const funcBtn = ref(null);
-console.log(funcBtn);
+
 </script>
 
 <template>
-  <ripple >
+  <ripple :target-el="funcBtn">
       <div class="func-group">
-        <div class="func-button" ref="funcBtn">
+        <div class="func-button" @pointerdown.self="true" ref="funcBtn">
           <div class="func-icon"></div>
           <div class="func-text">设置</div>
         </div>
@@ -27,7 +27,6 @@ console.log(funcBtn);
     .func-button{
       width: 100%;
       height: 211px;
-      background-color: #ffb800;
       display: flex;
       align-items: center;
       .func-icon{

@@ -14,12 +14,13 @@ const props = defineProps({
     type: Boolean, // 是否为激活状态
     default: false
   },
-})
+});
+const mainBtn = ref(null);
 
 </script>
 
 <template>
-  <div class="main-button" @pointerdown="rippleEffect($event, $event.target)" @click="console.log('click')">
+  <div class="main-button" ref="mainBtn" @pointerdown="rippleEffect($event, mainBtn)">
     <slot name="default">
       <div class="main-button-content">
         <div class="main-button-icon">
