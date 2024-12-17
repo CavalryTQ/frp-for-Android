@@ -16,7 +16,7 @@ const props = defineProps({
   },
 });
 const mainBtn = ref(null);
-const isDarkModel = window.matchMedia('(prefers-color-scheme: dark)').matches;
+const isDarkModel = ref(window.matchMedia("(prefers-color-scheme: dark)").matches)
 </script>
 
 <template>

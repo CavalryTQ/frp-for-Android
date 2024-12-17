@@ -1,7 +1,10 @@
 <script setup>
 import {ref} from "vue";
 import Ripple from "@/components/ripple.vue";
+import {rippleEffect} from "@/animations/customAnimation.js";
 
+const funcBtn = ref(null);
+const isDarkModel = ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
 const group = ref([
     {
       text: "日志",
@@ -22,18 +25,20 @@ const group = ref([
     isActive: false,
   },
 ])
-
+const test = ()=>{
+  console.log(funcBtn);
+}
 </script>
 
 <template>
-  <ripple >
-      <div class="func-group">
-        <div class="func-button" v-for="(item, index) in group" :key="index" @pointerdown.self="true">
-          <div class="func-icon"></div>
-          <div class="func-text">{{item.text}}</div>
-        </div>
-      </div>
-  </ripple>
+     <ripple>
+       <div class="func-group">
+         <div class="func-button" v-for="(item, index) in group" @pointerdown="rippleEffect($event, funcBtn[index], {isDark: isDarkModel})" :key="index" ref="funcBtn">
+           <div class="func-icon"></div>
+           <div class="func-text">{{item.text}}</div>
+         </div>
+       </div>
+     </ripple>
 </template>
 
 <style scoped>
