@@ -1,5 +1,8 @@
 <script setup>
+import {icons, loadIcons} from "@/mixins/mixin.js";
 
+console.log(icons);
+console.log(loadIcons('view-list-w'));
 </script>
 
 <template>

@@ -3,6 +3,7 @@ import {ref} from "vue";
 import Ripple from "@/components/ripple.vue";
 import {rippleEffect} from "@/animations/customAnimation.js";
 
+localStorage
 const funcBtn = ref(null);
 const isDarkModel = ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
 const group = ref([

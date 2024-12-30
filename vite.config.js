@@ -20,7 +20,8 @@ export default defineConfig({
         '@router': fileURLToPath(new URL('./src/router', import.meta.url)),
         '@views': fileURLToPath(new URL('./src/views', import.meta.url)),
         '@utils': fileURLToPath(new URL('./src/utils', import.meta.url)),
-        '@plugins': fileURLToPath(new URL('./src/plugins', import.meta.url))
+        '@plugins': fileURLToPath(new URL('./src/plugins', import.meta.url)),
+        '@icons': fileURLToPath(new URL('./src/assets/icons', import.meta.url)),
     },
   },
   server: {
