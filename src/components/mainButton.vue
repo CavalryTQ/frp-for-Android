@@ -40,7 +40,7 @@ if (props.type){
   }
 }
 
-watch(isDarkModel, (newValue, oldValue) =>{
+watch(isDarkModel, (newValue) =>{
   if (props.type){
     if (props.isActive){
       newValue ? icon.value = loadIcon('circle-w') : icon.value = loadIcon('circle-b')
@@ -49,7 +49,7 @@ watch(isDarkModel, (newValue, oldValue) =>{
     }
   }
 });
-watch(isActive, (newValue, oldValue) =>{
+watch(isActive, (newValue) =>{
   if (props.type){
     if (newValue){
       isDarkModel.value ? icon.value = loadIcon('circle-w') : icon.value = loadIcon('circle-b');

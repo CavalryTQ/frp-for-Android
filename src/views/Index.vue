@@ -6,11 +6,13 @@ import FunctionGroup from "@/components/functionGroup.vue";
 import {ref} from "vue";
 import {userCache} from "@/data/cache.js";
 import {loadIcon, loadIcons} from "@/mixins/mixin.js";
+import {Capacitor} from "@capacitor/core";
 
 const isDarkModel = ref(userCache.isDark.value) || ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
 
 console.log(loadIcon("666"))
 console.log(loadIcons("circle"));
+console.log(Capacitor);
 </script>
 
 <template>

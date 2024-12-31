@@ -12,7 +12,6 @@
 @import "./assets/base.css";
 .body{
   box-sizing: border-box;
-  height: 100vh;
   overflow: scroll;
   /*滑动隐藏滑动条*/
   -ms-overflow-style: none;

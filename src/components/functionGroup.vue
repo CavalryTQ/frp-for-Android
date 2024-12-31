@@ -28,8 +28,8 @@ const group = ref([
   },
 ]);
 
-watch(userCache.isDark, (newValue, oldValue) => {
-  group.value.forEach((item, index) => {
+watch(userCache.isDark, (newValue) => {
+  group.value.forEach((item) => {
     switch (item.text){
       case "日志":
         item.icon = newValue ? loadIcon("assignment-w") : loadIcon("assignment-b");
