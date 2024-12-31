@@ -3,7 +3,7 @@ export const rippleEffect = (event, element, options = {
     // 默认配置
     isDark: false, // 是否为暗黑模式
     color: 'rgba(0, 0, 0, 0.1)', // 涟漪颜色
-    duration: 800, // 动画时长，单位 ms
+    duration: 5000, // 动画时长，单位 ms
     sizeFactor: 2.5, // 涟漪扩散倍数
 }) => {
 
@@ -13,7 +13,7 @@ export const rippleEffect = (event, element, options = {
      const defaultOptions = {
          isDark: false,
          color: 'rgba(0, 0, 0, 0.1)', // 涟漪颜色
-         duration: 800, // 动画时长，单位 ms
+         duration: 5000, // 动画时长，单位 ms
          sizeFactor: 2.5, // 涟漪扩散倍数
      };
      if (options.isDark){
