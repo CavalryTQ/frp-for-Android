@@ -1,4 +1,5 @@
 <script setup>
+// 功能按钮组
 import {ref, watch} from "vue";
 import Ripple from "@/components/ripple.vue";
 import {rippleEffect} from "@/animations/customAnimation.js";

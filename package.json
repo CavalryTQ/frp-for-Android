@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "build-sync-android": "node scripts/build-sync-android.cjs",
     "build": "vite build",
     "preview": "vite preview"
   },

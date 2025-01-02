@@ -13,3 +13,7 @@ export const icons = import.meta.glob('@/assets/icons/*.svg', { eager: true });/
  export const loadIcons = (iconName) => {
      return Object.keys(icons).filter(key => key.includes(iconName)).map(key => icons[key].default);
  }
+
+ export const goToPage = (route, url) => {
+
+ }

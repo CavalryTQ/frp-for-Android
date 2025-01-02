@@ -1,4 +1,5 @@
 <script setup>
+// 涟漪特效组件
 import {defineEmits, defineProps, ref} from 'vue';
 import { rippleEffect } from '@/animations/customAnimation';
 

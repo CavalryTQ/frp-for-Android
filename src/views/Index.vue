@@ -1,5 +1,5 @@
 <script setup>
-
+// app首页
 import IndexHeader from "@/components/indexHeader.vue";
 import MainButton from "@/components/mainButton.vue";
 import FunctionGroup from "@/components/functionGroup.vue";
@@ -10,9 +10,8 @@ import {Capacitor} from "@capacitor/core";
 
 const isDarkModel = ref(userCache.isDark.value) || ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
 
-console.log(loadIcon("666"))
-console.log(loadIcons("circle"));
-console.log(Capacitor);
+const handlePointerDown = (e) => {
+}
 </script>
 
 <template>
@@ -20,7 +19,7 @@ console.log(Capacitor);
     <index-header></index-header>
      <div class="body-content">
        <mainButton :type="true"/>
-       <mainButton :icon="isDarkModel ? loadIcon('view-w') : loadIcon('view-b')" title="配置" text="点击编辑"/>
+       <mainButton :icon="isDarkModel ? loadIcon('view-w') : loadIcon('view-b')" title="配置" text="点击编辑" @pointerdown="handlePointerDown"/>
        <function-group></function-group>
      </div>
   </div>

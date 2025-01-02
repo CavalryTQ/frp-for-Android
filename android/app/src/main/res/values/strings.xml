@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">frp</string>
+    <string name="title_activity_main">frp</string>
+    <string name="package_name">icu.cavalry.frp</string>
+    <string name="custom_url_scheme">icu.cavalry.frp</string>
+</resources>

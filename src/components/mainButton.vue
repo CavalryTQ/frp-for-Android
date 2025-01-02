@@ -1,4 +1,5 @@
 <script setup>
+// 主要按钮
 import {ref, defineProps, watch, defineEmits} from "vue";
 import {rippleEffect} from "@/animations/customAnimation.js";
 import {loadIcon} from "@/mixins/mixin.js";

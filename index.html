@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8">
     <link rel="icon" href="/favicon.ico">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit-cover">
+    <meta name="viewport" content="viewport-fit-cover, initial-scale=1.0, width=device-width">
+<!--      width=device-width, initial-scale=1.0-->
     <title>Vite App</title>
   </head>
   <body>
@@ -12,13 +13,19 @@
   </body>
 </html>
 <style>
-  body{
-      margin: 0;
-      width: 100vw;
-      height: 100vh;
-      box-sizing: border-box;
 
-      /* 适配安全区域 */
-      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-  }
+   body {
+       padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        margin: 0;
+        box-sizing: border-box;
+
+
+        -webkit-overflow-scrolling: touch;
+        overflow-scrolling: touch;
+        touch-action: pan-y;
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+        -webkit-touch-callout: none;
+    }
+
+
 </style>
