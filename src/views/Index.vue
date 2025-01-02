@@ -5,12 +5,15 @@ import MainButton from "@/components/mainButton.vue";
 import FunctionGroup from "@/components/functionGroup.vue";
 import {ref} from "vue";
 import {userCache} from "@/data/cache.js";
-import {loadIcon, loadIcons} from "@/mixins/mixin.js";
-import {Capacitor} from "@capacitor/core";
+import {goToPage, loadIcon, loadIcons} from "@/mixins/mixin.js";
+import {useRouter} from "vue-router";
 
 const isDarkModel = ref(userCache.isDark.value) || ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
+const router = useRouter();
 
-const handlePointerDown = (e) => {
+const handlePointerDown = () => {
+  console.log(router)
+  goToPage(router, "/config");
 }
 </script>
 

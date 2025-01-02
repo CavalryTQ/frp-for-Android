@@ -1,3 +1,5 @@
+import {useRouter} from "vue-router";
+
 export const icons = import.meta.glob('@/assets/icons/*.svg', { eager: true });// 引入所有图标 eager: true 提前加载
 
  export const loadIcon = (iconName) => {
@@ -14,6 +16,6 @@ export const icons = import.meta.glob('@/assets/icons/*.svg', { eager: true });/
      return Object.keys(icons).filter(key => key.includes(iconName)).map(key => icons[key].default);
  }
 
- export const goToPage = (route, url) => {
-
+ export const goToPage = (router, data) => {
+    typeof data === 'string' ? router.push(data) : router.push(data.path)
  }

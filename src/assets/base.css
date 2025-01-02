@@ -84,6 +84,7 @@
   box-sizing: border-box;
   margin: 0;
   font-weight: normal;
+  font-size: 49px;
 }
 
 body {
@@ -107,7 +108,7 @@ body {
     'Droid Sans',
     'Helvetica Neue',
     sans-serif;
-  font-size: 16px;
+  /*font-size: 16px;*/
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

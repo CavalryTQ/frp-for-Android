@@ -6,9 +6,21 @@ import AppHeader from "@/components/appHeader.vue";
 
 <template>
      <app-header></app-header>
-     <config-item></config-item>
+  <form class="config-list">
+    <fieldset>
+      <legend>配置列表</legend>
+      <config-item></config-item>
+      <config-item></config-item>
+      <config-item></config-item>
+    </fieldset>
+    <p>test</p>
+  </form>
 </template>
 
 <style scoped lang="scss">
-
+ .config-list{
+   width: 100%;
+   height: auto;
+   font-size: 16px;
+ }
 </style>

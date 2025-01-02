@@ -62,5 +62,5 @@ export const rippleEffect = (event, element, options = {
             { once: true }
         );
     }, config.duration);
-    console.log('rippleEffect', element);
+    // console.log('rippleEffect', element);
 }
