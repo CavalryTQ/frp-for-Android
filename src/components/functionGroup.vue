@@ -1,10 +1,12 @@
 <script setup>
 // 功能按钮组
-import {ref, watch} from "vue";
+import {ref, watch, defineEmits} from "vue";
 import Ripple from "@/components/ripple.vue";
 import {rippleEffect} from "@/animations/customAnimation.js";
 import {userCache} from "@/data/cache.js";
 import {loadIcon} from "@/mixins/mixin.js";
+
+const emits = defineEmits(['log', 'setting' , 'about']);
 
 const funcBtn = ref(null);
 const isDarkModel = ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
@@ -14,12 +16,14 @@ const group = ref([
       icon: userCache.isDark.value ? loadIcon("assignment-w") : loadIcon("assignment-b"),
       type: false,
       isActive: false,
+      path: "/log",
     },
     {
       text: "设置",
       icon: userCache.isDark.value ? loadIcon("settings-w") : loadIcon("settings-b"),
       type: false,
       isActive: false,
+      path: "/setting",
     },
   {
     text: "关于",
@@ -47,19 +51,24 @@ watch(userCache.isDark, (newValue) => {
 // console.log(userCache);
 // console.log(userCache.get("isDark"));
 // console.log(userCache.isDark.value);
-function test(){
-  isDarkModel.value = !isDarkModel.value;
-  userCache.isDark.value = isDarkModel.value;
-  console.log("test", userCache);
-  console.log(userCache.get("isDark"));
-  console.log(userCache.isDark.value);
-}
+const handlePointerDown = (item) => {
+  switch (item.text){
+    case "日志":
+       emits('log', item);
+      break;
+    case "设置":
+       emits('setting', item)
+      break;
+    case "关于":
+      emits('about', true);
+  }
+};
 </script>
 
 <template>
      <ripple>
        <div class="func-group">
-         <div class="func-button" v-for="(item, index) in group" @pointerdown="rippleEffect($event, funcBtn[index], {isDark: isDarkModel, duration: 1000});test();" :key="index" ref="funcBtn">
+         <div class="func-button" v-for="(item, index) in group" @pointerdown="rippleEffect($event, funcBtn[index], {isDark: isDarkModel, duration: 1000});handlePointerDown(item);" :key="index" ref="funcBtn">
            <div class="func-icon"><img style="width: 100%;height: 100%" :src="item.icon" alt="icon"></div>
            <div class="func-text">{{item.text}}</div>
          </div>

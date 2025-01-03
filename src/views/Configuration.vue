@@ -7,12 +7,11 @@ import AppHeader from "@/components/appHeader.vue";
 <template>
      <app-header></app-header>
   <form class="config-list">
-    <fieldset>
-      <legend>配置列表</legend>
+
       <config-item></config-item>
       <config-item></config-item>
       <config-item></config-item>
-    </fieldset>
+
     <p>test</p>
   </form>
 </template>

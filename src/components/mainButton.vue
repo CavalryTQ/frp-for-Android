@@ -34,7 +34,7 @@ if (props.type){
     text.value = '点击停止';
     emit('isActive', true);
   }else {
-    isDarkModel.value ? icon.value = loadIcon('block-w') : icon.value = loadIcon('block-b');
+    isDarkModel.value ? icon.value = loadIcon('ic--baseline-block-w') : icon.value = loadIcon('ic--baseline-block-b');
     title.value = '已停止';
     text.value = '点击启动';
     emit('isActive', false);
@@ -46,7 +46,7 @@ watch(isDarkModel, (newValue) =>{
     if (props.isActive){
       newValue ? icon.value = loadIcon('circle-w') : icon.value = loadIcon('circle-b')
     }else {
-      newValue ? icon.value = loadIcon('block-w') : icon.value = loadIcon('block-b')
+      newValue ? icon.value = loadIcon('ic--baseline-block-w') : icon.value = loadIcon('ic--baseline-block-b')
     }
   }
 });
@@ -58,7 +58,7 @@ watch(isActive, (newValue) =>{
        text.value = '点击停止';
        emit('isActive', true);
     }else {
-      isDarkModel.value ? icon.value = loadIcon('block-w') : icon.value = loadIcon('block-b');
+      isDarkModel.value ? icon.value = loadIcon('ic--baseline-block-w') : icon.value = loadIcon('ic--baseline-block-b');
       title.value = '已停止';
       text.value = '点击启动';
       emit('isActive', false);

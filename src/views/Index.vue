@@ -5,11 +5,13 @@ import MainButton from "@/components/mainButton.vue";
 import FunctionGroup from "@/components/functionGroup.vue";
 import {ref} from "vue";
 import {userCache} from "@/data/cache.js";
-import {goToPage, loadIcon, loadIcons} from "@/mixins/mixin.js";
+import {goToPage, loadIcon} from "@/mixins/mixin.js";
 import {useRouter} from "vue-router";
+import About from "@/components/about.vue";
 
 const isDarkModel = ref(userCache.isDark.value) || ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
 const router = useRouter();
+const popupAbout = ref(false);
 
 const handlePointerDown = () => {
   console.log(router)
@@ -23,9 +25,11 @@ const handlePointerDown = () => {
      <div class="body-content">
        <mainButton :type="true"/>
        <mainButton :icon="isDarkModel ? loadIcon('view-w') : loadIcon('view-b')" title="配置" text="点击编辑" @pointerdown="handlePointerDown"/>
-       <function-group></function-group>
+       <function-group @about="args => {popupAbout = args}"></function-group>
      </div>
   </div>
+
+  <about :show="popupAbout" @close="args => {popupAbout = args}"></about>
 </template>
 
 <style scoped lang="scss">

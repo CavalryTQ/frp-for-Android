@@ -10,7 +10,7 @@ export const icons = import.meta.glob('@/assets/icons/*.svg', { eager: true });/
      // 在所有图标中查找匹配项
      const matchKey = Object.keys(icons).find(key => regex.test(key));
 
-     return matchKey ? icons[matchKey].default : null;
+     return matchKey ? icons[matchKey].default : new Error(`Icon "${iconName}" not found.`);
 };
  export const loadIcons = (iconName) => {
      return Object.keys(icons).filter(key => key.includes(iconName)).map(key => icons[key].default);
