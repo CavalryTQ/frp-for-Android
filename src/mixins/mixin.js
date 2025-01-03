@@ -1,4 +1,3 @@
-import {useRouter} from "vue-router";
 
 export const icons = import.meta.glob('@/assets/icons/*.svg', { eager: true });// 引入所有图标 eager: true 提前加载
 
