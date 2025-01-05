@@ -6,7 +6,6 @@ export const rippleEffect = (event, element, options = {
     duration: 5000, // 动画时长，单位 ms
     sizeFactor: 2.5, // 涟漪扩散倍数
 }) => {
-
      if (event.cancelable){ // 判断是否可以取消默认行为
          event.preventDefault(); // 阻止默认行为
      }
@@ -45,6 +44,7 @@ export const rippleEffect = (event, element, options = {
     element.style.overflow = 'hidden';
     element.appendChild(ripple);
 
+    console.log('rippleEffect', element)
     // 延迟开始动画，避免插入 DOM 时跳帧
     requestAnimationFrame(() => {
         ripple.style.transform = 'scale(1)';
@@ -62,5 +62,4 @@ export const rippleEffect = (event, element, options = {
             { once: true }
         );
     }, config.duration);
-    // console.log('rippleEffect', element);
 }

@@ -1,6 +1,6 @@
 <script setup>
 // 配置列表Item
-import {ref, defineProps, watch} from "vue";
+import {ref, defineProps, watch, defineEmits} from "vue";
 import {userCache} from "@/data/cache.js";
 import {rippleEffect} from "@/animations/customAnimation.js";
 import {loadIcon} from "@/mixins/mixin.js";
@@ -11,6 +11,7 @@ const props = defineProps({
     default: true
   }
 });
+const emit = defineEmits(['handleMore']);
 
 const configItem = ref(null);
 const radioStyle = ref(null);
@@ -44,7 +45,7 @@ watch(isDarkMode, (newValue) => {
 </script>
 
 <template>
-      <div class="config-item" ref="configItem" @pointerdown.self="rippleEffect($event, configItem, {isDark: isDarkModel})">
+      <div class="config-item" ref="configItem" @pointerdown="rippleEffect($event, configItem, {isDark: isDarkMode})">
         <div class="item-left">
           <div class="radio" select-radio="config" disabled="true" ref="radioStyle">
             <input type="radio" id="config" name="config" value="" @pointerdown="handleRadioStyle($event, radioStyle)"/>
@@ -54,7 +55,7 @@ watch(isDarkMode, (newValue) => {
         <div class="item-right">
           <div class="last-time">1小时前</div>
           <div :class="{'line': !isDarkMode, 'line-dark' : true}"></div>
-          <div class="item-more"><img style="width: 100%;height: 100%" :src="moreIcon" alt="more"></div>
+          <div class="item-more" @pointerdown="emit('handleMore', true)"><img style="width: 100%;height: 100%" :src="moreIcon" alt="more"></div>
         </div>
       </div>
 </template>
@@ -142,12 +143,13 @@ input[type="radio"]:checked{
        .item-more{
          width: 96px;
          height: 96px;
-         position: relative;
+         display: flex;
+         justify-content: center;
+         align-items: center;
          img{
            width: 100%;
            height: 100%;
            object-fit: contain;
-           position: absolute;
          }
        }
      }
