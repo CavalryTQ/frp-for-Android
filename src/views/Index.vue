@@ -3,21 +3,27 @@
 import IndexHeader from "@/components/indexHeader.vue";
 import MainButton from "@/components/mainButton.vue";
 import FunctionGroup from "@/components/functionGroup.vue";
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import {userCache} from "@/data/cache.js";
-import {goToPage, loadIcon, watchMode} from "@/mixins/mixin.js";
+import {goToPage, loadIcon} from "@/mixins/mixin.js";
 import {useRouter} from "vue-router";
 import About from "@/components/about.vue";
 
 const isDarkModel = ref(userCache.isDark.value) || ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
 const router = useRouter();
 const popupAbout = ref(false);
+const systemModel = ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
 
 const handlePointerDown = () => {
   console.log(router)
-  goToPage(router, "/config");
+  // systemModel.value = !systemModel.value;
+  console.log("systemModel", systemModel.value)
+  // goToPage(router, "/config");
 }
-watchMode();
+console.log(systemModel)
+watch(systemModel, (newValue) => {
+  console.log("systemModel", newValue);
+})
 </script>
 
 <template>
