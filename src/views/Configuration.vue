@@ -27,11 +27,13 @@ const closeDialog = () => {
 
     <p>test</p>
   </form>
-  <drawer-dialog :visible="popup" >
-    <div class="dialog">
-      <h2>Drawer Content</h2>
-      <button @click="closeDialog">Close</button>
-    </div>
+  <drawer-dialog :visible="popup" @close="args => {popup = args}" direction="left">
+<!--    <div class="dialog">-->
+<!--      <h2>Drawer Content</h2>-->
+<!--      <button @click="closeDialog">Close</button>-->
+<!--    </div>-->
+    <h2>Drawer Content</h2>
+    <button @click="closeDialog">Close</button>
   </drawer-dialog>
 </template>
 
@@ -43,7 +45,7 @@ const closeDialog = () => {
  }
  .dialog{
    width: 100%;
-   height: 50%;
+   height: auto;
    background: #1976D3;
  }
 </style>

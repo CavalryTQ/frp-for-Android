@@ -5,7 +5,7 @@ import MainButton from "@/components/mainButton.vue";
 import FunctionGroup from "@/components/functionGroup.vue";
 import {ref} from "vue";
 import {userCache} from "@/data/cache.js";
-import {goToPage, loadIcon} from "@/mixins/mixin.js";
+import {goToPage, loadIcon, watchMode} from "@/mixins/mixin.js";
 import {useRouter} from "vue-router";
 import About from "@/components/about.vue";
 
@@ -17,6 +17,7 @@ const handlePointerDown = () => {
   console.log(router)
   goToPage(router, "/config");
 }
+watchMode();
 </script>
 
 <template>

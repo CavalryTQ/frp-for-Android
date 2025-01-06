@@ -42,6 +42,7 @@ if (props.type){
 }
 
 watch(isDarkModel, (newValue) =>{
+  console.log('model', newValue)
   if (props.type){
     if (props.isActive){
       newValue ? icon.value = loadIcon('circle-w') : icon.value = loadIcon('circle-b')
