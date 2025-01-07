@@ -27,12 +27,11 @@ router.beforeEach((to, from) => {
 <!--    翻页动画-->
    <div class="animation">
     <router-view v-slot="{ Component }">
-      <transition :name="pageFade"
-                  mode="out-in">
+      <transition :name="pageFade">
            <component :is="Component" />
       </transition>
     </router-view>
-     <component :is="Configuration"/>
+<!--     <component :is="Configuration"/>-->
    </div>
   </div>
 </template>
