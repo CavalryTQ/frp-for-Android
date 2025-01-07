@@ -1,6 +1,6 @@
 <script setup>
 // 主要按钮
-import {ref, defineProps, watch, defineEmits} from "vue";
+import {ref, defineProps, watch, defineEmits, watchEffect, onMounted, nextTick} from "vue";
 import {rippleEffect} from "@/animations/customAnimation.js";
 import {loadIcon} from "@/mixins/mixin.js";
 import {userCache} from "@/data/cache.js";
@@ -8,7 +8,10 @@ import {userCache} from "@/data/cache.js";
 const props = defineProps({
   title: String,
   text: String,
-  icon: String,
+  icon: {
+    type: String,
+    default: undefined
+  },
   type: {
     type: Boolean, // 是否为激活类型按钮
     default: false
@@ -21,11 +24,11 @@ const props = defineProps({
 const emit = defineEmits(['isActive']);
 
 const mainBtn = ref(null);
-const isDarkModel = userCache.isDark || ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
-const icon = props.icon !== undefined ? ref(props.icon) : ref('');
+const Icon = ref(props.icon !== undefined ? props.icon : '');
 const title = props.title !== undefined ? ref(props.title) : ref('功能名称');
 const text = props.text !== undefined ? ref(props.text) : ref('功能描述');
 const isActive = props.isActive !== undefined ? ref(props.isActive) : ref(false);
+const isDarkModel = userCache.isDark;
 
 if (props.type){
   if (props.isActive){
@@ -34,38 +37,49 @@ if (props.type){
     text.value = '点击停止';
     emit('isActive', true);
   }else {
-    isDarkModel.value ? icon.value = loadIcon('ic--baseline-block-w') : icon.value = loadIcon('ic--baseline-block-b');
+    isDarkModel.value ? Icon.value = loadIcon('ic--baseline-block-w') : Icon.value = loadIcon('ic--baseline-block-b');
     title.value = '已停止';
     text.value = '点击启动';
     emit('isActive', false);
   }
 }
 
-watch(isDarkModel, (newValue) =>{
-  console.log('model', newValue)
-  if (props.type){
-    if (props.isActive){
-      newValue ? icon.value = loadIcon('circle-w') : icon.value = loadIcon('circle-b')
-    }else {
-      newValue ? icon.value = loadIcon('ic--baseline-block-w') : icon.value = loadIcon('ic--baseline-block-b')
-    }
-  }
-});
+
 watch(isActive, (newValue) =>{
   if (props.type){
     if (newValue){
-      isDarkModel.value ? icon.value = loadIcon('circle-w') : icon.value = loadIcon('circle-b');
+      isDarkModel.value ? Icon.value = loadIcon('circle-w') : Icon.value = loadIcon('circle-b');
        title.value = '运行中';
        text.value = '点击停止';
        emit('isActive', true);
     }else {
-      isDarkModel.value ? icon.value = loadIcon('ic--baseline-block-w') : icon.value = loadIcon('ic--baseline-block-b');
+      isDarkModel.value ? Icon.value = loadIcon('ic--baseline-block-w') : Icon.value = loadIcon('ic--baseline-block-b');
       title.value = '已停止';
       text.value = '点击启动';
       emit('isActive', false);
     }
   }
 });
+
+watch(isDarkModel, (newValue) =>{
+
+  if (props.type){
+
+    if (props.isActive){
+      newValue ? Icon.value = loadIcon('circle-w') : Icon.value = loadIcon('circle-b')
+    }else {
+      newValue ? Icon.value = loadIcon('ic--baseline-block-w') : Icon.value = loadIcon('ic--baseline-block-b')
+    }
+  }
+});
+onMounted(async ()=>{
+ await nextTick(() =>{
+   // 监听props.icon的变化
+    watch(()=> props.icon, (newValue)=>{
+      Icon.value = newValue;
+    })
+ })
+})
 
 const handleActive = () =>{
   props.type ? isActive.value = !isActive.value : null;
@@ -77,7 +91,7 @@ const handleActive = () =>{
     <slot name="default">
       <div class="main-button-content">
         <div class="main-button-icon">
-          <slot name="icon"><img style="width: 100%;height: 100%" :src="icon" alt="mainBtnIcon"></slot>
+          <slot name="icon"><img style="width: 100%;height: 100%" :src="Icon" alt="mainBtnIcon"></slot>
         </div>
         <div class="main-button-text">
            <span><slot name="title">{{ title }}</slot></span>
