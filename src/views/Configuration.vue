@@ -16,25 +16,27 @@ const closeDialog = () => {
 </script>
 
 <template>
+   <div class="config">
      <app-header></app-header>
-  <form class="config-list">
+     <form class="config-list">
 
-      <config-item></config-item>
-      <config-item></config-item>
-      <config-item @handle-more="args => {
+       <config-item></config-item>
+       <config-item></config-item>
+       <config-item @handle-more="args => {
         handlePopup(args);
       }"></config-item>
 
-    <p>test</p>
-  </form>
-  <drawer-dialog :visible="popup" @close="args => {popup = args}" direction="left">
-<!--    <div class="dialog">-->
-<!--      <h2>Drawer Content</h2>-->
-<!--      <button @click="closeDialog">Close</button>-->
-<!--    </div>-->
-    <h2>Drawer Content</h2>
-    <button @click="closeDialog">Close</button>
-  </drawer-dialog>
+       <p>test</p>
+     </form>
+     <drawer-dialog :visible="popup" @close="args => {popup = args}" direction="bottom">
+       <!--    <div class="dialog">-->
+       <!--      <h2>Drawer Content</h2>-->
+       <!--      <button @click="closeDialog">Close</button>-->
+       <!--    </div>-->
+       <h2>Drawer Content</h2>
+       <button @click="closeDialog">Close</button>
+     </drawer-dialog>
+   </div>
 </template>
 
 <style scoped lang="scss">

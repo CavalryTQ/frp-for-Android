@@ -19,7 +19,6 @@ const handlePointerDown = () => {
   // systemModel.value = !systemModel.value;
   goToPage(router, "/config");
 }
-console.log(configIcon)
 watch(userCache.isDark, (newValue) => {
   configIcon.value = newValue ? loadIcon('view-w') : loadIcon('view-b');
 })
@@ -33,9 +32,8 @@ watch(userCache.isDark, (newValue) => {
        <mainButton v-model:icon="configIcon" title="配置" text="点击编辑" @pointerdown="handlePointerDown"/>
        <function-group @about="args => {popupAbout = args}"></function-group>
      </div>
+    <about :show="popupAbout" @close="args => {popupAbout = args}"></about>
   </div>
-
-  <about :show="popupAbout" @close="args => {popupAbout = args}"></about>
 </template>
 
 <style scoped lang="scss">
