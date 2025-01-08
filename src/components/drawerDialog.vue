@@ -51,7 +51,6 @@ const beforeEnter = (e) => {
 const beforeLeave = (e) => {
   e.style.transitionDuration = `${props.leaveDuration}ms`;
   transitioning.value = true; // 开始动画
-  isDarkModel.value = false;
 };
 // 动画结束后的钩子
 const afterLeave = () => {
@@ -67,7 +66,7 @@ watch(isDarkModel, (newValue) => {
   <div
       v-show="visible || transitioning"
       class="drawer-overlay"
-      @pointerleave="closeDialog"
+      @pointerup="closeDialog"
   >
     <!-- 只为 drawer-content 添加动画 -->
     <transition :name="'drawer-content-' + props.direction"
@@ -81,7 +80,7 @@ watch(isDarkModel, (newValue) => {
           class="drawer-content"
           ref="drawer"
           :class="{'drawer-content-bottom': direction === 'bottom', 'drawer-content-top': direction === 'top', 'drawer-content-left': direction === 'left', 'drawer-content-right': direction === 'right'}"
-          @pointerdown.stop
+          @pointerup.stop
       >
         <slot></slot>
       </div>

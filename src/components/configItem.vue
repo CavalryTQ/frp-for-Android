@@ -55,7 +55,7 @@ watch(isDarkMode, (newValue) => {
         <div class="item-right">
           <div class="last-time">1小时前</div>
           <div :class="{'line': !isDarkMode, 'line-dark' : true}"></div>
-          <div class="item-more" @pointerdown="emit('handleMore', true)"><img style="width: 100%;height: 100%" :src="moreIcon" alt="more"></div>
+          <div class="item-more" @pointerdown="emit('handleMore', true)"><img :src="moreIcon" alt="more"></div>
         </div>
       </div>
 </template>
@@ -87,7 +87,7 @@ input[type="radio"]:checked{
      justify-content: space-between;
      text-align: left;
      line-height: 9.78vh;
-     padding: 0 60px;
+     padding: 0 0 0 60px;
      .item-left{
        display: flex;
        align-items: center;
@@ -130,25 +130,23 @@ input[type="radio"]:checked{
          height: 50%;
          border-right: 0.5px solid #DCDCDC;
          margin-left: 30px;
-         margin-right: 60px;
        }
        .line-dark{
          width: 0;
          height: 50%;
          border-right: 0.5px solid #414141;
          margin-left: 30px;
-         margin-right: 60px;
        }
        
        .item-more{
-         width: 96px;
-         height: 96px;
+         height: 100%;
          display: flex;
          justify-content: center;
          align-items: center;
+         padding: 0 60px;
          img{
            width: 100%;
-           height: 100%;
+           height: 96px !important;
            object-fit: contain;
          }
        }
