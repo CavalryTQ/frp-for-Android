@@ -6,8 +6,8 @@
  import {useRouter} from "vue-router";
 
  const router = useRouter();
- const isDarkMode = userCache.isDark || ref(window.matchMedia('(prefers-color-scheme: dark)').matches);
- const backIcon = isDarkMode.value ? loadIcon('back-w') : loadIcon('back-b');
+ const isDarkMode = userCache.isDark;
+ const backIcon = ref(isDarkMode.value ? loadIcon('back-w') : loadIcon('back-b'));
 
  watch(isDarkMode, (newValue) => {
    newValue ? backIcon.value = loadIcon('back-w') : backIcon.value = loadIcon('back-b');

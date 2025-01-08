@@ -15,8 +15,8 @@ const emit = defineEmits(['handleMore']);
 
 const configItem = ref(null);
 const radioStyle = ref(null);
-const isDarkMode = userCache.isDark || ref(window.matchMedia('(prefers-color-scheme: dark)').matches);
-const moreIcon = isDarkMode.value ? loadIcon('more-w') : loadIcon('more-b');
+const isDarkMode = userCache.isDark;
+const moreIcon = ref(isDarkMode.value ? loadIcon('more-w') : loadIcon('more-b'));
 
 const handleRadioStyle = (e, radio) => {
   e.target.checked = true;

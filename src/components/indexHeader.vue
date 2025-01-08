@@ -19,7 +19,6 @@
   justify-content: center;
   overflow: hidden;
   .title{
-    color: #fff;
     font-size: 1.25rem;
     font-weight: 700;
   }

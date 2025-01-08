@@ -1,7 +1,6 @@
 <script setup>
 import {ref, defineProps, defineEmits, watch} from 'vue';
 import {userCache} from "@/data/cache.js";
-import {isDarkModel} from "@/mixins/mixin.js";
 
 const props = defineProps({
   visible: {
@@ -32,6 +31,8 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['update:visible', 'close']);
+
+const isDarkModel = userCache.isDark;
 
 const closeDialog = () => {
   emit('update:visible', false);
@@ -66,7 +67,7 @@ watch(isDarkModel, (newValue) => {
   <div
       v-show="visible || transitioning"
       class="drawer-overlay"
-      @pointerdown="closeDialog"
+      @pointerleave="closeDialog"
   >
     <!-- 只为 drawer-content 添加动画 -->
     <transition :name="'drawer-content-' + props.direction"
