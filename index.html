@@ -9,7 +9,13 @@
   </head>
   <body>
     <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
+    <script type="module" src="/src/main.js">
+        // 移动端禁用默认滑动翻页行为
+        document.addEventListener('touchmove', function (e) {
+            console.log('touchmove');
+            e.preventDefault();
+        }, { passive: false });
+    </script>
   </body>
 </html>
 <style>
@@ -17,6 +23,7 @@
        padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
        margin: 0;
        box-sizing: border-box;
+       overflow: hidden;
 
         -webkit-overflow-scrolling: touch;
         overflow-scrolling: touch;

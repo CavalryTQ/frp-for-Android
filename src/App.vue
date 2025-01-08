@@ -1,24 +1,16 @@
 <script setup>
 
-import {onBeforeUnmount, onMounted, ref, watch} from "vue";
+import { ref} from "vue";
 import {useRouter} from "vue-router";
-import Configuration from "@/views/Configuration.vue";
-import Log from "@/views/Log.vue";
+import {isBack} from "@/mixins/mixin.js";
 
-const pageFade = ref('');
+const pageScale = ref('');
 const router = useRouter();
-const isBack = ref(false);
 
-watch(isBack, (newValue)=>{
-  console.log('isBack', newValue)
+router.beforeEach(() => {
+  isBack.value ? pageScale.value = 'scale-slide-back': pageScale.value = 'scale-slide-go';
+  return true;
 });
-onMounted(()=>{
-  window.addEventListener('popstate', (event) => {
-    isBack.value = true;
-    console.log('isBack');
-  });
-});
-
 </script>
 
 <template>
@@ -26,11 +18,10 @@ onMounted(()=>{
 <!--    翻页动画-->
    <div class="animation">
     <router-view v-slot="{ Component }">
-      <transition name="scale-slide">
+      <transition :name="pageScale">
            <component :is="Component" />
       </transition>
     </router-view>
-<!--     <component :is="Configuration"/>-->
    </div>
   </div>
 </template>
@@ -58,7 +49,7 @@ onMounted(()=>{
 }
 
 /* 翻页滑动动画 */
-.slide-enter-active,
+/* .slide-enter-active,
 .slide-leave-active {
   transition: all 0.75s ease-out;
 }
@@ -86,32 +77,56 @@ onMounted(()=>{
   position: absolute;
   left: 0;
 }
+ */
 
 
-/*滑动组合动画（go-1)*/
-.scale-slide-enter-active,
-.scale-slide-leave-active {
+.scale-slide-back-enter-active,
+.scale-slide-back-leave-active,
+.scale-slide-go-enter-active,
+.scale-slide-go-leave-active{
   position: absolute;
   transition: all 0.85s ease;
 }
 
-.scale-slide-leave-from {
-  right: 0;
-}
-
-.scale-slide-leave-to {
-  right: 100%;
-}
-
-.scale-slide-enter-from {
-
-  transform: scale(0.1);
-  opacity: 0;
-}
-
-.scale-slide-enter-to {
+/*滑动组合动画 back（go-1)*/
+.scale-slide-back-leave-from {
+  left: 0;
   transform: scale(1);
   opacity: 1;
 }
 
+.scale-slide-back-leave-to {
+  left: 100%;
+  transform: scale(0.1);
+}
+
+.scale-slide-back-enter-from {
+  left: -100%;
+  transform: scale(0.1);
+  opacity: 0;
+}
+
+.scale-slide-back-enter-to {
+  left: 0;
+  transform: scale(1);
+  opacity: 1;
+}
+
+/*滑动组合动画 go（router)*/
+.scale-slide-go-leave-from {
+  transform: scale3d(1, 1, 1);
+  opacity: 1;
+  right: 0;
+}
+.scale-slide-go-leave-to {
+  transform: scale3d(0.1, 0.1, 0.1);
+  opacity: 0;
+  right: 100%;
+}
+.scale-slide-go-enter-from {
+  right: -100%;
+}
+.scale-slide-go-enter-to {
+  right: 0;
+}
 </style>

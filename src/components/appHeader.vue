@@ -2,7 +2,7 @@
  // app头部
  import {ref, watch} from "vue";
  import {userCache} from "@/data/cache.js";
- import {loadIcon} from "@/mixins/mixin.js";
+ import {goToPage, loadIcon} from "@/mixins/mixin.js";
  import {useRouter} from "vue-router";
 
  const router = useRouter();
@@ -17,7 +17,7 @@
 <template>
   <div class="app-header">
     <div class="header-left">
-      <div class="back" @pointerdown="router.go(-1)"><img style="width: 100%;height: 100%" :src="backIcon" alt="back"></div>
+      <div class="back" @pointerup="goToPage(router, -1)"><img style="width: 100%;height: 100%" :src="backIcon" alt="back"></div>
       <span class="header-name page-name">配置</span>
     </div>
     <div class="header-right func-group">

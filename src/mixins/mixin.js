@@ -1,6 +1,7 @@
+import {ref} from "vue";
 
 export const icons = import.meta.glob('@/assets/icons/*.svg', { eager: true });// 引入所有图标 eager: true 提前加载
-// export const isDarkModel = ref(userCache.isDark.value) || ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
+export const isBack = ref(false);
  export const loadIcon = (iconName) => {
      // 将用户输入的关键字分解为正则模式，忽略顺序和间隔
      const keywords = iconName.split('').map(char => char.trim()).join('.*'); // 将空格替换为任意字符
@@ -17,8 +18,10 @@ export const icons = import.meta.glob('@/assets/icons/*.svg', { eager: true });/
 
  export const goToPage = (router, data) => {
      if (typeof data === 'number') {
+         isBack.value = true;
          router.go(data);
      }else {
+         isBack.value = false;
          typeof data === 'string' ? router.push(data) : router.push(data.path)
      }
 

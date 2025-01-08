@@ -4,15 +4,12 @@
  import {goToPage} from "@/mixins/mixin.js";
  const router = useRouter()
 
- const handleGoBack = () => {
-   goToPage(router, -1);
- }
 </script>
 
 <template>
    <div style="height: 50vh;background: #2c3e50" @pointerup.self="console.log('go')">
-     <button @pointerup="handleGoBack">back</button>
-     <button @pointerup="console.log('go')">go</button>
+     <button @pointerup="goToPage(router, -1);">back</button>
+     <button @pointerup="goToPage(router, '/logcat');">go</button>
    </div>
 </template>
 
