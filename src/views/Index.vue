@@ -14,10 +14,13 @@ const router = useRouter();
 const popupAbout = ref(false);
 const configIcon = userCache.isDark.value ? ref(loadIcon('view-w')) : ref(loadIcon('view-b'));
 
-const handlePointerDown = () => {
+const handlePointerUp = () => {
   // console.log(router)
   // systemModel.value = !systemModel.value;
   goToPage(router, "/config");
+}
+const handleGoToLog = (info) => {
+  goToPage(router, info.path)
 }
 watch(userCache.isDark, (newValue) => {
   configIcon.value = newValue ? loadIcon('view-w') : loadIcon('view-b');
@@ -29,8 +32,10 @@ watch(userCache.isDark, (newValue) => {
     <index-header></index-header>
      <div class="body-content">
        <mainButton :type="true"/>
-       <mainButton v-model:icon="configIcon" title="配置" text="点击编辑" @pointerdown="handlePointerDown"/>
-       <function-group @about="args => {popupAbout = args}"></function-group>
+       <mainButton v-model:icon="configIcon" title="配置" text="点击编辑" @pointerup="handlePointerUp"/>
+       <function-group @about="args => {popupAbout = args}"
+                       @log="args => {handleGoToLog(args)}"
+       ></function-group>
      </div>
     <about :show="popupAbout" @close="args => {popupAbout = args}"></about>
   </div>

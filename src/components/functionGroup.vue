@@ -1,7 +1,6 @@
 <script setup>
 // 功能按钮组
-import {ref, watch, defineEmits} from "vue";
-import Ripple from "@/components/ripple.vue";
+import {ref, watch, defineEmits, toRaw} from "vue";
 import {rippleEffect} from "@/animations/customAnimation.js";
 import {userCache} from "@/data/cache.js";
 import {loadIcon} from "@/mixins/mixin.js";
@@ -51,13 +50,13 @@ watch(userCache.isDark, (newValue) => {
 // console.log(userCache);
 // console.log(userCache.get("isDark"));
 // console.log(userCache.isDark.value);
-const handlePointerDown = (item) => {
+const handlePointerUp = (item) => {
   switch (item.text){
     case "日志":
-       emits('log', item);
+       emits('log', toRaw(item));
       break;
     case "设置":
-       emits('setting', item)
+       emits('setting', toRaw(item));
       break;
     case "关于":
       emits('about', true);
@@ -66,14 +65,17 @@ const handlePointerDown = (item) => {
 </script>
 
 <template>
-     <ripple>
+<!--     <ripple>-->
        <div class="func-group">
-         <div class="func-button" v-for="(item, index) in group" @pointerdown="rippleEffect($event, funcBtn[index], {isDark: isDarkModel, duration: 1000});handlePointerDown(item);" :key="index" ref="funcBtn">
+         <div class="func-button" v-for="(item, index) in group" @pointerdown="rippleEffect($event, funcBtn[index], {isDark: isDarkModel, duration: 1000});"
+              :key="index" ref="funcBtn"
+              @pointerup="handlePointerUp(item)"
+         >
            <div class="func-icon"><img style="width: 100%;height: 100%" :src="item.icon" alt="icon"></div>
            <div class="func-text">{{item.text}}</div>
          </div>
        </div>
-     </ripple>
+<!--     </ripple>-->
 </template>
 
 <style scoped>

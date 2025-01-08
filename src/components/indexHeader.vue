@@ -13,9 +13,9 @@
 .index-header{
   width: 100%;
   height: 329px;
-  background-color: #30638E;
+  background: var(--app-background);
   display: flex;
-  align-items: center;
+  align-items: self-end;
   justify-content: center;
   overflow: hidden;
   .title{

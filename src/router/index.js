@@ -12,18 +12,22 @@ const router = createRouter({
       path: '/index',
       name: 'Index',
       component: () => import('@/views/Index.vue'),
-      meta:{
-          index: 1
-      }
     },
       {
        path: '/config',
        name: 'Config',
        component: () => import('@/views/Configuration.vue'),
-       meta:{
-          index: 2
-      }
-      }
+      },
+      {
+       path: '/log',
+       name: 'Log',
+       component: () => import('@/views/Log.vue'),
+      },
+      {
+       path: '/logcat',
+       name: 'LogCat',
+       component: () => import('@/views/LogCat.vue'),
+      },
   ],
 })
 

@@ -1,25 +1,24 @@
 <script setup>
 
-import {ref} from "vue";
+import {onBeforeUnmount, onMounted, ref, watch} from "vue";
 import {useRouter} from "vue-router";
 import Configuration from "@/views/Configuration.vue";
+import Log from "@/views/Log.vue";
 
 const pageFade = ref('');
-
 const router = useRouter();
+const isBack = ref(false);
 
-router.beforeEach((to, from) => {
-  // 根据路由标记判断触发哪个动画
-  if (to.meta.index > from.meta.index) {
-    // 从右往左动画
-    pageFade.value = 'slide-right';
-  } else if (to.meta.index < from.meta.index) {
-    // 从左往右动画
-    pageFade.value = 'slide-left';
-  } else {
-    pageFade.value = '';
-  }
+watch(isBack, (newValue)=>{
+  console.log('isBack', newValue)
 });
+onMounted(()=>{
+  window.addEventListener('popstate', (event) => {
+    isBack.value = true;
+    console.log('isBack');
+  });
+});
+
 </script>
 
 <template>
@@ -27,7 +26,7 @@ router.beforeEach((to, from) => {
 <!--    翻页动画-->
    <div class="animation">
     <router-view v-slot="{ Component }">
-      <transition :name="pageFade">
+      <transition name="scale-slide">
            <component :is="Component" />
       </transition>
     </router-view>
@@ -50,58 +49,69 @@ router.beforeEach((to, from) => {
     display: none;
   }
  .animation{
-   display: flex;
-   flex-direction: row;
-   width: 200%;
-   height: auto;
-   & > div {
-     width: 50%;
+   width: 100%;
+   min-height: 100vh;
+   & div{
+     width: 100%;
    }
  }
 }
 
-/* 翻页动画 */
-.fade-enter-active, .fade-leave-active {
-  transition: transform 1s ease, opacity 1s ease;
-}
-.fade-enter, .fade-leave-to {
-  transform: translateX(100%); opacity: 0;
-}
-.fade-leave, .fade-enter-to {
-  transform: translateX(0); opacity: 1;
+/* 翻页滑动动画 */
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.75s ease-out;
 }
 
-.slide-left-enter-active,
-.slide-left-leave-active,
-.slide-right-enter-active,
-.slide-right-leave-active {
-  transition: transform 0.5s;
+
+.slide-enter-to {
+  position: absolute;
+  right: 0;
 }
 
-//.slide-right-enter-from {
-//  transform: translateX(0);
-//}
-.slide-right-enter-to {
-  transform: translateX(0);
-}
-//.slide-right-leave-from {
-//  transform: translateX(0);
-//}
-.slide-right-leave-to {
-  transform: translateX(-100%);
+
+.slide-enter-from {
+  position: absolute;
+  right: -100%;
 }
 
-//.slide-left-enter-from {
-//  transform: translateX(-200%);
-//}
-.slide-left-enter-to {
-  transform: translateX(0);
+
+.slide-leave-to {
+  position: absolute;
+  left: -100%;
 }
-//.slide-left-leave-from {
-//  transform: translateX(0);
-//}
-.slide-left-leave-to {
-  transform: translateX(100%);
+
+
+.slide-leave-from {
+  position: absolute;
+  left: 0;
+}
+
+
+/*滑动组合动画（go-1)*/
+.scale-slide-enter-active,
+.scale-slide-leave-active {
+  position: absolute;
+  transition: all 0.85s ease;
+}
+
+.scale-slide-leave-from {
+  right: 0;
+}
+
+.scale-slide-leave-to {
+  right: 100%;
+}
+
+.scale-slide-enter-from {
+
+  transform: scale(0.1);
+  opacity: 0;
+}
+
+.scale-slide-enter-to {
+  transform: scale(1);
+  opacity: 1;
 }
 
 </style>

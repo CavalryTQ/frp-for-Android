@@ -1,9 +1,8 @@
-import {ref, watch} from "vue";
+import {ref} from "vue";
 import {userCache} from "@/data/cache.js";
 
 export const icons = import.meta.glob('@/assets/icons/*.svg', { eager: true });// 引入所有图标 eager: true 提前加载
 export const isDarkModel = ref(userCache.isDark.value) || ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
-export const systemModel = ref(window.matchMedia("(prefers-color-scheme: dark)"));
  export const loadIcon = (iconName) => {
      // 将用户输入的关键字分解为正则模式，忽略顺序和间隔
      const keywords = iconName.split('').map(char => char.trim()).join('.*'); // 将空格替换为任意字符
@@ -19,13 +18,7 @@ export const systemModel = ref(window.matchMedia("(prefers-color-scheme: dark)")
  }
 
  export const goToPage = (router, data) => {
+     if (typeof data === 'number') router.go(data);
     typeof data === 'string' ? router.push(data) : router.push(data.path)
  }
 
- export const watchMode =  watch(systemModel, (newValue, oldValue) => {
-     console.log(newValue, oldValue)
- });
-
- export const modelChangeHook = (newValue, oldValue) => {
-     console.log(newValue, oldValue);
- }
