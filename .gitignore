@@ -21,6 +21,8 @@ coverage
 .vscode/*
 frp/*
 frp
+android
+android/*
 !.vscode/extensions.json
 .idea
 *.suo
