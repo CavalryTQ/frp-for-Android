@@ -1,15 +1,48 @@
 <script setup>
 
-import { ref} from "vue";
-import {useRouter} from "vue-router";
-import {isBack} from "@/mixins/mixin.js";
+import {onBeforeUnmount, ref} from "vue";
+import {useRoute, useRouter} from "vue-router";
+import {goToPage, isBack} from "@/mixins/mixin.js";
+import {Capacitor} from "@capacitor/core";
+import { App } from '@capacitor/app';
 
 const pageScale = ref('');
 const router = useRouter();
+const route = useRoute();
 
-router.beforeEach(() => {
-  isBack.value ? pageScale.value = 'scale-slide-back': pageScale.value = 'scale-slide-go';
-  return true;
+router.beforeEach((to, from, next) => {
+    if (from.path === '/' && to.path === '/index'){
+      // 初始化根路由重定向不需要加载动画
+      pageScale.value = '';
+      next();
+    }else {
+      isBack.value ? pageScale.value = 'scale-slide-back': pageScale.value = 'scale-slide-go';
+      next();
+    }
+    return true;
+});
+router.afterEach(() => {
+  isBack.value = true;
+});
+
+
+console.log(Capacitor.getPlatform());
+console.log(App);
+
+App.addListener( 'backButton', ()=>{
+  console.log('backButton监听！');
+  if (route.path === '/' || route.path === '/index') {
+    App.exitApp();
+  }else {
+    goToPage(router, -1);
+  }
+}).then(res => {
+}).catch(err => {
+  console.log(JSON.stringify(err, null, 2));
+});
+
+onBeforeUnmount(() => {
+  App.removeAllListeners();
 });
 </script>
 
@@ -31,7 +64,7 @@ router.beforeEach(() => {
 .body{
   box-sizing: border-box;
   overflow-y: scroll;
-  overflow-x: scroll;
+  overflow-x: hidden;
   /*滑动隐藏滑动条*/
   -ms-overflow-style: none;
   scrollbar-width: none;

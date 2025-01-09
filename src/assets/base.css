@@ -85,10 +85,16 @@
   margin: 0;
   font-weight: normal;
   font-size: 49px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 body {
   min-height: 100vh;
+  height: 416.79vh;
   color: var(--app-text-color);
   background: var(--app-background);
   transition:

@@ -11,10 +11,10 @@
     <div id="app"></div>
     <script type="module" src="/src/main.js">
         // 移动端禁用默认滑动翻页行为
-        document.addEventListener('touchmove', function (e) {
-            console.log('touchmove');
-            e.preventDefault();
-        }, { passive: false });
+        // document.addEventListener('touchmove', function (e) {
+        //     console.log('touchmove');
+        //     e.preventDefault();
+        // }, { passive: false });
     </script>
   </body>
 </html>
@@ -23,13 +23,14 @@
        padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
        margin: 0;
        box-sizing: border-box;
-       overflow: hidden;
 
-        -webkit-overflow-scrolling: touch;
-        overflow-scrolling: touch;
-        touch-action: pan-y;
-        -webkit-tap-highlight-color: rgba(0,0,0,0);
-        -webkit-touch-callout: none;
+       /*touch-action: none;*/
+       -webkit-overflow-scrolling: touch;
+       overflow-scrolling: touch;
+       touch-action: pan-y;
+       -webkit-tap-highlight-color: rgba(0,0,0,0);
+       -webkit-touch-callout: none;
+
     }
 
 
