@@ -17,6 +17,32 @@ if (!fs.existsSync(configPath)) {
 // 读取 capacitor.config.json
 const config = require(configPath);
 
+// 读取 package.json
+const packageJsonPath = path.join(projectRoot, "package.json");
+const packageJson = require(packageJsonPath);
+
+// 更新 capacitor.config.json 的版本号
+config.appVersion = packageJson.version;
+fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+console.log(`Updated appVersion in capacitor.config.json to ${packageJson.version}`);
+
+// 检查 Android build.gradle 是否存在
+const androidGradlePath = path.join(
+    projectRoot,
+    "android",
+    "app",
+    "build.gradle"
+);
+if (fs.existsSync(androidGradlePath)) {
+    let gradleContent = fs.readFileSync(androidGradlePath, "utf-8");
+    gradleContent = gradleContent.replace(
+        /versionName "\d+\.\d+\.\d+"/,
+        `versionName "${packageJson.version}"`
+    );
+    fs.writeFileSync(androidGradlePath, gradleContent);
+    console.log(`Updated versionName in build.gradle to ${packageJson.version}`);
+}
+
 // 获取打包目录名（默认为 "dist"）
 const buildDir = config.webDir || "dist";
 
