@@ -5,7 +5,7 @@ import {rippleEffect} from "@/animations/customAnimation.js";
 import {userCache} from "@/data/cache.js";
 import {loadIcon} from "@/mixins/mixin.js";
 
-const emits = defineEmits(['log', 'setting' , 'about']);
+const emits = defineEmits(['log', 'setting' , 'help', 'about']);
 
 const funcBtn = ref(null);
 const isDarkModel = ref(window.matchMedia("(prefers-color-scheme: dark)").matches);
@@ -25,6 +25,12 @@ const group = ref([
       path: "/setting",
     },
   {
+    text: "帮助",
+    icon: userCache.isDark.value ? loadIcon("help-w") : loadIcon("help-b"),
+    type: false,
+    isActive: false,
+  },
+  {
     text: "关于",
     icon: userCache.isDark.value ? loadIcon("error-w") : loadIcon("error-b"),
     type: false,
@@ -41,15 +47,15 @@ watch(userCache.isDark, (newValue) => {
       case "设置":
         item.icon = newValue ? loadIcon("settings-w") : loadIcon("settings-b");
         break;
+      case "帮助":
+        item.icon = newValue ? loadIcon("help-w") : loadIcon("help-b");
+        break;
       case "关于":
         item.icon = newValue ? loadIcon("error-w") : loadIcon("error-b");
         break;
     }
-  })
-})
-// console.log(userCache);
-// console.log(userCache.get("isDark"));
-// console.log(userCache.isDark.value);
+  });
+});
 const handlePointerUp = (item) => {
   switch (item.text){
     case "日志":
@@ -57,6 +63,9 @@ const handlePointerUp = (item) => {
       break;
     case "设置":
        emits('setting', toRaw(item));
+      break;
+    case "帮助":
+      emits('help', toRaw(item));
       break;
     case "关于":
       emits('about', true);
