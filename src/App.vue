@@ -4,7 +4,6 @@ import {useRoute, useRouter} from "vue-router";
 import {goToPage, isBack} from "@/mixins/mixin.js";
 import {Capacitor} from "@capacitor/core";
 import { App } from '@capacitor/app';
-import {BackgroundRunner} from "@capacitor/background-runner";
 
 
 const pageScale = ref('');
@@ -28,20 +27,20 @@ router.afterEach(() => {
 
 if(Capacitor.getPlatform() === 'android'){
   console.log('属于安卓平台！');
-  BackgroundRunner.dispatchEvent({label: 'icu.cavalry.frp', event: 'testEvent', details: {interval: 1}}).then(res => {
-    console.log('dispatchEvent, 后台运行器事件监听成功！')
-    console.log('res内容为：');
-    console.log(JSON.stringify(res, null, 2));
-    BackgroundRunner.requestPermissions().then(res => {
-      console.log('requestPermissions, 后台运行器权限请求通知！')
-    })
-  });
+  // BackgroundRunner.dispatchEvent({label: 'icu.cavalry.frp', event: 'testEvent', details: {interval: 1}}).then(res => {
+  //   console.log('dispatchEvent, 后台运行器事件监听成功！')
+  //   console.log('res内容为：');
+  //   console.log(JSON.stringify(res, null, 2));
+  //   BackgroundRunner.requestPermissions().then(res => {
+  //     console.log('requestPermissions, 后台运行器权限请求通知！')
+  //   })
+  // });
 }
 
 App.addListener( 'backButton', ()=>{
   console.log('backButton监听！');
   if (route.path === '/' || route.path === '/index') {
-    App.exitApp();
+    App.minimizeApp();
   }else {
     goToPage(router, -1);
   }
@@ -49,15 +48,17 @@ App.addListener( 'backButton', ()=>{
 }).catch(err => {
   console.log(JSON.stringify(err, null, 2));
 });
-
+const handleAppState = (state) => {
+  if (state === 'active') {
+    console.log('App is active');
+  } else if (state === 'background') {
+    console.log('App is in background');
+  }
+};
 onMounted(()=>{
   nextTick(()=>{
-    document.addEventListener("visibilitychange", async (event) => {
-      // BackgroundRunner.dispatchEvent({label: 'icu.cavalry.frp', event: 'testEvent', details: {interval: 1}}).then(res => {
-      //   console.log('dispatchEvent, 后台运行器事件监听成功！')
-      //   console.log('res内容为：');
-      //   console.log(JSON.stringify(res, null, 2))
-      // });
+    App.addListener('appStateChange', ({ isActive }) => {
+      handleAppState(isActive ? 'active' : 'background');
     });
   })
 });

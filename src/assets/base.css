@@ -93,7 +93,7 @@
 }
 
 body {
-  min-height: 100vh;
+  height: 100vh;
   color: var(--app-text-color);
   background: var(--app-background);
   transition:

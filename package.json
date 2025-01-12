@@ -12,7 +12,6 @@
   "dependencies": {
     "@capacitor/android": "^6.2.0",
     "@capacitor/app": "6.0.2",
-    "@capacitor/background-runner": "^2.0.0",
     "@capacitor/camera": "^6.1.2",
     "@capacitor/core": "6.2.0",
     "@capacitor/filesystem": "^6.0.2",
