@@ -19,6 +19,9 @@
   --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
   --vt-c-text-dark-1: var(--vt-c-white);
   --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
+  
+  --app-base-width: 1264;
+  --app-base-height: 2780;
 
   --app-text-light: #FFFFFF;
   --app-text-dark: #000000;
@@ -56,6 +59,13 @@
   --app-btn-hover: var(--app-btn-hover-light);
   --app-text-color: var(--app-text-dark);
   --app-background: var(--app-background-linght);
+}
+
+@media (orientation: landscape) {
+  :root{
+    --scale-factor-width: calc(100vh / var(--app-base-width));
+    --scale-factor-height: calc(100vw / var(--app-base-height));
+  }
 }
 
 @media (prefers-color-scheme: dark) {

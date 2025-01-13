@@ -47,7 +47,7 @@ export const rippleEffect = (event, element, options = {
     // 延迟开始动画，避免插入 DOM 时跳帧
     requestAnimationFrame(() => {
         ripple.style.transform = 'scale(1)';
-        ripple.style.opacity = '1';
+        ripple.style.opacity = '0.5';
     });
 
     // 动画结束后移除涟漪

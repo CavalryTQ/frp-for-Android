@@ -9,16 +9,13 @@
   </head>
   <body>
     <div id="app"></div>
-    <script type="module" src="/src/main.js">
-        // 移动端禁用默认滑动翻页行为
-        // document.addEventListener('touchmove', function (e) {
-        //     console.log('touchmove');
-        //     e.preventDefault();
-        // }, { passive: false });
-    </script>
+    <script type="module" src="/src/main.js"></script>
   </body>
 </html>
 <style>
+    ::-webkit-scrollbar {
+        display: none !important;/* 隐藏滚动条 */
+    }
    body {
        padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
        margin: 0;

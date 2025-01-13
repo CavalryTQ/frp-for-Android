@@ -95,7 +95,7 @@ onBeforeUnmount(() => {
   }
  .animation{
    width: 100%;
-   min-height: 100vh;
+   height: 100vh;
    & div{
      width: 100%;
    }

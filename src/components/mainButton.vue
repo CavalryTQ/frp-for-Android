@@ -103,6 +103,29 @@ const handleActive = () =>{
 </template>
 
 <style scoped lang="scss">
+@media (orientation: landscape) {
+  .main-button{
+    width: calc(1680 * var(--scale-factor-width)) !important;
+    height: calc(298 * var(--scale-factor-height)) !important;
+    border-radius: calc(30 * var(--scale-factor-width)) !important;
+    .main-button-content{
+      padding-left: calc(60 * var(--scale-factor-width)) !important;
+      .main-button-icon{
+        width: calc(128 * var(--scale-factor-width)) !important;
+        height: calc(128 * var(--scale-factor-width)) !important;
+      }
+      .main-button-text{
+        margin-left: calc(60 * var(--scale-factor-width)) !important;
+        span:first-child{
+          font-size: calc(49 * var(--scale-factor-width)) !important;
+        }
+        span:last-child{
+          font-size: calc(40 * var(--scale-factor-width)) !important;
+        }
+      }
+    }
+  }
+}
 .main-button{
   box-sizing: border-box;
   width: 100%;

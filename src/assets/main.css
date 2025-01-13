@@ -4,6 +4,9 @@
 
   font-weight: normal;
 }
-
+/* 针对所有滚动条 */
+::-webkit-scrollbar {
+  display: none !important;/* 隐藏滚动条 */
+}
 
 
