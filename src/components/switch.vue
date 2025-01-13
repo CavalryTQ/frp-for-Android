@@ -1,16 +1,11 @@
 <script setup>
- // 应用设置
-
+// 开关组件
 </script>
 
 <template>
-  <div class="app-setting">
 
-  </div>
 </template>
 
 <style scoped lang="scss">
-.app-setting{
 
-}
 </style>
