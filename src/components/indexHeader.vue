@@ -10,6 +10,16 @@
 </template>
 
 <style scoped lang="scss">
+@media (orientation: landscape) {
+  .index-header{
+    width: 100%;
+    height: calc(329 * var(--scale-factor-height)) !important;
+    .title{
+      font-size: 0.8rem !important;
+      font-weight: 700;
+    }
+  }
+}
 .index-header{
   width: 100%;
   height: 329px;

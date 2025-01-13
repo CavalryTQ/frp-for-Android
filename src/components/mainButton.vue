@@ -105,7 +105,7 @@ const handleActive = () =>{
 <style scoped lang="scss">
 @media (orientation: landscape) {
   .main-button{
-    width: calc(1680 * var(--scale-factor-width)) !important;
+    width: 100% !important;
     height: calc(298 * var(--scale-factor-height)) !important;
     border-radius: calc(30 * var(--scale-factor-width)) !important;
     .main-button-content{

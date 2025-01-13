@@ -87,15 +87,22 @@ onBeforeUnmount(() => {
   overflow-y: scroll;
   overflow-x: hidden;
   /*滑动隐藏滑动条*/
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
   color: var(--app-text-color);
   &::-webkit-scrollbar {
-    display: none;
+    display: none !important;
   }
  .animation{
    width: 100%;
    height: 100vh;
+   overflow-y: scroll;
+   overflow-x: hidden;
+   -ms-overflow-style: none !important;
+   scrollbar-width: none !important;
+   &::-webkit-scrollbar {
+     display: none !important;
+   }
    & div{
      width: 100%;
    }

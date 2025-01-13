@@ -88,6 +88,30 @@ const handlePointerUp = (item) => {
 </template>
 
 <style scoped>
+@media (orientation: landscape) {
+  .func-group{
+    width: 100% !important;
+    box-sizing: border-box;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    .func-button{
+      width: 100%;
+      height: calc(211 * var(--scale-factor-width)) !important;
+      display: flex;
+      align-items: center;
+      .func-icon{
+        width: calc(128 * var(--scale-factor-width)) !important;
+        height: calc(128 * var(--scale-factor-height)) !important;
+        margin-left: calc(70 * var(--scale-factor-width)) !important;
+      }
+      .func-text{
+        margin-left: calc(60 * var(--scale-factor-width)) !important;
+        font-size: calc(49 * var(--scale-factor-width)) !important;
+      }
+    }
+  }
+}
   .func-group{
     box-sizing: border-box;
     width: 1054px;
