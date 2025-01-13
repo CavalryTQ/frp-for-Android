@@ -40,14 +40,33 @@ const closeDialog = () => {
 </template>
 
 <style scoped lang="scss">
- .config-list{
-   width: 100%;
-   height: auto;
-   font-size: 16px;
- }
- .dialog{
-   width: 100%;
-   height: auto;
-   background: #1976D3;
- }
+@media (orientation: landscape) {
+  .config{
+    width: 100%;
+    padding: 0 calc(445 * var(--scale-factor-width));
+    .config-list{
+      width: 100%;
+      height: auto;
+      font-size: 16px;
+    }
+    .dialog{
+      width: 100%;
+      height: auto;
+      background: #1976D3;
+    }
+  }
+}
+.config{
+  width: 100%;
+  .config-list{
+    width: 100%;
+    height: auto;
+    font-size: 16px;
+  }
+  .dialog{
+    width: 100%;
+    height: auto;
+    background: #1976D3;
+  }
+}
 </style>

@@ -153,4 +153,99 @@ input[type="radio"]:checked{
      }
 
    }
+
+@media (orientation: landscape) {
+  /*radio未选择样式*/
+  input[type="radio"]{
+    width: calc(64 * var(--scale-factor-width));
+    height: calc(64 * var(--scale-factor-width));
+    appearance: none;
+    position: absolute;
+    border: none;
+    border-radius: 50%;
+  }
+  /*radio确认样式*/
+  input[type="radio"]:checked{
+    background: #1976D3;
+    width: 60%;
+    height: 60%;
+    border: none;
+    border-radius: 50%;
+  }
+
+
+  .config-item{
+    width: 100%;
+    height: calc(272 * var(--scale-factor-height));
+    display: flex;
+    justify-content: space-between;
+    text-align: left;
+    line-height: calc(272 * var(--scale-factor-height));
+    padding: 0 0 0 calc(60 * var(--scale-factor-width));
+    .item-left{
+      display: flex;
+      align-items: center;
+      label{
+        font-size: calc(55 * var(--scale-factor-width));
+      }
+      .radio{
+        width: calc(64 * var(--scale-factor-width));
+        height: calc(64 * var(--scale-factor-width));
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: calc(8 * var(--scale-factor-width)) solid #757575;
+        border-radius: 50%;
+        position: relative;
+      }
+      .radio[disabled="false"]{
+        width: calc(64 * var(--scale-factor-width));
+        height: calc(64 * var(--scale-factor-width));
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: calc(8 * var(--scale-factor-width)) solid #1976D3;
+        border-radius: 50%;
+        position: relative;
+      }
+    }
+    .item-right{
+      display: flex;
+      height: 100%;
+      flex-direction: row;
+      justify-content: center;
+      align-content: center;
+      align-items: center;
+      .last-time{
+        font-size: calc(44 * var(--scale-factor-width));
+      }
+      .line{
+        width: 0;
+        height: 50%;
+        border-right: calc(0.5 * var(--scale-factor-width)) solid #DCDCDC;
+        margin-left: calc(30 * var(--scale-factor-width));
+      }
+      .line-dark{
+        width: 0;
+        height: 50%;
+        border-right: calc(0.5 * var(--scale-factor-width)) solid #414141;
+        margin-left: calc(30 * var(--scale-factor-width));
+      }
+
+      .item-more{
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0 calc(60 * var(--scale-factor-width));
+        img{
+          width: 100%;
+          height: calc(96 * var(--scale-factor-width)) !important;
+          object-fit: contain;
+        }
+      }
+    }
+
+  }
+}
 </style>

@@ -29,6 +29,34 @@
 </template>
 
 <style scoped lang="scss">
+@media (orientation: landscape) {
+  .app-header{
+    height: calc(336 * var(--scale-factor-width)) !important;
+    margin: 0 calc(60 * var(--scale-factor-width)) calc(20 * var(--scale-factor-width)) calc(60 * var(--scale-factor-width)) !important;
+    .header-left{
+      .back{
+        width: calc(80 * var(--scale-factor-width)) !important;;
+        height: calc(80 * var(--scale-factor-width)) !important;;
+        img{
+          width: 100%;
+          height: 100%;
+        }
+      }
+      .header-name{
+        margin-left: calc(50 * var(--scale-factor-width)) !important;;
+        font-size: calc(68 * var(--scale-factor-width)) !important;;
+      }
+    }
+    .header-right{
+      width: auto;
+      text-align: center;
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
+
  .app-header{
    background: var(--app-background);
     height: 336px;
@@ -36,7 +64,8 @@
     justify-content: space-between;
     align-items: flex-end;
    text-align: center;
-   padding: 0 60px 20px 60px;
+   //padding: 0 60px 20px 60px;
+   margin: 0 60px 20px 60px;
    .header-left{
      width: auto;
      display: flex;

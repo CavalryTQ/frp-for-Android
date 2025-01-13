@@ -101,7 +101,21 @@
     display: none;
   }
 }
-
+@media (orientation: landscape) {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    font-weight: normal;
+    font-size: calc(59 * var(--scale-factor-width)) !important;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
 body {
   height: 100vh;
   color: var(--app-text-color);
