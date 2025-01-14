@@ -9,18 +9,18 @@ import {goToPage, loadIcon} from "@/mixins/mixin.js";
 import {useRouter} from "vue-router";
 import About from "@/components/about.vue";
 
-// const isDarkModel = ref(userCache.isDark.value);
 const router = useRouter();
 const popupAbout = ref(false);
 const content = ref(null);
 const configIcon = userCache.isDark.value ? ref(loadIcon('view-w')) : ref(loadIcon('view-b'));
 
 const handlePointerUp = () => {
-  // console.log(router)
-  // systemModel.value = !systemModel.value;
   goToPage(router, "/config");
 }
 const handleGoToLog = (info) => {
+  goToPage(router, info.path)
+}
+const handleGoToSetting = (info) => {
   goToPage(router, info.path)
 }
 watch(userCache.isDark, (newValue) => {
@@ -37,6 +37,7 @@ watch(userCache.isDark, (newValue) => {
        <mainButton v-model:icon="configIcon" title="配置" text="点击编辑" @pointerup="handlePointerUp"/>
        <function-group @about="args => {popupAbout = args}"
                        @log="args => {handleGoToLog(args)}"
+                       @setting="args => {handleGoToSetting(args)}"
        ></function-group>
      </div>
     <about :show="popupAbout" @close="args => {popupAbout = args}"></about>

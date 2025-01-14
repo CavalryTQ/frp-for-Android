@@ -22,13 +22,14 @@ const group = ref([
       icon: userCache.isDark.value ? loadIcon("settings-w") : loadIcon("settings-b"),
       type: false,
       isActive: false,
-      path: "/setting",
+      path: "/setting_app",
     },
   {
     text: "帮助",
     icon: userCache.isDark.value ? loadIcon("help-w") : loadIcon("help-b"),
     type: false,
     isActive: false,
+    path: "https://gofrp.org/zh-cn/docs/",
   },
   {
     text: "关于",
@@ -74,7 +75,6 @@ const handlePointerUp = (item) => {
 </script>
 
 <template>
-<!--     <ripple>-->
        <div class="func-group">
          <div class="func-button" v-for="(item, index) in group" @pointerdown="rippleEffect($event, funcBtn[index], {isDark: isDarkModel, duration: 1000});"
               :key="index" ref="funcBtn"
@@ -84,7 +84,6 @@ const handlePointerUp = (item) => {
            <div class="func-text">{{item.text}}</div>
          </div>
        </div>
-<!--     </ripple>-->
 </template>
 
 <style scoped>

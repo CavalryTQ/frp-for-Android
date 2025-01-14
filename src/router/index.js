@@ -28,6 +28,11 @@ const router = createRouter({
        name: 'LogCat',
        component: () => import('@/views/LogCat.vue'),
       },
+      {
+          path: '/setting_app',
+          name: 'Setting-app',
+          component: () => import('@/views/AppSetting.vue'),
+      }
   ],
 })
 

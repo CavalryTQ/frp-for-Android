@@ -59,10 +59,14 @@
   --app-btn-hover: var(--app-btn-hover-light);
   --app-text-color: var(--app-text-dark);
   --app-background: var(--app-background-linght);
+
+  --scale-factor-width: calc(100vw / var(--app-base-width));
+  --scale-factor-height: calc(100vh / var(--app-base-height));
 }
 
 @media (orientation: landscape) {
   :root{
+    /*横屏比例为高/宽*/
     --scale-factor-width: calc(100vh / var(--app-base-width));
     --scale-factor-height: calc(100vw / var(--app-base-height));
   }
