@@ -6,17 +6,36 @@
  import {userCache} from "@/data/cache.js";
  import {loadIcon} from "@/mixins/mixin.js";
 
- const modelText = ref(userCache.isDark ? '黑暗模式' : '明亮模式');
- const appModel = ref(userCache.isDark ? loadIcon('brightness-4') : loadIcon('brightness-5'));
+ console.log(userCache.isDark.value);
+ const appSetting = ref([
+   {
+     label: '应用界面',
+     title: userCache.isDark.value ? '黑暗模式' : '明亮模式',
+     text: '',
+     icon: userCache.isDark.value ? loadIcon('brightness-4') : loadIcon('brightness-5'),
+   },
+   {
+     label: '应用服务',
+     title: '显示通知',
+     text: '在通知中刷新流量',
+     icon: userCache.isDark.value ? loadIcon('notes-w') : loadIcon('notes-b'),
+   }
+ ]);
+
 
  watch(userCache.isDark, (newValue) => {
-    if (newValue){
-      modelText.value = '黑暗模式';
-      appModel.value = loadIcon('brightness-4');
-    }else{
-      modelText.value = '明亮模式';
-      appModel.value = loadIcon('brightness-5');
-    }
+     appSetting.value.forEach((item) => {
+       switch (item.label){
+         case "应用界面":
+           console.log('新值：', newValue)
+           item.title = newValue ? '黑暗模式' : '明亮模式';
+           item.icon = newValue ? loadIcon('brightness-4') : loadIcon('brightness-5');
+           break;
+           case "应用通知":
+             item.icon = newValue ? loadIcon('notes-w') : loadIcon('notes-b');
+             break;
+       }
+     })
  });
 </script>
 
@@ -24,35 +43,26 @@
   <div class="app-setting">
       <app-header></app-header>
     <form class="setting-content">
-       <div class="setting-item">
+       <div class="setting-item" v-for = "(item, index) in appSetting"
+       >
          <label>
-           <span>应用界面</span>
+           <span>{{item.label}}</span>
          </label>
          <div class="set-app-fun model">
            <div class="func-notice">
-             <img :src="appModel" alt="appModel">
+             <img :src="item.icon" alt="appModel">
              <div class="notice">
-               <span>{{modelText}}</span>
-               <span>{{'总是黑暗模式'}}</span>
+               <span>{{item.title}}</span>
+               <span>{{item.text}}</span>
+               <!--           下拉框         -->
+               <div class="select-model" v-if="item.label === '666应用界面'">
+                 <div class="select-item system"><span>跟随系统(Android 10+)</span></div>
+                 <div class="select-item dark"><span>总是明亮模式</span></div>
+                 <div class="select-item light"><span>总是黑暗模式</span></div>
+               </div>
              </div>
            </div>
            <switch-button></switch-button>
-
-                  <!--           下拉框         -->
-            <div class="select-model">
-              <ul>
-                <li>
-                  <label>
-                    <input type="radio" name="model" value="dark" v-model="userCache.isDark">
-                    <span class="radio-text">
-                       <img :src="loadIcon('brightness-4')" alt="brightness-4">
-                       <span class="radio-text-span"> always dark</span>
-                     </span>
-                  </label>
-                </li>
-              </ul>
-            </div>
-
          </div>
        </div>
     </form>
@@ -88,7 +98,7 @@ img{
         justify-content: space-between;
         align-content: center;
         align-items: center;
-
+        height: 9.78vh;
         .func-notice{
           display: inline-flex;
           flex-direction: row;
@@ -108,12 +118,30 @@ img{
 
       .model{
         position: relative;
-        .select-model{
-          position: absolute;
-          height: 200px;
-          background: #1BA8CB;
-          top: 9.78vh;
-          z-index: 999;
+        .func-notice{
+          .notice{
+            .select-model{
+              position: absolute;
+              width: 70%;
+              height: auto;
+              top: 9.78vh;
+              z-index: 999;
+              border-radius: 10px;
+              padding: 10px 0;
+              box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.10);
+              border: 1px solid var(--color-border);
+              background: #FFFFFF;
+              .select-item{
+                width: 100%;
+                height: 168px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-content: center;
+                padding: 30px;
+              }
+            }
+          }
         }
       }
     }
@@ -126,6 +154,15 @@ img{
       .setting-item{
         label{
           color: #1974cd;
+        }
+        .model{
+          .func-notice{
+            .notice{
+              .select-model{
+                background: #383737;
+              }
+            }
+          }
         }
       }
     }
