@@ -1,6 +1,7 @@
 <script setup>
 // 开关组件
-import {defineEmits, defineProps, ref} from "vue"
+import {defineEmits, defineProps, ref, watch} from "vue"
+import {userCache} from "@/data/cache.js";
 
 const props = defineProps({
   isActive: {
@@ -18,18 +19,21 @@ const switchBox = ref(null);
 const switchBtn = ref(null);
 const switchDot = ref(null);
 
-const handleSwitch = (el) => {
+const handleSwitch = () => {
   if (props.disabled) {
     return;
   }
   // 切换开关状态动画
   switchBox.value.classList.toggle('active');
   switchBtn.value.classList.toggle('active');
-  switchBtn.value.classList.toggle('disabled');
   switchDot.value.classList.toggle('active');
   console.log(switchBtn.value);
   emit('change', !props.isActive);
 }
+
+watch(userCache.isDark, (newValue) => {
+
+});
 </script>
 
 <template>
@@ -44,17 +48,20 @@ const handleSwitch = (el) => {
 
 <style scoped lang="scss">
  .switch {
-   width: auto;
-   height: auto;
+  /* --switch-box-bg:#ACACAC;
+   --switch-box-active-bg: #8599B4;
+   --switch-btn-bg:#fff;
+   --switch-btn-active-bg: rgb(0, 0, 0, 0.3);*/
+   width: 117px;
+   height: 72px;
    position: relative;
    display: flex;
    justify-content: center;
    align-items: center;
-   background-size: cover;
    .switch-box {
      position: relative;
-     width: 200px;
-     height: 90px;
+     width: 117px;
+     height: 50px;
      cursor: pointer;
      background: #ACACAC;
      border-radius: 90px;
@@ -65,8 +72,8 @@ const handleSwitch = (el) => {
        background: #8599B4;
      }
      .switch-btn {
-       width: 120px;
-       height: 120px;
+       width: 71px;
+       height: 71px;
        position: absolute;
        left: 0;
        background: #fff;
@@ -80,10 +87,12 @@ const handleSwitch = (el) => {
        }
        &:hover {
          .switch-dot {
-           display: block;
+           display: flex;
+           justify-content: center;
+           align-self: center;
            position: absolute;
-           width: 230px;
-           height: 230px;
+           width: 130px;
+           height: 130px;
            background: rgb(0, 0, 0, 0.3);
            border-radius: 50%;
            &.active {
@@ -92,7 +101,7 @@ const handleSwitch = (el) => {
          }
        }
        &.active {
-         transform: translateX(90px);
+         transform: translateX(50px);
          background: #1d4374;
        }
        &.disabled {

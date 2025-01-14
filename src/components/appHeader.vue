@@ -31,7 +31,7 @@
 <style scoped lang="scss">
 @media (orientation: landscape) {
   .app-header{
-    height: calc(336 * var(--scale-factor-width)) !important;
+    height: calc(280 * var(--scale-factor-width)) !important;
     margin: 0 calc(60 * var(--scale-factor-width)) calc(20 * var(--scale-factor-width)) calc(60 * var(--scale-factor-width)) !important;
     .header-left{
       .back{
@@ -43,7 +43,7 @@
         }
       }
       .header-name{
-        margin-left: calc(50 * var(--scale-factor-width)) !important;;
+        margin-left: calc(70 * var(--scale-factor-width)) !important;;
         font-size: calc(68 * var(--scale-factor-width)) !important;;
       }
     }
@@ -59,7 +59,7 @@
 
  .app-header{
    background: var(--app-background);
-    height: 336px;
+    height: 280px;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
@@ -79,7 +79,7 @@
        }
      }
      .header-name{
-       margin-left: 50px;
+       margin-left: 70px;
        font-size: 68px;
      }
    }

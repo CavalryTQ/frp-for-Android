@@ -8,14 +8,8 @@ export class Display{
         this.init();
     }
     init(el){
-        // 初始化组件禁用在isDisplay调用,在目标el上添加display遮罩层
-        if (typeof el === 'undefined' || el === null){
-            console.error('el is undefined or null')
-        }else {
-            this.el = el;
-            this.isShow = isShow;
+        // 初始化组件禁用在isDisplay调用
 
-        }
     }
     isDisplay(el = this.el, isShow = false){
         if (typeof el === 'undefined' || el === null){
