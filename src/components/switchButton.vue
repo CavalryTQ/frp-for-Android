@@ -47,11 +47,104 @@ watch(userCache.isDark, (newValue) => {
 </template>
 
 <style scoped lang="scss">
+
+ @media (orientation: landscape){
+   .switch {
+     width: calc(160 * var(--scale-factor-height)) !important;
+     height: calc(50 * var(--scale-factor-height)) !important;
+     position: relative;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     .switch-box {
+       position: relative;
+       width: calc(160 * var(--scale-factor-width)) !important;
+       height: calc(50 * var(--scale-factor-height)) !important;
+       cursor: pointer;
+       background: #ACACAC;
+       border-radius: calc(90 * var(--scale-factor-width)) !important;
+       display: flex;
+       justify-content: left;
+       align-items: center;
+       &.active {
+         background: #8599B4;
+       }
+       .switch-btn {
+         width: calc(71 * var(--scale-factor-width)) !important;
+         height: calc(71 * var(--scale-factor-width)) !important;
+         position: absolute;
+         left: calc(-71 * var(--scale-factor-width) / 2) !important;
+         background: #fff;
+         border-radius: 50%;
+         transition: all 0.3s;
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         opacity: 0.5;
+         .switch-dot {
+           display: none;
+         }
+         &:hover {
+           .switch-dot {
+             display: flex;
+             justify-content: center;
+             align-self: center;
+             position: absolute;
+             width: calc(130 * var(--scale-factor-width)) !important;
+             height: calc(130 * var(--scale-factor-width)) !important;
+             background: rgb(0, 0, 0, 0.3);
+             border-radius: 50%;
+             &.active {
+               background: rgb(29, 67, 116, 0.3);
+             }
+           }
+         }
+         &.active {
+           /*right: calc(71 * var(--scale-factor-width) / 2) !important; --transform-X: calc(71 * var(--scale-factor-width) / 2);
+           transform: translateX(var(--transform-X));*/
+           /*TODO: 横屏专用移动点位置不生效*/
+           right: 6666px !important;
+           background: #1d4374;
+         }
+       }
+     }
+
+
+     /*系统黑夜模式*/
+     @media (prefers-color-scheme: dark) {
+       .switch-box {
+         background: #ACACAC;
+         &.active {
+           background: #1c4e7f;
+         }
+         .switch-btn {
+           background: #333333;
+           .switch-dot {
+             display: none;
+           }
+           &:hover {
+             .switch-dot {
+               display: block;
+               background: rgb(255, 255, 255, 0.3);
+               border-radius: 50%;
+               &.active {
+                 background: rgb(25, 116, 205, 0.3);
+               }
+             }
+           }
+           &.active {
+             background: #1974cd;
+           }
+           &.disabled {
+
+           }
+         }
+       }
+     }
+   }
+ }
+
  .switch {
-  /* --switch-box-bg:#ACACAC;
-   --switch-box-active-bg: #8599B4;
-   --switch-btn-bg:#fff;
-   --switch-btn-active-bg: rgb(0, 0, 0, 0.3);*/
    width: 117px;
    height: 72px;
    position: relative;
@@ -75,7 +168,7 @@ watch(userCache.isDark, (newValue) => {
        width: 71px;
        height: 71px;
        position: absolute;
-       left: 0;
+       left: -2px;
        background: #fff;
        border-radius: 50%;
        transition: all 0.3s;
@@ -142,4 +235,5 @@ watch(userCache.isDark, (newValue) => {
      }
    }
  }
+
 </style>

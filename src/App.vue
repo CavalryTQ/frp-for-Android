@@ -95,9 +95,11 @@ onBeforeUnmount(() => {
   }
  .animation{
    width: 100%;
-   height: 100vh;
+   height: 100dvh;
    overflow-y: scroll;
    overflow-x: hidden;
+   display: flex;
+   flex-direction: column;
    -ms-overflow-style: none !important;
    scrollbar-width: none !important;
    &::-webkit-scrollbar {

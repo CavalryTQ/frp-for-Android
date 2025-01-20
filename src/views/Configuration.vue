@@ -43,7 +43,7 @@ const closeDialog = () => {
 @media (orientation: landscape) {
   .config{
     width: 100%;
-    padding: 0 calc(445 * var(--scale-factor-width));
+    padding: 0 min(calc(445 * var(--scale-factor-width)), 15%);
     .config-list{
       width: 100%;
       height: auto;
