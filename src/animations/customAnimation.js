@@ -38,10 +38,12 @@ export const rippleEffect = (event, element, options = {
     ripple.style.opacity = '0';
     ripple.style.transform = 'scale(0)';
     ripple.style.transition = `transform ${config.duration}ms ease-out, opacity ${config.duration}ms ease-out`;
+    ripple.style.zIndex = '1';
 
     // 添加涟漪到元素
+    console.log(element)
     element.style.position = 'relative';
-    element.style.overflow = 'hidden';
+    element.style.overflow = 'hidden'; // TODO: AppSetting.vue 当目标元素内有相对目标元素的子元素绝对定位且超过父元素大小，子元素会被裁剪或消失，待解决 target：select-model第99行 2025.1.21
     element.appendChild(ripple);
 
     // 延迟开始动画，避免插入 DOM 时跳帧

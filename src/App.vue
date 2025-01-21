@@ -4,6 +4,7 @@ import {useRoute, useRouter} from "vue-router";
 import {goToPage, isBack} from "@/mixins/mixin.js";
 import {Capacitor} from "@capacitor/core";
 import { App } from '@capacitor/app';
+import Model from "@/data/model.js";
 
 
 const pageScale = ref('');
@@ -57,12 +58,14 @@ const handleAppState = (state) => {
 };
 onMounted(()=>{
   nextTick(()=>{
+    Model;
     App.addListener('appStateChange', ({ isActive }) => {
       handleAppState(isActive ? 'active' : 'background');
     });
   })
 });
 onBeforeUnmount(() => {
+  console.log('App.removeAllListeners')
   App.removeAllListeners();
 });
 </script>

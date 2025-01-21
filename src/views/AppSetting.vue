@@ -6,6 +6,7 @@
  import {userCache} from "@/data/cache.js";
  import {loadIcon} from "@/mixins/mixin.js";
  import {rippleEffect} from "@/animations/customAnimation.js";
+ import Model from "@/data/model.js";
 
  const appSetting = ref([
    {
@@ -52,20 +53,43 @@
    }
  ]);
  const funcItem = ref(null);
+ const popup = ref(false);
 
+ const handlePointerUpItem = (item) => {
+   if (item.label === '应用界面') {
+     popup.value = !popup.value;
+   }
+ };
+const handlePinterUpModel = (type) => {
+  switch (type) { // 0:跟随系统 1:总明 2:总暗
+    case 0:
+      userCache.isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      Model.changeTheme(userCache.isDark.value);
+      break;
+    case 1:
+      userCache.isDark.value = false;
+      Model.changeTheme(userCache.isDark.value);
+      break;
+    case 2:
+      userCache.isDark.value = true;
+      Model.changeTheme(userCache.isDark.value);
+      break;
+  }
+  console.log(userCache.isDark);
+ };
  watch(userCache.isDark, (newValue) => {
+   console.log('新值：', newValue)
      appSetting.value.forEach((item) => {
        switch (item.label){
          case "应用界面":
-           console.log('新值：', newValue)
            item.title = newValue ? '黑暗模式' : '明亮模式';
            item.icon = newValue ? loadIcon('brightness-4') : loadIcon('brightness-5');
            break;
-           case "应用通知":
+           case "应用服务":
              item.icon = newValue ? loadIcon('notes-w') : loadIcon('notes-b');
              break;
        }
-     })
+     });
  });
 </script>
 
@@ -79,18 +103,23 @@
          <label>
            <span>{{item.label}}</span>
          </label>
-         <div class="set-app-fun model" ref="funcItem" @pointerdown="rippleEffect($event, funcItem[index], {isDark: userCache.isDark.value})">
+<!--    TODO:     @pointerdown="rippleEffect($event, funcItem[index], {isDark: userCache.isDark.value})"-->
+         <div class="set-app-fun model" ref="funcItem"
+              @pointerup="handlePointerUpItem(item)"
+         >
            <div class="func-notice">
              <img :src="item.icon" alt="appModel">
              <div class="notice">
                <span>{{item.title}}</span>
                <span>{{item.text}}</span>
                <!--           下拉框         -->
-               <div class="select-model" v-if="item.label === '应用界面'">
-                 <div class="select-item system"><span>跟随系统(Android 10+)</span></div>
-                 <div class="select-item dark"><span>总是明亮模式</span></div>
-                 <div class="select-item light"><span>总是黑暗模式</span></div>
-               </div>
+              <transition name="select-model" mode="in-out">
+                <div class="select-model" v-show="item.label === '应用界面' && popup">
+                  <div class="select-item system" @pointerup="handlePinterUpModel(0)"><span>跟随系统(Android 10+)</span></div>
+                  <div class="select-item dark" @pointerup="handlePinterUpModel(1)"><span>总是明亮模式</span></div>
+                  <div class="select-item light" @pointerup="handlePinterUpModel(2)"><span>总是黑暗模式</span></div>
+                </div>
+              </transition>
              </div>
            </div>
            <div class="switchButton"> <switch-button  v-if="item.label !== '应用界面'"></switch-button></div>
@@ -112,17 +141,16 @@
     max-height: 100dvh;
     background: var(--app-background);
     padding: 0 min(calc(445 * var(--scale-factor-width)), 15%);
-    overflow-x: visible;
+    overflow-x: hidden;
     overflow-y: hidden;
     .setting-content{
       width: 100%;
       height: auto;
       max-height: calc(100dvh - calc(300 * var(--scale-factor-width))) !important;
       flex: 1;
-      overflow-x: visible;
+      overflow-x: hidden;
       overflow-y: scroll;
-      padding: 0 !important;
-      margin: 0 calc(60 * var(--scale-factor-width)) !important;
+      padding: 0 calc(60 * var(--scale-factor-width)) !important;
       .setting-item{
         display: flex;
         flex-direction: column;
@@ -179,7 +207,7 @@
 
           .switchButton{
             position: relative;
-            right: calc(30 * var(--scale-factor-width)) !important;
+            right: calc(70 * var(--scale-factor-width)) !important;
           }
 
         }
@@ -196,13 +224,13 @@ img{
   height: auto;
   max-height: 100dvh;
   background: var(--app-background);
-  overflow-x: visible;
+  overflow-x: hidden;
   overflow-y: hidden;
   .setting-content{
     width: 100%;
     height: 100%;
     max-height: calc(100dvh - 400px);
-    overflow-x: visible;
+    overflow-x: hidden;
     overflow-y: scroll;
     padding: 0 60px;
     .setting-item{
@@ -220,6 +248,8 @@ img{
         align-content: center;
         align-items: center;
         height: 9.78vh;
+        position: relative;
+
         .func-notice{
           display: inline-flex;
           flex-direction: row;
@@ -230,28 +260,13 @@ img{
             display: flex;
             flex-direction: column;
             margin-left: 30px;
-            span:last-child{
-              font-size: 46px;
-            }
-          }
-        }
-
-        .switchButton{
-          position: relative;
-          right: 32px;
-        }
-      }
-
-      .model{
-        position: relative;
-        .func-notice{
-          .notice{
+            overflow: visible !important;
             .select-model{
               position: absolute;
               width: 70%;
               height: auto;
               top: 9.78vh;
-              z-index: 999;
+              z-index: 99999999;
               border-radius: 10px;
               padding: 10px 0;
               box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.10);
@@ -267,9 +282,18 @@ img{
                 padding: 30px;
               }
             }
+            span:last-child{
+              font-size: 46px;
+            }
           }
         }
+
+        .switchButton{
+          position: relative;
+          right: 32px;
+        }
       }
+
     }
   }
 }

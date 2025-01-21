@@ -31,9 +31,7 @@ const handleSwitch = () => {
   emit('change', !props.isActive);
 }
 
-watch(userCache.isDark, (newValue) => {
 
-});
 </script>
 
 <template>
@@ -50,15 +48,15 @@ watch(userCache.isDark, (newValue) => {
 
  @media (orientation: landscape){
    .switch {
-     width: calc(160 * var(--scale-factor-height)) !important;
-     height: calc(50 * var(--scale-factor-height)) !important;
+     width: calc(117 * var(--scale-factor-height)) !important;
+     height: calc(72 * var(--scale-factor-height)) !important;
      position: relative;
      display: flex;
      justify-content: center;
      align-items: center;
      .switch-box {
        position: relative;
-       width: calc(160 * var(--scale-factor-width)) !important;
+       width: calc(117 * var(--scale-factor-width)) !important;
        height: calc(50 * var(--scale-factor-height)) !important;
        cursor: pointer;
        background: #ACACAC;
@@ -73,6 +71,7 @@ watch(userCache.isDark, (newValue) => {
          width: calc(71 * var(--scale-factor-width)) !important;
          height: calc(71 * var(--scale-factor-width)) !important;
          position: absolute;
+         /*calc(-71 * var(--scale-factor-width) / 2)*/
          left: calc(-71 * var(--scale-factor-width) / 2) !important;
          background: #fff;
          border-radius: 50%;
@@ -80,7 +79,7 @@ watch(userCache.isDark, (newValue) => {
          display: flex;
          justify-content: center;
          align-items: center;
-         opacity: 0.5;
+         /*opacity: 0.5;*/
          .switch-dot {
            display: none;
          }
@@ -103,8 +102,10 @@ watch(userCache.isDark, (newValue) => {
            /*right: calc(71 * var(--scale-factor-width) / 2) !important; --transform-X: calc(71 * var(--scale-factor-width) / 2);
            transform: translateX(var(--transform-X));*/
            /*TODO: 横屏专用移动点位置不生效*/
-           right: 6666px !important;
-           background: #1d4374;
+           --transform-X: calc(117 * var(--scale-factor-width) - calc(71 * var(--scale-factor-width) / 4));
+           --transform-X-test: calc(71 * var(--scale-factor-width) * 2 - calc(25 * var(--scale-factor-width)));
+           transform-origin: center center !important;
+           transform: translateX(var(--transform-X-test)) !important;
          }
        }
      }
@@ -194,6 +195,7 @@ watch(userCache.isDark, (newValue) => {
          }
        }
        &.active {
+         /*transform: translateX(50px);*/
          transform: translateX(50px);
          background: #1d4374;
        }
