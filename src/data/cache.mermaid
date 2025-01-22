@@ -1,0 +1,16 @@
+flowchart TD
+    A[初始化] --> B{判断存储类型}
+    B -->|localStorage| C[使用 localStorage]
+    B -->|sessionStorage| D[使用 sessionStorage]
+    C --> E[获取系统暗黑模式]
+    D --> E
+    E --> F[初始化 isDark 和 modelType]
+    F --> G[添加系统暗黑模式监听器]
+    G --> H[初始化缓存]
+    I[系统暗黑模式变化] --> J{modelType 是否为 0}
+    J -->|Yes| K[更新 isDark 为系统模式]
+    J -->|No| L[更新 isDark 为缓存值]
+    M[设置缓存] --> N[保存 key-value 到 storage]
+    O[获取缓存] --> P[从 storage 获取 key-value]
+    Q[删除缓存] --> R[移除指定 key]
+    S[清空缓存] --> T[清空所有缓存]

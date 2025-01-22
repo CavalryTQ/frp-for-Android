@@ -53,6 +53,7 @@
    }
  ]);
  const funcItem = ref(null);
+ const selectModelRef = ref(null);
  const popup = ref(false);
 
  const handlePointerUpItem = (item) => {
@@ -64,32 +65,40 @@ const handlePinterUpModel = (type) => {
   switch (type) { // 0:跟随系统 1:总明 2:总暗
     case 0:
       userCache.isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      userCache.modelType.value = 0;
       Model.changeTheme(userCache.isDark.value);
       break;
     case 1:
       userCache.isDark.value = false;
+      userCache.modelType.value = 1;
       Model.changeTheme(userCache.isDark.value);
       break;
     case 2:
       userCache.isDark.value = true;
+      userCache.modelType.value = 1;
       Model.changeTheme(userCache.isDark.value);
       break;
   }
-  console.log(userCache.isDark);
  };
  watch(userCache.isDark, (newValue) => {
-   console.log('新值：', newValue)
-     appSetting.value.forEach((item) => {
+     appSetting.value.forEach((item, index) => {
        switch (item.label){
          case "应用界面":
            item.title = newValue ? '黑暗模式' : '明亮模式';
            item.icon = newValue ? loadIcon('brightness-4') : loadIcon('brightness-5');
+           // selectModelRef.value[index].style.background = newValue ? '#383737' : '#FFFFFF';
            break;
            case "应用服务":
              item.icon = newValue ? loadIcon('notes-w') : loadIcon('notes-b');
              break;
        }
      });
+
+    // Model.changeTheme({isDark: newValue, css: `
+    //            :deep(.select-model){
+    //             background: ${newValue ? '#383737' : '#FFFFFF'};
+    //           }
+    // `});
  });
 </script>
 
@@ -114,7 +123,7 @@ const handlePinterUpModel = (type) => {
                <span>{{item.text}}</span>
                <!--           下拉框         -->
               <transition name="select-model" mode="in-out">
-                <div class="select-model" v-show="item.label === '应用界面' && popup">
+                <div class="select-model" ref="selectModelRef" v-show="item.label === '应用界面' && popup">
                   <div class="select-item system" @pointerup="handlePinterUpModel(0)"><span>跟随系统(Android 10+)</span></div>
                   <div class="select-item dark" @pointerup="handlePinterUpModel(1)"><span>总是明亮模式</span></div>
                   <div class="select-item light" @pointerup="handlePinterUpModel(2)"><span>总是黑暗模式</span></div>
@@ -130,7 +139,6 @@ const handlePinterUpModel = (type) => {
 </template>
 
 <style scoped lang="scss">
-
 @media (orientation: landscape) {
   img{
     width: calc(118 * var(--scale-factor-width)) !important;
@@ -215,7 +223,6 @@ const handlePinterUpModel = (type) => {
     }
   }
 }
-
 img{
   width: 128px;
   height: 128px;
@@ -237,7 +244,7 @@ img{
       display: flex;
       flex-direction: column;
       label{
-        color: #1d4374;
+        color: var(--app-label-color);
         margin: 50px 0 60px 0;
         padding-left: 150px;
       }
@@ -303,13 +310,14 @@ img{
     .setting-content{
       .setting-item{
         label{
-          color: #1974cd;
+          /*TODO: LABEL样式写入css全局变量*/
+          color: var(--label-color);
         }
         .model{
           .func-notice{
             .notice{
               .select-model{
-                background: #383737;
+                background: var(--app-label-color);
               }
             }
           }

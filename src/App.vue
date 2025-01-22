@@ -58,7 +58,6 @@ const handleAppState = (state) => {
 };
 onMounted(()=>{
   nextTick(()=>{
-    Model;
     App.addListener('appStateChange', ({ isActive }) => {
       handleAppState(isActive ? 'active' : 'background');
     });

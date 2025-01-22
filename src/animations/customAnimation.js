@@ -1,7 +1,8 @@
+import {userCache} from "@/data/cache.js";
 
 export const rippleEffect = (event, element, options = {
     // 默认配置
-    isDark: false, // 是否为暗黑模式
+    isDark: userCache.isDark.value, // 是否为暗黑模式
     color: 'rgba(0, 0, 0, 0.1)', // 涟漪颜色
     duration: 5000, // 动画时长，单位 ms
     sizeFactor: 2.5, // 涟漪扩散倍数
@@ -10,17 +11,21 @@ export const rippleEffect = (event, element, options = {
          event.preventDefault(); // 阻止默认行为
      }
      const defaultOptions = {
-         isDark: false,
+         isDark: userCache.isDark.value,
          color: 'rgba(0, 0, 0, 0.1)', // 涟漪颜色
          duration: 5000, // 动画时长，单位 ms
          sizeFactor: 2.5, // 涟漪扩散倍数
      };
-     if (options.isDark){
-         options.color = 'rgba(255, 255, 255, 0.3)';
-     }
+     // if (options.isDark){
+     //     console.log('dark mode');
+     //     options.color = 'rgba(255, 255, 255, 0.3)';
+     // }
     // console.log('rippleEffect', event, element, options)
     const config = Object.assign(defaultOptions, options);
-
+    if(config.isDark){
+        config.color ='rgba(255, 255, 255, 0.3)';
+    }
+    console.log('config', config);
     // 计算点击位置
     const rect = element.getBoundingClientRect();
     const rippleX = event.clientX - rect.left;

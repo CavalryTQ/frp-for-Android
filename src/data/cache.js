@@ -5,26 +5,50 @@ export const userCache = new class Cache {
         this.storage = storageType === "localStorage" ? localStorage : sessionStorage;
 
         const systemDarkMode = window.matchMedia("(prefers-color-scheme: dark)");
+        this.modelType = ref(0);
         this.dark = ref(systemDarkMode.matches);
-
         const cachedDark = this.get("isDark");
+
         this.isDark = ref(
             cachedDark !== null && cachedDark !== undefined
                 ? cachedDark
                 : this.dark.value
         );
-
         this.handleSystemDarkModeChange = this.updateSystemDarkMode.bind(this);
         systemDarkMode.addEventListener("change", this.handleSystemDarkModeChange);
-
+        this.init();
         watch(this.isDark, (newValue) => {
             this.set("isDark", newValue);
         });
     }
 
+    init(){
+        this.modelType.value = this.get("modelType") === null || this.get("modelType") === undefined ?
+            this.initSettings("modelType", 0) : this.initGetter("modelType");
+    }
+
+    initSettings(key, value){
+        this.set(key, value);
+        return value;
+    }
+
+    initGetter(key){
+        watch(this[key], (newValue) => {
+            this.set(key, newValue);
+        });
+        return this.get(key);
+    }
+
     updateSystemDarkMode(event) {
+        // console.log("System dark mode changed:", event.matches);
+        // console.log(this.handleSystemDarkModeChange);
         this.dark.value = event.matches;
-        this.isDark.value = this.dark.value;
+        // modelType:0 跟随系统，1跟随用户设置，即使以外切换系统模式也跟随缓存设置
+        if (this.modelType.value === 0) {
+            this.isDark.value = this.dark.value;
+        }else {
+            this.isDark.value = this.get("isDark");
+        }
     }
 
     removeSystemDarkModeListener() {

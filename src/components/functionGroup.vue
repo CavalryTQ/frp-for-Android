@@ -76,7 +76,7 @@ const handlePointerUp = (item) => {
 
 <template>
        <div class="func-group">
-         <div class="func-button" v-for="(item, index) in group" @pointerdown="rippleEffect($event, funcBtn[index], {isDark: isDarkModel, duration: 1000});"
+         <div class="func-button" v-for="(item, index) in group" @pointerdown="rippleEffect($event, funcBtn[index], {duration: 500});"
               :key="index" ref="funcBtn"
               @pointerup="handlePointerUp(item)"
          >

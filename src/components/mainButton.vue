@@ -87,7 +87,7 @@ const handleActive = () =>{
 </script>
 
 <template>
-  <div class="main-button" ref="mainBtn" @pointerdown="rippleEffect($event, mainBtn, {isDark: isDarkModel});handleActive();">
+  <div class="main-button" ref="mainBtn" @pointerdown="rippleEffect($event, mainBtn);handleActive();">
     <slot name="default">
       <div class="main-button-content">
         <div class="main-button-icon">

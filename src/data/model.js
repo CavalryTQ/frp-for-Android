@@ -26,17 +26,24 @@ export default new class Model{
             }
         `);
         this.init();
+        console.log('model init')
     }
     init() {
         this.isDark.value = userCache.isDark.value;
         this.backGround.value = userCache.isDark.value ? this.APP_BG_DARK : this.APP_BG_LIGHT;
         this.textColor.value = userCache.isDark.value ? this.APP_TEXT_LIGHT : this.APP_TEXT_DARK;
+        this.borderColor.value = userCache.isDark.value ? this.APP_BORDER_LIGHT : this.APP_BORDER_DARK;
         this.updateCSS();
+        watch(userCache.isDark,(newValue) => {
+            // 更新CSS
+            this.changeTheme(newValue);
+        });
     }
     /**
      * 更新CSS
      */
     updateCSS(css) {
+        console.log('updateCss',css);
         const CSS_CONTENT = ref(`
             :root {
                 --app-background: ${this.backGround.value};
@@ -51,21 +58,52 @@ export default new class Model{
            this.styleElement.value.type = 'text/css';
            document.head.appendChild(this.styleElement.value);
        }
-        console.log('CSS_CONTENT', CSS_CONTENT.value)
-       this.styleElement.value.innerHTML = CSS_CONTENT.value
+       this.styleElement.value.innerHTML = css === undefined ? CSS_CONTENT.value : css;
     }
     changeTheme(...data) {
-        console.log(typeof data);
-       if (typeof data[0] === "boolean"){
-           this.isDark.value = data[0];
-           userCache.isDark.value = data[0];
-           this.backGround.value = userCache.isDark.value ? this.APP_BG_DARK : this.APP_BG_LIGHT;
-           this.textColor.value = userCache.isDark.value ? this.APP_TEXT_LIGHT : this.APP_TEXT_DARK;
-           this.updateCSS();
-       }else if (typeof data[0] === "string"){
-           console.log(typeof data);
+        // console.log(typeof data);
+       if (data.length > 0){
+           // if (typeof data[0] === "boolean"){
+           //     this.isDark.value = data[0];
+           //     userCache.isDark.value = data[0];
+           //     this.backGround.value = userCache.isDark.value ? this.APP_BG_DARK : this.APP_BG_LIGHT;
+           //     this.textColor.value = userCache.isDark.value ? this.APP_TEXT_LIGHT : this.APP_TEXT_DARK;
+           //     this.borderColor.value = userCache.isDark.value ? this.APP_BORDER_LIGHT : this.APP_BORDER_DARK;
+           //     this.updateCSS();
+           // }else if (typeof data[0] === "string"){
+           //     console.log(typeof data);
+           // }else {
+           //     console.log('obj');
+           // }
+           data.forEach(item => {
+               Array.isArray(item) ? new Error('参数错误,意外的数组类型') : null;
+           });
+           switch (typeof data[0]) {
+               case 'boolean':
+                   console.log('boolean')
+                       this.isDark.value = data[0];
+                       userCache.isDark.value = data[0];
+                       this.backGround.value = userCache.isDark.value ? this.APP_BG_DARK : this.APP_BG_LIGHT;
+                       this.textColor.value = userCache.isDark.value ? this.APP_TEXT_LIGHT : this.APP_TEXT_DARK;
+                       this.borderColor.value = userCache.isDark.value ? this.APP_BORDER_LIGHT : this.APP_BORDER_DARK;
+                       this.updateCSS();
+                   break;
+               case 'object':
+                     console.log('object');
+                     const objData = data[0];
+                     objData['isDark'] ? this.isDark.value = objData['isDark'] : null;
+                     this.backGround.value = userCache.isDark.value ? this.APP_BG_DARK : this.APP_BG_LIGHT;
+                     this.textColor.value = userCache.isDark.value ? this.APP_TEXT_LIGHT : this.APP_TEXT_DARK;
+                     this.borderColor.value = userCache.isDark.value ? this.APP_BORDER_LIGHT : this.APP_BORDER_DARK;
+                     this.updateCSS(objData['css']);
+                   break;
+               case 'string':
+                   break;
+               default:
+                   throw new Error('参数错误');
+           }
        }else {
-           console.log('obj');
+           throw new Error('参数错误');
        }
     }
 }
