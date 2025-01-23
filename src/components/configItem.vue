@@ -77,6 +77,8 @@ input[type="radio"]:checked{
   height: 60%;
   border: none;
   border-radius: 50%;
+  transition: all 0.2s ease;
+  transform: scale3d(1, 1, 1);
 }
 
 

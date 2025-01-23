@@ -18,13 +18,7 @@ export default new class Model{
         this.textColor = ref(userCache.isDark.value ? this.APP_TEXT_LIGHT : this.APP_TEXT_DARK);
         this.borderColor = ref(userCache.isDark.value ? this.APP_BORDER_LIGHT : this.APP_BORDER_DARK);
         this.styleElement = ref(null); // 存储样式元素的引用
-        this.CSS_CONTENT = ref(`
-            :root {
-                --app-background: ${this.backGround.value};
-                --app-text-color: ${this.textColor.value};
-                --app-btn-bg: ${userCache.isDark.value ? this.APP_MAIN_BTN_BG_DARK : this.APP_MAIN_BTN_BG_LIGHT}
-            }
-        `);
+        this.styleState = ref(0);
         this.init();
         console.log('model init')
     }
@@ -36,45 +30,74 @@ export default new class Model{
         this.updateCSS();
         watch(userCache.isDark,(newValue) => {
             // 更新CSS
+            this.backGround.value = newValue ? this.APP_BG_DARK : this.APP_BG_LIGHT;
+            this.textColor.value = newValue ? this.APP_TEXT_LIGHT : this.APP_TEXT_DARK;
+            this.borderColor.value = newValue ? this.APP_BORDER_LIGHT : this.APP_BORDER_DARK;
             this.changeTheme(newValue);
         });
     }
     /**
      * 更新CSS
      */
-    updateCSS(css) {
+    async updateCSS(css) {
         console.log('updateCss',css);
-        const CSS_CONTENT = ref(`
+      try{
+          const CSS_CONTENT = ref(`
             :root {
-                --app-background: ${this.backGround.value};
-                --app-text-color: ${this.textColor.value};
-                --color-border: ${this.borderColor.value};
-                --app-btn-bg: ${userCache.isDark.value ? this.APP_MAIN_BTN_BG_DARK : this.APP_MAIN_BTN_BG_LIGHT}
+                --app-background: ${this.backGround.value} !important;
+                --app-text-color: ${this.textColor.value} !important;
+                --color-border: ${this.borderColor.value} !important;
+                --app-btn-bg: ${userCache.isDark.value ? this.APP_MAIN_BTN_BG_DARK : this.APP_MAIN_BTN_BG_LIGHT};
+                --app-label-color: ${userCache.isDark.value ? '#1974cd' : '#1d4374'};
             }
         `);
-       if (!this.styleElement.value){
-           // 创建一个新的样式元素
-           this.styleElement.value = document.createElement('style');
-           this.styleElement.value.type = 'text/css';
-           document.head.appendChild(this.styleElement.value);
-       }
-       this.styleElement.value.innerHTML = css === undefined ? CSS_CONTENT.value : css;
+          const result = await this.loadCSS();
+          console.log('updateCss',result);
+          this.styleElement.value.innerHTML =  CSS_CONTENT.value + css;
+          return result;
+      }catch (e) {
+          console.error('Error updating CSS:', e)
+      }
+    }
+
+    /*
+    加载css
+    * */
+    loadCSS() {
+       return new Promise((resolve, reject) => {
+           if (!this.styleElement.value){
+               // 创建一个新的样式元素
+               this.styleElement.value = document.createElement('style');
+               this.styleElement.value.type = 'text/css';
+               this.styleElement.value.id = 'app-user-theme';
+               document.head.appendChild(this.styleElement.value);
+           }else {
+                resolve({message: '样式已经加载', type: 1, state: 0});
+           }
+           resolve({message: '样式加载成功', type: 1, state: 1});
+       });
+    }
+
+    /*
+    卸载css
+    * */
+    unloadCSS() {
+        return new Promise((resolve, reject) => {
+           setTimeout(() => {
+               if (this.styleElement.value){
+                   // 创建一个新的样式元素
+                   document.head.removeChild(this.styleElement.value);
+                   this.styleElement.value = null;
+                   resolve({ message: '样式卸载成功', type: 0, state: 1});
+               }else {
+                   reject({ message: '样式已经卸载', type: 0, state: 0});
+               }
+           }, 500);
+        });
     }
     changeTheme(...data) {
         // console.log(typeof data);
        if (data.length > 0){
-           // if (typeof data[0] === "boolean"){
-           //     this.isDark.value = data[0];
-           //     userCache.isDark.value = data[0];
-           //     this.backGround.value = userCache.isDark.value ? this.APP_BG_DARK : this.APP_BG_LIGHT;
-           //     this.textColor.value = userCache.isDark.value ? this.APP_TEXT_LIGHT : this.APP_TEXT_DARK;
-           //     this.borderColor.value = userCache.isDark.value ? this.APP_BORDER_LIGHT : this.APP_BORDER_DARK;
-           //     this.updateCSS();
-           // }else if (typeof data[0] === "string"){
-           //     console.log(typeof data);
-           // }else {
-           //     console.log('obj');
-           // }
            data.forEach(item => {
                Array.isArray(item) ? new Error('参数错误,意外的数组类型') : null;
            });
@@ -86,15 +109,15 @@ export default new class Model{
                        this.backGround.value = userCache.isDark.value ? this.APP_BG_DARK : this.APP_BG_LIGHT;
                        this.textColor.value = userCache.isDark.value ? this.APP_TEXT_LIGHT : this.APP_TEXT_DARK;
                        this.borderColor.value = userCache.isDark.value ? this.APP_BORDER_LIGHT : this.APP_BORDER_DARK;
-                       this.updateCSS();
+                       this.updateCSS(':)');
                    break;
                case 'object':
                      console.log('object');
                      const objData = data[0];
                      objData['isDark'] ? this.isDark.value = objData['isDark'] : null;
-                     this.backGround.value = userCache.isDark.value ? this.APP_BG_DARK : this.APP_BG_LIGHT;
-                     this.textColor.value = userCache.isDark.value ? this.APP_TEXT_LIGHT : this.APP_TEXT_DARK;
-                     this.borderColor.value = userCache.isDark.value ? this.APP_BORDER_LIGHT : this.APP_BORDER_DARK;
+                     // this.backGround.value = userCache.isDark.value ? this.APP_BG_DARK : this.APP_BG_LIGHT;
+                     // this.textColor.value = userCache.isDark.value ? this.APP_TEXT_LIGHT : this.APP_TEXT_DARK;
+                     // this.borderColor.value = userCache.isDark.value ? this.APP_BORDER_LIGHT : this.APP_BORDER_DARK;
                      this.updateCSS(objData['css']);
                    break;
                case 'string':

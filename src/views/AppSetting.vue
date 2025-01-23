@@ -2,10 +2,9 @@
  // 应用设置
  import SwitchButton from "@/components/switchButton.vue";
  import AppHeader from "@/components/appHeader.vue";
- import {nextTick, onMounted, ref, watch} from "vue";
+ import { onMounted, ref, watch} from "vue";
  import {userCache} from "@/data/cache.js";
  import {loadIcon} from "@/mixins/mixin.js";
- import {rippleEffect} from "@/animations/customAnimation.js";
  import Model from "@/data/model.js";
 
  const appSetting = ref([
@@ -52,9 +51,12 @@
      icon: userCache.isDark.value ? loadIcon('notes-w') : loadIcon('notes-b'),
    }
  ]);
+
+
  const funcItem = ref(null);
  const selectModelRef = ref(null);
  const popup = ref(false);
+
 
  const handlePointerUpItem = (item) => {
    if (item.label === '应用界面') {
@@ -67,6 +69,8 @@ const handlePinterUpModel = (type) => {
       userCache.isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches;
       userCache.modelType.value = 0;
       Model.changeTheme(userCache.isDark.value);
+      const isUNLoad = Model.unloadCSS(); // 卸载css
+      console.log(isUNLoad ? '卸载成功' : '卸载失败');
       break;
     case 1:
       userCache.isDark.value = false;
@@ -80,25 +84,30 @@ const handlePinterUpModel = (type) => {
       break;
   }
  };
+
+
  watch(userCache.isDark, (newValue) => {
      appSetting.value.forEach((item, index) => {
        switch (item.label){
          case "应用界面":
            item.title = newValue ? '黑暗模式' : '明亮模式';
            item.icon = newValue ? loadIcon('brightness-4') : loadIcon('brightness-5');
-           // selectModelRef.value[index].style.background = newValue ? '#383737' : '#FFFFFF';
+           selectModelRef.value[index].style.background = newValue ? '#383737' : '#FFFFFF';
            break;
            case "应用服务":
              item.icon = newValue ? loadIcon('notes-w') : loadIcon('notes-b');
              break;
        }
      });
-
-    // Model.changeTheme({isDark: newValue, css: `
-    //            :deep(.select-model){
-    //             background: ${newValue ? '#383737' : '#FFFFFF'};
-    //           }
-    // `});
+   // Model.changeTheme({isDark: newValue, css: `
+   //  .switch-box {
+   //    background: red !important;
+   //  }
+   //  `});
+ });
+ onMounted(()=>{
+   console.log(selectModelRef.value[0]);
+   selectModelRef.value[0].style.background = userCache.isDark.value ? '#383737' : '#FFFFFF';
  });
 </script>
 
@@ -164,7 +173,7 @@ const handlePinterUpModel = (type) => {
         flex-direction: column;
         margin-bottom: calc(20 * var(--scale-factor-width));
         label{
-          color: #1d4374;
+          color: var(--app-label-color);
           margin: calc(60 * var(--scale-factor-width)) 0 calc(60 * var(--scale-factor-width)) 0;
           padding-left: calc(150 * var(--scale-factor-width)) !important;
         }
@@ -223,6 +232,8 @@ const handlePinterUpModel = (type) => {
     }
   }
 }
+
+
 img{
   width: 128px;
   height: 128px;
@@ -267,7 +278,7 @@ img{
             display: flex;
             flex-direction: column;
             margin-left: 30px;
-            overflow: visible !important;
+            overflow: visible;
             .select-model{
               position: absolute;
               width: 70%;
@@ -311,13 +322,13 @@ img{
       .setting-item{
         label{
           /*TODO: LABEL样式写入css全局变量*/
-          color: var(--label-color);
+          color: var(--app-label-color);
         }
         .model{
           .func-notice{
             .notice{
               .select-model{
-                background: var(--app-label-color);
+                background: #383737;
               }
             }
           }
