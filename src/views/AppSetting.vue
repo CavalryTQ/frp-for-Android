@@ -74,14 +74,18 @@ const handlePinterUpModel = (type) => {
       }); // 卸载css
       break;
     case 1:
-      userCache.modelType.value = 1;
-      userCache.isDark.value = false;
-      Model.changeTheme(userCache.isDark.value);
+      if (userCache.isDark.value){
+        userCache.modelType.value = 1;
+        userCache.isDark.value = false;
+        Model.changeTheme(userCache.isDark.value);
+      }
       break;
     case 2:
-      userCache.modelType.value = 1;
-      userCache.isDark.value = true;
-      Model.changeTheme(userCache.isDark.value);
+      if (!userCache.isDark.value){
+        userCache.modelType.value = 2;
+        userCache.isDark.value = true;
+        Model.changeTheme(userCache.isDark.value);
+      }
       break;
   }
  };
@@ -100,11 +104,6 @@ const handlePinterUpModel = (type) => {
              break;
        }
      });
-   // Model.changeTheme({isDark: newValue, css: `
-   //  .switch-box {
-   //    background: red !important;
-   //  }
-   //  `, modelType: userCache.modelType.value});
  });
  onMounted(()=>{
    console.log(selectModelRef.value[0]);

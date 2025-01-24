@@ -2,6 +2,7 @@
  // 日志页
  import { useRouter } from 'vue-router'
  import {goToPage} from "@/mixins/mixin.js";
+ import AppHeader from "@/components/appHeader.vue";
 
  const router = useRouter()
 
@@ -11,7 +12,9 @@
 </script>
 
 <template>
-  <div style="height: 50vh;background: #1976D3;"><button @pointerup="handlePointerUp">back</button></div>
+    <div class="log-cat">
+       <app-header></app-header>
+    </div>
 </template>
 
 <style scoped lang="scss">

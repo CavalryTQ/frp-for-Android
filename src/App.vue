@@ -12,7 +12,9 @@ const router = useRouter();
 const route = useRoute();
 
 router.beforeEach((to, from, next) => {
-    if (from.path === '/' && to.path === '/index'){
+  console.log(from.path === to.path, from.path, to.path);
+  // (from.path === '/' && to.path === '/index') || (from.path === to.path)
+    if (from.path === '/'){
       // 初始化根路由重定向不需要加载动画
       pageScale.value = '';
       next();
@@ -26,17 +28,6 @@ router.afterEach(() => {
   isBack.value = true;
 });
 
-if(Capacitor.getPlatform() === 'android'){
-  console.log('属于安卓平台！');
-  // BackgroundRunner.dispatchEvent({label: 'icu.cavalry.frp', event: 'testEvent', details: {interval: 1}}).then(res => {
-  //   console.log('dispatchEvent, 后台运行器事件监听成功！')
-  //   console.log('res内容为：');
-  //   console.log(JSON.stringify(res, null, 2));
-  //   BackgroundRunner.requestPermissions().then(res => {
-  //     console.log('requestPermissions, 后台运行器权限请求通知！')
-  //   })
-  // });
-}
 
 App.addListener( 'backButton', ()=>{
   console.log('backButton监听！');
@@ -58,9 +49,13 @@ const handleAppState = (state) => {
 };
 onMounted(()=>{
   nextTick(()=>{
-    App.addListener('appStateChange', ({ isActive }) => {
-      handleAppState(isActive ? 'active' : 'background');
-    });
+    console.log(Capacitor.getPlatform());
+    if(Capacitor.getPlatform() === 'android'){
+      console.log('属于安卓平台！');
+      App.addListener('appStateChange', ({ isActive }) => {
+        handleAppState(isActive ? 'active' : 'background');
+      });
+    }
   })
 });
 onBeforeUnmount(() => {

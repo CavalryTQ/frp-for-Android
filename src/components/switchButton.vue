@@ -60,6 +60,16 @@ watch(userCache.isDark, (newValue, oldValue) => {
     `, modelType: userCache.modelType.value});
 });
 nextTick(() => {
+  Model.changeTheme({isDark: userCache.isDark.value, css: `
+    .switch-box {
+     --switch-box-bg: ${userCache.isDark.value ? switchBox_bg_dark : switchBox_bg_light} !important;
+     --switch-box-bg-active: ${userCache.isDark.value ? switchBox_bg_active_dark : switchBox_bg_active_light} !important;
+     --switch-btn-bg: ${userCache.isDark.value ? switchBtn_bg_dark : switchBtn_bg_light} !important;
+     --switch-btn-bg-active: ${userCache.isDark.value ? switchBtn_bg_active_dark : switchBtn_bg_active_light} !important;
+     --switch-dot-bg-hover: ${userCache.isDark.value ? switchDot_bg_hover_dark : switchDot_bg_hover_light} !important;
+     --switch-dot-bg-hover-active: ${userCache.isDark.value ? switchDot_bg_hover_active_dark : switchDot_bg_hover_active_light} !important;
+    }
+    `, modelType: userCache.modelType.value});
 });
 </script>
 

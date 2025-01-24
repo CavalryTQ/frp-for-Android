@@ -7,9 +7,8 @@
 </script>
 
 <template>
-   <div style="height: 50vh;background: #2c3e50" @pointerup.self="console.log('go')">
-     <button @pointerup="goToPage(router, -1);">back</button>
-     <button @pointerup="goToPage(router, '/logcat');">go</button>
+   <div class="log">
+<!--  TODO：先开发LogCat，Log列表功能暂缓...2025.1.24-->
    </div>
 </template>
 

@@ -21,7 +21,8 @@ const router = createRouter({
       {
        path: '/log',
        name: 'Log',
-       component: () => import('@/views/Log.vue'),
+       redirect: '/logcat', //       TODO：先开发LogCat，Log列表功能暂缓...2025.1.24
+       // component: () => import('@/views/Log.vue'),
       },
       {
        path: '/logcat',
