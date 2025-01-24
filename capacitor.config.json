@@ -2,5 +2,14 @@
   "appId": "icu.cavalry.frp",
   "appName": "frp",
   "webDir": "frp",
-  "appVersion": "0.0.1"
+  "appVersion": "0.0.1",
+  "plugins": {
+    "PushNotifications": {
+      "presentationOptions": [
+        "badge",
+        "sound",
+        "alert"
+      ]
+    }
+  }
 }

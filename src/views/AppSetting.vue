@@ -63,7 +63,7 @@
      popup.value = !popup.value;
    }
  };
-const handlePinterUpModel = (type) => {
+const handlePinterUpModel = (type, data) => {
   switch (type) { // 0:跟随系统 1:总明 2:总暗
     case 0:
       userCache.modelType.value = 0;
@@ -71,21 +71,24 @@ const handlePinterUpModel = (type) => {
       Model.changeTheme(userCache.isDark.value);
       Model.unloadCSS().then(res => {
         console.log(res);
+        appSetting.value[data.index].text = data.text;
       }); // 卸载css
       break;
     case 1:
+      userCache.modelType.value = 1;
       if (userCache.isDark.value){
-        userCache.modelType.value = 1;
         userCache.isDark.value = false;
         Model.changeTheme(userCache.isDark.value);
       }
+      appSetting.value[data.index].text = data.text;
       break;
     case 2:
+      userCache.modelType.value = 2;
       if (!userCache.isDark.value){
-        userCache.modelType.value = 2;
         userCache.isDark.value = true;
         Model.changeTheme(userCache.isDark.value);
       }
+      appSetting.value[data.index].text = data.text;
       break;
   }
  };
@@ -133,9 +136,9 @@ const handlePinterUpModel = (type) => {
                <!--           下拉框         -->
               <transition name="select-model" mode="in-out">
                 <div class="select-model" ref="selectModelRef" v-show="item.label === '应用界面' && popup">
-                  <div class="select-item system" @pointerup="handlePinterUpModel(0)"><span>跟随系统(Android 10+)</span></div>
-                  <div class="select-item dark" @pointerup="handlePinterUpModel(1)"><span>总是明亮模式</span></div>
-                  <div class="select-item light" @pointerup="handlePinterUpModel(2)"><span>总是黑暗模式</span></div>
+                  <div class="select-item system" @pointerup="handlePinterUpModel(0, {index: index,text: '跟随系统(Android 10+)'})"><span>跟随系统(Android 10+)</span></div>
+                  <div class="select-item dark" @pointerup="handlePinterUpModel(1, {index: index,text: '总是明亮'})"><span>总是明亮模式</span></div>
+                  <div class="select-item light" @pointerup="handlePinterUpModel(2, {index: index,text: '总是黑暗模式'})"><span>总是黑暗模式</span></div>
                 </div>
               </transition>
              </div>

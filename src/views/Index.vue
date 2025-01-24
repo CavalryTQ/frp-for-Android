@@ -8,6 +8,7 @@ import {userCache} from "@/data/cache.js";
 import {goToPage, loadIcon} from "@/mixins/mixin.js";
 import {useRouter} from "vue-router";
 import About from "@/components/about.vue";
+import Notifications from "@/plugins/notifications.js";
 
 const router = useRouter();
 const popupAbout = ref(false);
@@ -23,6 +24,14 @@ const handleGoToLog = (info) => {
 const handleGoToSetting = (info) => {
   goToPage(router, info.path)
 }
+const handleActive = () => {
+  // Notifications.register();
+  Notifications.requestPermissions().then(permission => {
+    console.log(JSON.stringify(permission, null, 2));
+  }).catch(err => {
+    console.log(JSON.stringify(err, null, 2));
+  })
+}
 watch(userCache.isDark, (newValue) => {
   configIcon.value = newValue ? loadIcon('view-w') : loadIcon('view-b');
 });
@@ -33,7 +42,7 @@ watch(userCache.isDark, (newValue) => {
   <div class="content">
     <index-header></index-header>
      <div class="body-content" ref="content">
-       <mainButton :type="true"/>
+       <mainButton :type="true" @pointerup="handleActive"/>
        <mainButton v-model:icon="configIcon" title="配置" text="点击编辑" @pointerup="handlePointerUp"/>
        <function-group @about="args => {popupAbout = args}"
                        @log="args => {handleGoToLog(args)}"
