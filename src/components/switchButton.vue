@@ -46,14 +46,19 @@ const handleSwitch = () => {
   console.log(switchBtn.value);
   emit('change', !props.isActive);
 }
-// watch(userCache.isDark, (newValue, oldValue) => {
-//    console.log('isDark', newValue, oldValue)
-//     Model.changeTheme({isDark: newValue, css: `
-//     .switch-box {
-//       background: red !important;
-//     }
-//     `});
-// });
+watch(userCache.isDark, (newValue, oldValue) => {
+   console.log('isDark', newValue, oldValue)
+  Model.changeTheme({isDark: newValue, css: `
+    .switch-box {
+     --switch-box-bg: ${newValue ? switchBox_bg_dark : switchBox_bg_light} !important;
+     --switch-box-bg-active: ${newValue ? switchBox_bg_active_dark : switchBox_bg_active_light} !important;
+     --switch-btn-bg: ${newValue ? switchBtn_bg_dark : switchBtn_bg_light} !important;
+     --switch-btn-bg-active: ${newValue ? switchBtn_bg_active_dark : switchBtn_bg_active_light} !important;
+     --switch-dot-bg-hover: ${newValue ? switchDot_bg_hover_dark : switchDot_bg_hover_light} !important;
+     --switch-dot-bg-hover-active: ${newValue ? switchDot_bg_hover_active_dark : switchDot_bg_hover_active_light} !important;
+    }
+    `, modelType: userCache.modelType.value});
+});
 nextTick(() => {
 });
 </script>
@@ -83,13 +88,13 @@ nextTick(() => {
        width: calc(117 * var(--scale-factor-width)) !important;
        height: calc(50 * var(--scale-factor-height)) !important;
        cursor: pointer;
-       background: #ADADAD;
+       background: var(--switch-box-bg);
        border-radius: calc(90 * var(--scale-factor-width)) !important;
        display: flex;
        justify-content: left;
        align-items: center;
        &.active {
-         background: #8599B4;
+         background: var(--switch-box-bg-active);
        }
        .switch-btn {
          width: calc(71 * var(--scale-factor-height)) !important;
@@ -97,7 +102,7 @@ nextTick(() => {
          position: absolute;
          /*calc(-71 * var(--scale-factor-width) / 2)*/
          left: 0 !important;
-         background: #fff;
+         background: var(--switch-btn-bg);
          border-radius: 50%;
          transition: all 0.3s;
          display: flex;
@@ -115,22 +120,17 @@ nextTick(() => {
              position: absolute;
              width: calc(130 * var(--scale-factor-height)) !important;
              height: calc(130 * var(--scale-factor-height)) !important;
-             background: rgb(0, 0, 0, 0.3);
+             background: var(--switch-dot-bg-hover);
              border-radius: 50%;
              &.active {
-               background: rgb(29, 67, 116, 0.3);
+               background: var(--switch-dot-bg-hover-active);
              }
            }
          }
          &.active {
-           /*right: calc(71 * var(--scale-factor-width) / 2) !important; --transform-X: calc(71 * var(--scale-factor-width) / 2);
-           transform: translateX(var(--transform-X));*/
-           /*TODO: 横屏专用移动点位置不生效*/
-           --transform-X: calc(117 * var(--scale-factor-width) - calc(71 * var(--scale-factor-width) / 4));
-           --transform-X-test: calc(71 * var(--scale-factor-width) * 2 - calc(25 * var(--scale-factor-width)));
-           --transform-X-test2: calc(50 * var(--scale-factor-height));
+           --transform-X: calc(50 * var(--scale-factor-height));
            transform-origin: center center !important;
-           transform: translateX(var(--transform-X-test2)) !important;
+           transform: translateX(var(--transform-X)) !important;
          }
        }
      }
@@ -139,30 +139,27 @@ nextTick(() => {
      /*系统黑夜模式*/
      @media (prefers-color-scheme: dark) {
        .switch-box {
-         background: #676767;
+         background: var(--switch-box-bg);
          &.active {
-           background: #1c4e7f;
+           background: var(--switch-box-bg-active);
          }
          .switch-btn {
-           background: #333333;
+           background: var(--switch-dot-bg-hover);
            .switch-dot {
              display: none;
            }
            &:hover {
              .switch-dot {
                display: block;
-               background: rgb(255, 255, 255, 0.3);
+               background: var(--switch-dot-bg-hover-active);
                border-radius: 50%;
                &.active {
-                 background: rgb(25, 116, 205, 0.3);
+                 background: var(--switch-dot-bg-hover-active);
                }
              }
            }
            &.active {
-             background: #1974cd;
-           }
-           &.disabled {
-
+             background: var(--switch-dot-bg-hover-active);
            }
          }
        }

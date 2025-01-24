@@ -92,12 +92,12 @@ onBeforeUnmount(() => {
   -ms-overflow-style: none !important;
   scrollbar-width: none !important;
   color: var(--app-text-color);
+  height: 100dvh !important;
   &::-webkit-scrollbar {
     display: none !important;
   }
  .animation{
    width: 100%;
-   height: 100dvh;
    overflow-y: scroll;
    overflow-x: hidden;
    display: flex;

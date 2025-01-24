@@ -66,20 +66,21 @@
 const handlePinterUpModel = (type) => {
   switch (type) { // 0:跟随系统 1:总明 2:总暗
     case 0:
-      userCache.isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches;
       userCache.modelType.value = 0;
+      userCache.isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches;
       Model.changeTheme(userCache.isDark.value);
-      const isUNLoad = Model.unloadCSS(); // 卸载css
-      console.log(isUNLoad ? '卸载成功' : '卸载失败');
+      Model.unloadCSS().then(res => {
+        console.log(res);
+      }); // 卸载css
       break;
     case 1:
-      userCache.isDark.value = false;
       userCache.modelType.value = 1;
+      userCache.isDark.value = false;
       Model.changeTheme(userCache.isDark.value);
       break;
     case 2:
-      userCache.isDark.value = true;
       userCache.modelType.value = 1;
+      userCache.isDark.value = true;
       Model.changeTheme(userCache.isDark.value);
       break;
   }
@@ -103,7 +104,7 @@ const handlePinterUpModel = (type) => {
    //  .switch-box {
    //    background: red !important;
    //  }
-   //  `});
+   //  `, modelType: userCache.modelType.value});
  });
  onMounted(()=>{
    console.log(selectModelRef.value[0]);
@@ -239,7 +240,7 @@ img{
   height: 128px;
 }
 .app-setting{
-  height: auto;
+  height: 100dvh;
   max-height: 100dvh;
   background: var(--app-background);
   overflow-x: hidden;
@@ -247,7 +248,7 @@ img{
   .setting-content{
     width: 100%;
     height: 100%;
-    max-height: calc(100dvh - 400px);
+    max-height: calc(100dvh - 300px);
     overflow-x: hidden;
     overflow-y: scroll;
     padding: 0 60px;

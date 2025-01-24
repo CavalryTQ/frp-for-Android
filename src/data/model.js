@@ -18,23 +18,26 @@ export default new class Model{
         this.textColor = ref(userCache.isDark.value ? this.APP_TEXT_LIGHT : this.APP_TEXT_DARK);
         this.borderColor = ref(userCache.isDark.value ? this.APP_BORDER_LIGHT : this.APP_BORDER_DARK);
         this.styleElement = ref(null); // 存储样式元素的引用
-        this.styleState = ref(0);
         this.init();
-        console.log('model init')
     }
     init() {
+        if (userCache.modelType.value !== 0){ // 如果是默认主题，则不执行后续操作
+            console.log('model init')
         this.isDark.value = userCache.isDark.value;
         this.backGround.value = userCache.isDark.value ? this.APP_BG_DARK : this.APP_BG_LIGHT;
         this.textColor.value = userCache.isDark.value ? this.APP_TEXT_LIGHT : this.APP_TEXT_DARK;
         this.borderColor.value = userCache.isDark.value ? this.APP_BORDER_LIGHT : this.APP_BORDER_DARK;
         this.updateCSS();
-        watch(userCache.isDark,(newValue) => {
+        watch(userCache.isDark, (newValue) => {
             // 更新CSS
             this.backGround.value = newValue ? this.APP_BG_DARK : this.APP_BG_LIGHT;
             this.textColor.value = newValue ? this.APP_TEXT_LIGHT : this.APP_TEXT_DARK;
             this.borderColor.value = newValue ? this.APP_BORDER_LIGHT : this.APP_BORDER_DARK;
+
             this.changeTheme(newValue);
+
         });
+      }
     }
     /**
      * 更新CSS
@@ -69,7 +72,7 @@ export default new class Model{
                // 创建一个新的样式元素
                this.styleElement.value = document.createElement('style');
                this.styleElement.value.type = 'text/css';
-               this.styleElement.value.id = 'app-user-theme';
+               this.styleElement.value.id = 'app-model-theme';
                document.head.appendChild(this.styleElement.value);
            }else {
                 resolve({message: '样式已经加载', type: 1, state: 0});
@@ -87,12 +90,18 @@ export default new class Model{
                if (this.styleElement.value){
                    // 创建一个新的样式元素
                    document.head.removeChild(this.styleElement.value);
+                   // 移除所有id=app-model-theme的style元素
+                   this.styleElement.value = document.querySelectorAll('style[id="app-model-theme"]');
+                   this.styleElement.value.forEach(item => {
+                       console.log('移除id=app-model-theme的style元素', item);
+                       item.remove();
+                   });
                    this.styleElement.value = null;
                    resolve({ message: '样式卸载成功', type: 0, state: 1});
                }else {
                    reject({ message: '样式已经卸载', type: 0, state: 0});
                }
-           }, 500);
+           }, 300);
         });
     }
     changeTheme(...data) {
@@ -109,16 +118,20 @@ export default new class Model{
                        this.backGround.value = userCache.isDark.value ? this.APP_BG_DARK : this.APP_BG_LIGHT;
                        this.textColor.value = userCache.isDark.value ? this.APP_TEXT_LIGHT : this.APP_TEXT_DARK;
                        this.borderColor.value = userCache.isDark.value ? this.APP_BORDER_LIGHT : this.APP_BORDER_DARK;
-                       this.updateCSS(':)');
+                       this.updateCSS(':)').then((result) => {
+                           console.log(result)
+                       });
                    break;
                case 'object':
                      console.log('object');
                      const objData = data[0];
                      objData['isDark'] ? this.isDark.value = objData['isDark'] : null;
+                     if (objData['modelType'] === 0) return; // 如果是默认主题，则默认不执行后续操作, 用户可传入参数强制切换主题
                      // this.backGround.value = userCache.isDark.value ? this.APP_BG_DARK : this.APP_BG_LIGHT;
                      // this.textColor.value = userCache.isDark.value ? this.APP_TEXT_LIGHT : this.APP_TEXT_DARK;
                      // this.borderColor.value = userCache.isDark.value ? this.APP_BORDER_LIGHT : this.APP_BORDER_DARK;
-                     this.updateCSS(objData['css']);
+                     this.updateCSS(objData['css']).then((result) => {
+                         console.log(result)});
                    break;
                case 'string':
                    break;
