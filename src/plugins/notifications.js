@@ -1,59 +1,53 @@
-// @capacitor/push-notifications 推送通知实现
-import { PushNotifications } from '@capacitor/push-notifications';
+// @capacitor/local-notifications 推送通知实现
 
- export default new class Notifications {
-    constructor() {
-        this.instance = PushNotifications;
-        // this.title = title;
-        // this.body = body;
-    }
+ import {LocalNotifications} from "@capacitor/local-notifications";
 
-    async addListeners(){
-        await this.addListener('registration', (token) => {
-            console.log('Push registration success, token: ' + token.value);
-        });
-
-        await this.addListener('registrationError', (error) => {
-            console.log('Error on registration: ' + JSON.stringify(error));
-        });
-
-        await this.addListener('pushNotificationReceived', (notification) => {
-            console.log('Push notification received: ' + JSON.stringify(notification));
-        });
-        await this.addListener('pushNotificationActionPerformed', (notification) => {
-            console.log('Push notification action performed', notification.data);
-        });
-    }
-    async addListener(eventName, callback){
-        await this.instance.addListener(eventName, async (token) => {
-            console.log('Push notification token: ' + token.value);
-            callback(token.value);
-        });
-    }
-    async register() {
-        try {
-            let permStatus = await this.instance.checkPermissions();
-
-            if (permStatus.receive === 'prompt') {
-                permStatus = await this.instance.requestPermissions();
+export default class Notifications {
+    constructor(state = false,notifications = {
+        notifications: [
+            {
+                id: Date.now(), // 唯一ID
+                title: "操作完成",
+                body: "您的任务已处理成功！",
+                schedule: { at: new Date(Date.now() + 500) }, // 0.5秒延迟
             }
+        ]
+    }) {
+        this.instance = LocalNotifications;
+        this.state = state;
+        this.id = notifications.notifications[0].id === undefined ? Date.now() : notifications.notifications[0].id;
+        this.notifications = this.state ? notifications.notifications : null;
+    }
 
-            if (permStatus.receive !== 'granted') {
-                 new Error('User denied permissions!');
+    async schedule(ScheduleOptions = {
+        notifications: [
+            {
+                id: this.id,
+                title: "本地通知测试",
+                body: "这是一条完全本地的通知",
+                schedule: { at: new Date(Date.now() + 1000) }, // 1秒后触发
+                sound: "default", // 可选声音
+                attachments: [], // 可选附件
+                actionTypeId: "", // 可选点击动作
+                extra: {} // 附加数据
             }
-
-            await this.instance.register();
-        } catch (error) {
-            console.error(error);
+        ]
+    }) {
+        // const thisNotification = {notifications: this.notifications};
+        const checkPermissions = await this.instance.checkPermissions();
+        console.log('checkPermissions', JSON.stringify(checkPermissions, null, 2));
+        if (checkPermissions.display !== 'granted'){
+            await this.instance.requestPermissions();
         }
-    }
-    requestPermissions(){
-        return new Promise((resolve, reject) => {
-            this.instance.requestPermissions().then((result) => {
-                resolve(result);
-            }).catch((error) => {
-                reject(error);
+        try {
+            await this.instance.schedule(ScheduleOptions).then(result => {
+                console.log('schedule', JSON.stringify(result.notifications, null, 2));
+            }).catch(e => {
+                console.log('schedule error', JSON.stringify(e, null, 2))
             });
-        });
+
+        } catch (e) {
+            console.log('schedule error', JSON.stringify(e, null, 2));
+        }
     }
 }

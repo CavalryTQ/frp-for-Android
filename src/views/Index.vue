@@ -9,12 +9,17 @@ import {goToPage, loadIcon} from "@/mixins/mixin.js";
 import {useRouter} from "vue-router";
 import About from "@/components/about.vue";
 import Notifications from "@/plugins/notifications.js";
+import {LocalNotifications} from "@capacitor/local-notifications";
 
 const router = useRouter();
 const popupAbout = ref(false);
 const content = ref(null);
 const configIcon = userCache.isDark.value ? ref(loadIcon('view-w')) : ref(loadIcon('view-b'));
 
+const getDeliveredNotifications = async () => {
+  const notificationList = await PushNotifications.getDeliveredNotifications();
+  console.log('已发送通知：', JSON.stringify(notificationList, null, 2));
+}
 const handlePointerUp = () => {
   goToPage(router, "/config");
 }
@@ -24,18 +29,45 @@ const handleGoToLog = (info) => {
 const handleGoToSetting = (info) => {
   goToPage(router, info.path)
 }
-const handleActive = () => {
+const handleActive = async () => {
   // Notifications.register();
-  Notifications.requestPermissions().then(permission => {
-    console.log(JSON.stringify(permission, null, 2));
-  }).catch(err => {
-    console.log(JSON.stringify(err, null, 2));
-  })
+  console.log('点击推送通知');
+ const result =  await LocalNotifications.schedule({
+    notifications: [
+      {
+        id: 1,
+        title: "本地通知测试",
+        body: "这是一条完全本地的通知",
+        // schedule: { at: new Date(Date.now() + 100)}, // 1秒后触发
+        // sound: "default", // 可选声音
+        // attachments: [], // 可选附件
+        // actionTypeId: "", // 可选点击动作
+        // extra: {} // 附加数据
+      }
+    ]
+  });
+  console.log('result',JSON.stringify(result, null, 2));
 }
+// 初始化通知
+const initializeNotifications = async () => {
+  // 请求权限
+  const { display } = await LocalNotifications.checkPermissions();
+  if (display !== 'granted') {
+    await LocalNotifications.requestPermissions();
+  }
+
+  // 监听通知点击事件
+  await LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
+    console.log('通知被点击:', JSON.stringify(notification, null, 2));
+  });
+};
 watch(userCache.isDark, (newValue) => {
   configIcon.value = newValue ? loadIcon('view-w') : loadIcon('view-b');
 });
 
+onMounted(() => {
+  initializeNotifications();
+})
 </script>
 
 <template>

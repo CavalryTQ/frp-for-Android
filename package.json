@@ -17,8 +17,8 @@
     "@capacitor/filesystem": "^7.0.0",
     "@capacitor/haptics": "^7.0.0",
     "@capacitor/keyboard": "^7.0.0",
+    "@capacitor/local-notifications": "^7.0.0",
     "@capacitor/preferences": "^7.0.0",
-    "@capacitor/push-notifications": "^7.0.0",
     "@capacitor/status-bar": "^7.0.0",
     "vue": "^3.5.13",
     "vue-router": "^4.4.5"
