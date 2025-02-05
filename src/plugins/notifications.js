@@ -1,53 +1,158 @@
 // @capacitor/local-notifications 推送通知实现
+// notifications.js
+import { LocalNotifications } from "@capacitor/local-notifications";
+import {userCache} from "@/data/cache.js";
 
- import {LocalNotifications} from "@capacitor/local-notifications";
-
-export default class Notifications {
-    constructor(state = false,notifications = {
-        notifications: [
-            {
-                id: Date.now(), // 唯一ID
-                title: "操作完成",
-                body: "您的任务已处理成功！",
-                schedule: { at: new Date(Date.now() + 500) }, // 0.5秒延迟
-            }
-        ]
-    }) {
-        this.instance = LocalNotifications;
-        this.state = state;
-        this.id = notifications.notifications[0].id === undefined ? Date.now() : notifications.notifications[0].id;
-        this.notifications = this.state ? notifications.notifications : null;
+// ID 生成器（持久化计数器）
+const ID_COUNTER_KEY = 'notification_id_counter'
+class NotificationIdGenerator {
+    static getNextId() {
+        let counter = parseInt(userCache.get(ID_COUNTER_KEY) || '1000')
+        counter = (counter % 2147483647) + 1 // 确保在 Java int 范围内
+        userCache.set(ID_COUNTER_KEY, counter.toString())
+        return counter
     }
 
-    async schedule(ScheduleOptions = {
-        notifications: [
-            {
-                id: this.id,
-                title: "本地通知测试",
-                body: "这是一条完全本地的通知",
-                schedule: { at: new Date(Date.now() + 1000) }, // 1秒后触发
-                sound: "default", // 可选声音
-                attachments: [], // 可选附件
-                actionTypeId: "", // 可选点击动作
-                extra: {} // 附加数据
-            }
-        ]
-    }) {
-        // const thisNotification = {notifications: this.notifications};
-        const checkPermissions = await this.instance.checkPermissions();
-        console.log('checkPermissions', JSON.stringify(checkPermissions, null, 2));
-        if (checkPermissions.display !== 'granted'){
-            await this.instance.requestPermissions();
-        }
-        try {
-            await this.instance.schedule(ScheduleOptions).then(result => {
-                console.log('schedule', JSON.stringify(result.notifications, null, 2));
-            }).catch(e => {
-                console.log('schedule error', JSON.stringify(e, null, 2))
-            });
-
-        } catch (e) {
-            console.log('schedule error', JSON.stringify(e, null, 2));
-        }
+    static validateId(id) {
+        return Number.isInteger(id) &&
+            id >= 0 &&
+            id <= 2147483647
     }
 }
+
+export default class Notifications {
+    constructor(options) {
+        this.instance = LocalNotifications;
+        this._validateOptions(options);
+        this.notifications = this._processNotifications(options.notifications || []);
+        this.id = this.notifications[0].id
+        this.addAllListeners();
+    }
+
+    // 验证用户自定义 ID 的有效性
+    _validateId(id) {
+        if (!NotificationIdGenerator.validateId(id)) {
+            throw new Error(`Invalid notification ID: ${id}. Must be 1-2147483647`)
+        }
+    }
+
+    // 处理通知数组
+    _processNotifications(notifications) {
+        return notifications.map(notification => {
+            // 优先使用用户定义的 ID
+            const finalId = notification.id ?? NotificationIdGenerator.getNextId()
+            this._validateId(finalId)
+
+            return {
+                ...notification,
+                id: finalId,
+                schedule: this._processSchedule(notification.schedule)
+            }
+        })
+    }
+
+    // 处理时间参数（可选）
+    _processSchedule(schedule) {
+        if (schedule?.at instanceof Date) {
+            return { at: schedule.at }
+        }
+        if (typeof schedule?.at === 'number') {
+            return { at: new Date(schedule.at) }
+        }
+        return schedule
+    }
+
+    // 验证配置参数
+    _validateOptions(options) {
+        if (options.notifications) {
+            if (!Array.isArray(options.notifications)) {
+                throw new Error('Notifications must be an array')
+            }
+            options.notifications.forEach(n => {
+                if (n.id) this._validateId(n.id)
+            })
+        }
+    }
+
+    // 监听器
+    addAllListeners() {
+        this.addListeners('localNotificationReceived', notification => {
+            console.log('Received notification:', notification);
+        });
+        this.addListeners('localNotificationActionPerformed', notification => {
+            console.log('Action performed:', notification);
+        });
+    }
+    addListeners(eventName = 'localNotificationReceived', callback = () => {}) {
+        if (eventName !== 'localNotificationReceived' && eventName !== 'localNotificationActionPerformed'){
+             throw new Error('eventName must be "localNotificationReceived" or "localNotificationActionPerformed"');
+        }
+       return new Promise((resolve, reject) => {
+           this.instance.addListener(eventName, notification => {
+               console.log(JSON.stringify(notification, null, 2));
+               if (typeof callback === 'function'){
+                   callback(notification);
+               }
+           }).then(r => {
+               console.log("addListener" + eventName, r);
+               resolve(r);
+           });
+       });
+     }
+    // 核心调度方法
+    async schedule(customOptions)
+    {
+        try {
+            // 合并配置
+            const finalOptions = typeof customOptions === 'undefined' || customOptions === null ?
+                {
+                    notifications: this.notifications
+                }
+                :
+                {
+                    notifications: [
+                        Object.assign(this.notifications[0], customOptions.notifications[0])
+                    ]
+                };
+            console.log("finalOptions", JSON.stringify(finalOptions, null, 2));
+            // 权限检查
+            const { display } = await this.instance.checkPermissions()
+            if (display !== 'granted') {
+                await this.instance.requestPermissions()
+            }
+
+            // 执行调度
+            const result = await this.instance.schedule(finalOptions)
+            console.debug('Scheduled notifications:', result.notifications)
+            return result
+        } catch (error) {
+            console.error('Notification scheduling failed:', error)
+            throw error
+        }
+    }
+
+    // 静态方法：清除持久化计数器（调试用）
+    static resetIdCounter() {
+        localStorage.removeItem(ID_COUNTER_KEY)
+    }
+}
+
+export const BootSuccessNotification = new Notifications({
+    notifications: [
+        {
+            id: 1,
+            title: "Frp应用启动成功",
+            body: "Frp客户端应用启动成功，请保持后台运行",
+        }
+    ]
+});
+
+export const BootFailedNotification = new Notifications({
+    notifications: [
+        {
+            id: 2,
+            title: "Frp应用启动失败",
+            body: "Frp客户端应用启动失败，请检查配置文件",
+        }
+    ]
+});
