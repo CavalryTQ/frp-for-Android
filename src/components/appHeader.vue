@@ -1,9 +1,18 @@
 <script setup>
  // app头部
- import {ref, watch} from "vue";
+ import {ref, watch, defineProps, defineEmits} from "vue";
  import {userCache} from "@/data/cache.js";
  import {goToPage, loadIcon} from "@/mixins/mixin.js";
  import {useRouter} from "vue-router";
+ import {rippleEffect} from "@/animations/customAnimation.js";
+
+ const props = defineProps({
+  title: {
+    type: String,
+    default: '标题'
+  },
+ });
+ const emit = defineEmits(['back', 'right']);
 
  const router = useRouter();
  const isDarkMode = userCache.isDark;
@@ -18,9 +27,9 @@
   <div class="app-header">
     <div class="header-left">
       <div class="back" @pointerup="goToPage(router, -1)"><img style="width: 100%;height: 100%" :src="backIcon" alt="back"></div>
-      <span class="header-name page-name">配置</span>
+      <span class="header-name page-name">{{ props.title }}</span>
     </div>
-    <div class="header-right func-group">
+    <div class="header-right func-group-right" @pointerdown="rippleEffect($event, $event.target, {isDark: isDarkMode, color: 'rgba(0,0,255)'})">
       <slot name="right">
         文字2
       </slot>
@@ -35,8 +44,8 @@
     margin: 0 calc(60 * var(--scale-factor-width)) calc(20 * var(--scale-factor-width)) calc(60 * var(--scale-factor-width)) !important;
     .header-left{
       .back{
-        width: calc(80 * var(--scale-factor-width)) !important;;
-        height: calc(80 * var(--scale-factor-width)) !important;;
+        width: calc(80 * var(--scale-factor-width)) !important;
+        height: calc(80 * var(--scale-factor-width)) !important;
         img{
           width: 100%;
           height: 100%;
@@ -52,6 +61,10 @@
       text-align: center;
       display: flex;
       align-items: center;
+      & > *{
+        border-radius: 50%;
+        display: flex;
+      }
     }
   }
 }
@@ -88,6 +101,12 @@
      text-align: center;
      display: flex;
      align-items: center;
+     justify-content: space-between;
+      & > *{
+        border-radius: 50%;
+        display: flex;
+     }
+
    }
  }
 </style>

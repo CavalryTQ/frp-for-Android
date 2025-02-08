@@ -26,10 +26,15 @@ const handleGoToLog = (info) => {
 const handleGoToSetting = (info) => {
   goToPage(router, info.path)
 }
-const handleActive = async () => {
+const handleActive = async args => {
   console.log('点击推送通知');
-  const result = await BootSuccessNotification.schedule();
-  console.log('result',JSON.stringify(result, null, 2));
+  if (args){
+    const result = await BootSuccessNotification.schedule();
+    console.log('result',JSON.stringify(result, null, 2));
+  }else {
+   const result = await BootSuccessNotification.removeDeliveredNotifications();
+    console.log('result',JSON.stringify(result, null, 2));
+  }
 }
 
 watch(userCache.isDark, (newValue) => {
@@ -49,7 +54,7 @@ onMounted(() => {
   <div class="content">
     <index-header></index-header>
      <div class="body-content" ref="content">
-       <mainButton :type="true" @pointerup="handleActive"/>
+       <mainButton :type="true" @isActive="args => {handleActive(args)}"/>
        <mainButton v-model:icon="configIcon" title="配置" text="点击编辑" @pointerup="handlePointerUp"/>
        <function-group @about="args => {popupAbout = args}"
                        @log="args => {handleGoToLog(args)}"

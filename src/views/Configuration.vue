@@ -3,9 +3,14 @@
 import ConfigItem from "@/components/configItem.vue";
 import AppHeader from "@/components/appHeader.vue";
 import DrawerDialog from "@/components/drawerDialog.vue";
-import {ref} from "vue";
+import {ref, watch} from "vue";
+import {userCache} from "@/data/cache.js";
+import {loadIcon} from "@/mixins/mixin.js";
 
 const popup = ref(false);
+const renewIcon = ref(userCache.isDark.value ? loadIcon('auto renew-w') : loadIcon('auto renew-b'));
+const addIcon = ref(userCache.isDark.value ? loadIcon('add-w') : loadIcon('add-b'));
+
 const handlePopup = (args) => {
   console.log(args, "handlePopup", popup.value);
   popup.value = args;
@@ -13,11 +18,26 @@ const handlePopup = (args) => {
 const closeDialog = () => {
   popup.value = false;
 };
+
+watch(userCache.isDark, (newValue) => {
+  if (newValue){
+    renewIcon.value = loadIcon('auto renew-w');
+    addIcon.value = loadIcon('add-w');
+  }else{
+    renewIcon.value = loadIcon('auto renew-b');
+    addIcon.value = loadIcon('add-b');
+  }
+})
 </script>
 
 <template>
    <div class="config">
-     <app-header></app-header>
+     <app-header title="配置">
+       <template #right>
+         <div class="auto-renew header-scoped"><img :src="renewIcon" alt="auto-renew"/></div>
+         <div class="add"><img class="add" :src="addIcon" alt="add"/></div>
+       </template>
+     </app-header>
      <form class="config-list">
 
        <config-item></config-item>
@@ -26,7 +46,7 @@ const closeDialog = () => {
         handlePopup(args);
       }"></config-item>
 
-       <p>test</p>
+<!--       <p>test</p>-->
      </form>
      <drawer-dialog :visible="popup" @close="args => {popup = args}" direction="bottom">
        <!--    <div class="dialog">-->
@@ -58,6 +78,9 @@ const closeDialog = () => {
 }
 .config{
   width: 100%;
+  .auto-renew{
+    margin-right: 60px;
+  }
   .config-list{
     width: 100%;
     height: auto;

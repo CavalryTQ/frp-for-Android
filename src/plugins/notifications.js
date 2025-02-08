@@ -110,9 +110,7 @@ export default class Notifications {
                 }
                 :
                 {
-                    notifications: [
-                        Object.assign(this.notifications[0], customOptions.notifications[0])
-                    ]
+                    notifications: [Object.assign(this.notifications[0], customOptions.notifications[0])]
                 };
             console.log("finalOptions", JSON.stringify(finalOptions, null, 2));
             // 权限检查
@@ -134,6 +132,19 @@ export default class Notifications {
     // 静态方法：清除持久化计数器（调试用）
     static resetIdCounter() {
         localStorage.removeItem(ID_COUNTER_KEY)
+    }
+    removeDeliveredNotifications(delivered = {
+        notifications: this.notifications
+    }){
+       return new Promise((resolve, reject) => {
+           this.instance.removeDeliveredNotifications(delivered).then(r => {
+               console.log("removeDeliveredNotifications", r);
+               resolve(r);
+           }).catch(e => {
+               console.log("removeDeliveredNotifications", e);
+               reject(e);
+           });
+       });
     }
 }
 
