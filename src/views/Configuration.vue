@@ -27,15 +27,15 @@ watch(userCache.isDark, (newValue) => {
     renewIcon.value = loadIcon('auto renew-b');
     addIcon.value = loadIcon('add-b');
   }
-})
+});
 </script>
 
 <template>
    <div class="config">
      <app-header title="配置">
        <template #right>
-         <div class="auto-renew header-scoped"><img :src="renewIcon" alt="auto-renew"/></div>
-         <div class="add"><img class="add" :src="addIcon" alt="add"/></div>
+         <div class="auto-renew header-scoped"><img style="position: relative;z-index: -999;" :src="renewIcon" alt="auto-renew"/></div>
+         <div class="add header-scoped"><img :src="addIcon" alt="add"/></div>
        </template>
      </app-header>
      <form class="config-list">
@@ -79,7 +79,7 @@ watch(userCache.isDark, (newValue) => {
 .config{
   width: 100%;
   .auto-renew{
-    margin-right: 60px;
+    margin-right: 10px;
   }
   .config-list{
     width: 100%;

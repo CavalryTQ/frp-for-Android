@@ -5,6 +5,7 @@
  import {goToPage, loadIcon} from "@/mixins/mixin.js";
  import {useRouter} from "vue-router";
  import {rippleEffect} from "@/animations/customAnimation.js";
+ import  "@assets/components/appHeaderRightScope.css";
 
  const props = defineProps({
   title: {
@@ -18,20 +19,34 @@
  const isDarkMode = userCache.isDark;
  const backIcon = ref(isDarkMode.value ? loadIcon('back-w') : loadIcon('back-b'));
 
+ const handlePointerDown = (event) => {
+   // 判断 event.target是否为 img
+   if (event.target.tagName === 'IMG') {
+     rippleEffect(event, event.target.offsetParent);
+     emit('right', {event: event, eventHTML: event.target.offsetParent, data: {}});
+   }else {
+     // 判断 event.target是否为 class === func-group-right
+     if (!event.target.classList.contains('func-group-right')) {
+       rippleEffect(event, event.target);
+       emit('right', {event: event, eventHTML: event.target, data: {}});
+     }
+   }
+ };
+
  watch(isDarkMode, (newValue) => {
    newValue ? backIcon.value = loadIcon('back-w') : backIcon.value = loadIcon('back-b');
  });
+
 </script>
 
 <template>
   <div class="app-header">
     <div class="header-left">
-      <div class="back" @pointerup="goToPage(router, -1)"><img style="width: 100%;height: 100%" :src="backIcon" alt="back"></div>
+      <div class="back" @pointerup="goToPage(router, -1);emit('back', {event: $event, router: router});"><img style="width: 100%;height: 100%" :src="backIcon" alt="back"></div>
       <span class="header-name page-name">{{ props.title }}</span>
     </div>
-    <div class="header-right func-group-right" @pointerdown="rippleEffect($event, $event.target, {isDark: isDarkMode, color: 'rgba(0,0,255)'})">
+    <div  class="header-right func-group-right" @pointerdown="handlePointerDown($event)">
       <slot name="right">
-        文字2
       </slot>
     </div>
   </div>
@@ -52,8 +67,8 @@
         }
       }
       .header-name{
-        margin-left: calc(70 * var(--scale-factor-width)) !important;;
-        font-size: calc(68 * var(--scale-factor-width)) !important;;
+        margin-left: calc(70 * var(--scale-factor-width)) !important;
+        font-size: calc(68 * var(--scale-factor-width)) !important;
       }
     }
     .header-right{
@@ -63,13 +78,14 @@
       align-items: center;
       & > *{
         border-radius: 50%;
-        display: flex;
       }
     }
   }
 }
 
-
+.header-scoped{
+  background: #8599B4 !important;
+}
  .app-header{
    background: var(--app-background);
     height: 280px;
@@ -102,11 +118,9 @@
      display: flex;
      align-items: center;
      justify-content: space-between;
-      & > *{
+      &  *{
         border-radius: 50%;
-        display: flex;
      }
-
    }
  }
 </style>

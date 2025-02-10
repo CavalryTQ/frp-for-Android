@@ -1,0 +1,23 @@
+.header-scoped{
+    position: relative;
+    width: 96px;
+    height: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9;
+    cursor: pointer;
+}
+.header-scoped img{
+    position: relative;
+    width: 60%;
+    height: 60%;
+    z-index: -999;
+}
+
+.header-scoped div{
+    position: relative;
+    width: 60%;
+    height: 60%;
+    z-index: -999;
+}

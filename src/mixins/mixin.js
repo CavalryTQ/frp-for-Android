@@ -18,12 +18,11 @@ export const isBack = ref(true);
 
  export const goToPage = (router, data) => {
      if (typeof data === 'number') {
-         isBack.value = true;
+         isBack.value = data < 0;
          router.go(data);
      }else {
          isBack.value = false;
          typeof data === 'string' ? router.push(data) : router.push(data.path)
      }
-
  }
 

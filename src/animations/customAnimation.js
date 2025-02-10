@@ -3,18 +3,20 @@ import {userCache} from "@/data/cache.js";
 export const rippleEffect = (event, element, options = {
     // 默认配置
     isDark: userCache.isDark.value, // 是否为暗黑模式
-    color: 'rgba(0, 0, 0, 0.1)', // 涟漪颜色
+    color: 'rgba(0, 0, 0, 0.3)', // 涟漪颜色
     duration: 5000, // 动画时长，单位 ms
     sizeFactor: 2.5, // 涟漪扩散倍数
+    rippleCenter: false, // 涟漪是否按照点击位置中心开始
 }) => {
      if (event.cancelable){ // 判断是否可以取消默认行为
          event.preventDefault(); // 阻止默认行为
      }
      const defaultOptions = {
          isDark: userCache.isDark.value,
-         color: 'rgba(0, 0, 0, 0.1)', // 涟漪颜色
+         color: 'rgba(0, 0, 0, 0.3)', // 涟漪颜色
          duration: 5000, // 动画时长，单位 ms
          sizeFactor: 2.5, // 涟漪扩散倍数
+         rippleCenter: false, // 涟漪是否按照点击位置中心开始
      };
      // if (options.isDark){
      //     console.log('dark mode');
@@ -25,11 +27,20 @@ export const rippleEffect = (event, element, options = {
     if(config.isDark){
         config.color ='rgba(255, 255, 255, 0.3)';
     }
-    console.log('config', config);
+    // console.log('config', config);
     // 计算点击位置
     const rect = element.getBoundingClientRect();
     const rippleX = event.clientX - rect.left;
     const rippleY = event.clientY - rect.top;
+    // let rippleX, rippleY;
+    // const rect = element.getBoundingClientRect();
+    // if (!config.rippleCenter){
+    //     rippleX = event.clientX - rect.left;
+    //     rippleY = event.clientY - rect.top;
+    // }else {
+    //     rippleX = rect.width / 2;
+    //     rippleY = rect.height / 2;
+    // }
 
     // 创建涟漪元素
     const ripple = document.createElement('span');
@@ -46,7 +57,7 @@ export const rippleEffect = (event, element, options = {
     ripple.style.zIndex = '1';
 
     // 添加涟漪到元素
-    console.log(element)
+    // console.log(element)
     element.style.position = 'relative';
     element.style.overflow = 'hidden'; // TODO: AppSetting.vue 当目标元素内有相对目标元素的子元素绝对定位且超过父元素大小，子元素会被裁剪或消失，待解决 target：select-model第99行 2025.1.21
     element.appendChild(ripple);
