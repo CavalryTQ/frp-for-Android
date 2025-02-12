@@ -16,6 +16,7 @@
  const emit = defineEmits(['back', 'right']);
 
  const router = useRouter();
+ const back = ref(null);
  const isDarkMode = userCache.isDark;
  const backIcon = ref(isDarkMode.value ? loadIcon('back-w') : loadIcon('back-b'));
 
@@ -42,7 +43,9 @@
 <template>
   <div class="app-header">
     <div class="header-left">
-      <div class="back" @pointerup="goToPage(router, -1);emit('back', {event: $event, router: router});"><img style="width: 100%;height: 100%" :src="backIcon" alt="back"></div>
+      <div class="back" ref="back" @pointerdown="rippleEffect($event, back);"
+           @pointerup="goToPage(router, -1);emit('back', {event: $event, router: router});">
+        <img :src="backIcon" alt="back"></div>
       <span class="header-name page-name">{{ props.title }}</span>
     </div>
     <div  class="header-right func-group-right" @pointerdown="handlePointerDown($event)">
@@ -59,15 +62,18 @@
     margin: 0 calc(60 * var(--scale-factor-width)) calc(20 * var(--scale-factor-width)) calc(60 * var(--scale-factor-width)) !important;
     .header-left{
       .back{
-        width: calc(80 * var(--scale-factor-width)) !important;
-        height: calc(80 * var(--scale-factor-width)) !important;
+        width: calc(96 * var(--scale-factor-width)) !important;
+        height: calc(96 * var(--scale-factor-width)) !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         img{
-          width: 100%;
-          height: 100%;
+          width: 60%;
+          height: 60%;
         }
       }
       .header-name{
-        margin-left: calc(70 * var(--scale-factor-width)) !important;
+        margin-left: calc(50 * var(--scale-factor-width)) !important;
         font-size: calc(68 * var(--scale-factor-width)) !important;
       }
     }
@@ -83,9 +89,6 @@
   }
 }
 
-.header-scoped{
-  background: #8599B4 !important;
-}
  .app-header{
    background: var(--app-background);
     height: 280px;
@@ -100,15 +103,19 @@
      display: flex;
      align-items: center;
      .back{
-       width: 80px;
-       height: 80px;
+       width: 96px;
+       height: 96px;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       border-radius: 50%;
        img{
-         width: 100%;
-         height: 100%;
+         width: 60%;
+         height: 60%;
        }
      }
      .header-name{
-       margin-left: 70px;
+       margin-left: 50px;
        font-size: 68px;
      }
    }

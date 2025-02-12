@@ -5,9 +5,13 @@ import AppHeader from "@/components/appHeader.vue";
 import DrawerDialog from "@/components/drawerDialog.vue";
 import {ref, watch} from "vue";
 import {userCache} from "@/data/cache.js";
-import {loadIcon} from "@/mixins/mixin.js";
+import {goToPage, loadIcon} from "@/mixins/mixin.js";
+import {lsDir, mkDir, readFilePath, readSecretFile, writeSecretFile} from "@/plugins/filesystem.js";
+import {Directory, Encoding} from "@capacitor/filesystem";
+import {useRouter} from "vue-router";
 
 const popup = ref(false);
+const router = useRouter();
 const renewIcon = ref(userCache.isDark.value ? loadIcon('auto renew-w') : loadIcon('auto renew-b'));
 const addIcon = ref(userCache.isDark.value ? loadIcon('add-w') : loadIcon('add-b'));
 
@@ -18,7 +22,27 @@ const handlePopup = (args) => {
 const closeDialog = () => {
   popup.value = false;
 };
-
+const handleAdd = async (args) => {
+// await mkDir({
+//     path: '/Cavalry',
+//     directory: Directory.Documents,
+//     recursive: true,
+//   });
+// await writeSecretFile({
+//     path: '/text.txt',
+//     data: 'This is a test',
+//     directory: Directory.Data,
+//     encoding: Encoding.UTF8,
+//     recursive: true,
+//   });
+//  await readFilePath({
+//     path: '/',
+//     directory: Directory.Data,
+//     encoding: Encoding.UTF8,
+//   });
+//  await lsDir();
+  goToPage(router,'/add_config');
+};
 watch(userCache.isDark, (newValue) => {
   if (newValue){
     renewIcon.value = loadIcon('auto renew-w');
@@ -35,7 +59,7 @@ watch(userCache.isDark, (newValue) => {
      <app-header title="配置">
        <template #right>
          <div class="auto-renew header-scoped"><img style="position: relative;z-index: -999;" :src="renewIcon" alt="auto-renew"/></div>
-         <div class="add header-scoped"><img :src="addIcon" alt="add"/></div>
+         <div class="add header-scoped" @pointerup="args => {handleAdd(args)}"><img :src="addIcon" alt="add"/></div>
        </template>
      </app-header>
      <form class="config-list">

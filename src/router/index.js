@@ -19,6 +19,11 @@ const router = createRouter({
        component: () => import('@/views/Configuration.vue'),
       },
       {
+        path: '/add_config',
+        name: 'AddConfig',
+        component: () => import('@/views/AddConfiguration.vue')
+      },
+      {
        path: '/log',
        name: 'Log',
        redirect: '/logcat', //       TODO：先开发LogCat，Log列表功能暂缓...2025.1.24
