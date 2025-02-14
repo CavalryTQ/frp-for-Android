@@ -117,11 +117,6 @@
   &::-webkit-scrollbar {
     display: none;
   }
-  img{
-    width: 96px;
-    height: 96px;
-    /*TODO：尝试固定图片大小*/
-  }
 }
 @media (orientation: landscape) {
   *,
@@ -163,5 +158,6 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
 
 }

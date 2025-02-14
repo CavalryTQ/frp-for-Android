@@ -15,8 +15,13 @@ router.beforeEach((to, from, next) => {
   console.log(from.path === to.path, from.path, to.path);
   // (from.path === '/' && to.path === '/index') || (from.path === to.path)
     if (from.path === '/'){
+      // if (to.path === '/config_edit'){
+      //   pageScale.value = 'scale-slide-go'
+      //   next();
+      //   return ;
+      // }
       // 初始化根路由重定向不需要加载动画
-      pageScale.value = '';
+       pageScale.value = 'scale-slide-go';
       next();
     }else {
       isBack.value ? pageScale.value = 'scale-slide-back': pageScale.value = 'scale-slide-go';
@@ -145,7 +150,7 @@ onBeforeUnmount(() => {
 .scale-slide-go-enter-active,
 .scale-slide-go-leave-active{
   position: absolute;
-  transition: all 0.85s ease;
+  transition: all 0.8s ease;
 }
 
 /*滑动组合动画 back（go-1)*/
@@ -174,10 +179,10 @@ onBeforeUnmount(() => {
 
 /*滑动组合动画 go（router)*/
 .scale-slide-go-leave-from {
-  transform: scale3d(1, 1, 1);
-  opacity: 1;
-  right: 0;
-}
+   transform: scale3d(1, 1, 1);
+   opacity: 1;
+   right: 0;
+ }
 .scale-slide-go-leave-to {
   transform: scale3d(0.1, 0.1, 0.1);
   opacity: 0;
