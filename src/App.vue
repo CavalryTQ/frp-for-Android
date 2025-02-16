@@ -21,7 +21,7 @@ router.beforeEach((to, from, next) => {
       //   return ;
       // }
       // 初始化根路由重定向不需要加载动画
-       pageScale.value = 'scale-slide-go';
+       pageScale.value = '';
       next();
     }else {
       isBack.value ? pageScale.value = 'scale-slide-back': pageScale.value = 'scale-slide-go';
