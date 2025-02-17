@@ -3,28 +3,15 @@
 import {nextTick, onMounted, ref, watch, defineProps, defineEmits, onUnmounted} from "vue";
 import {userCache} from "@/data/cache.js";
 import 'codemirror/mode/toml/toml';  // 引入 TOML 语言支持
-import 'codemirror/lib/codemirror.css';  // 可选：引入 CodeMirror 样式
+import 'codemirror/lib/codemirror.css';  // 引入 CodeMirror 样式
 import 'codemirror/theme/material-darker.css';
 import 'codemirror/theme/eclipse.css';
-import 'codemirror/theme/elegant.css'
 import CodeMirror from "codemirror";
 
 const props = defineProps({
   modelValue: {
     type: String,
-    default:
-      `
-serverAddr = ""
-serverPort = 80
-
-
-# http
-[[proxies]]
-name = "web"
-type = "http"
-localPort = 80
-customDomains = [""]
-      `
+    default: '666',
   },
 });
 const emit = defineEmits(['update:modelValue', 'change']);
@@ -51,15 +38,26 @@ const handleClick = () => {
     }
   }, 200);  // 延迟 200ms
 };
+const handleKeyDown = (event) => {
+  console.log(event) // TODO: codeMirror5 编辑器在键盘输入完毕后focus会回到定点位置，所以需要设置焦点
+  if (editor){
+    editor.setFocus( true)
+  }
+};
 
 watch(userCache.isDark,(newValue)=>{
-
   if (newValue){
     editor.setOption('theme', 'material-darker');
   }else{
     editor.setOption('theme', 'eclipse');
   }
-})
+});
+
+watch(()=> props.modelValue, (newValue) => {
+  if (editor){
+    editor.setValue(newValue);
+  }
+});
 
 onMounted(() => {
   nextTick(() =>{
@@ -97,29 +95,26 @@ onUnmounted(() => {
 </script>
 
 <template>
-<!--  <textarea  v-model="code"></textarea>-->
   <!--  CodeMirror编辑器-->
- <div class="codeMirror-edit" ref="edit" @click="handleClick"></div>
+ <div class="codeMirror-edit" ref="edit" @click="handleClick" @keydown="handleKeyDown"></div>
 </template>
 
 <style scoped lang="scss">
-
   .codeMirror-edit {
-    position: relative;
-    display: flex;
-    flex: 1;
     width: 100%;
     height: 100%;
-    //@media (prefers-color-scheme: light){
-    //  :deep(.cm-atom){
-    //    color: #a60000;
-    //  }
-    //}
+ /*
+    @media (prefers-color-scheme: light){
+      :deep(.cm-atom){
+        color: #a60000;
+      }
+    }
+ */
   }
 :deep(.CodeMirror){
   display: flex;
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 300px) !important;
 }
 
 </style>
