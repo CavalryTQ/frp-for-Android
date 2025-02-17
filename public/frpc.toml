@@ -1,0 +1,11 @@
+# Frp client config
+serverAddr = ""
+serverPort = 80
+
+
+# http
+[[proxies]]
+name = "web"
+type = "http"
+localPort = 80
+customDomains = [""]

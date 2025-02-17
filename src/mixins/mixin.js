@@ -1,4 +1,5 @@
-import {ref} from "vue";
+import {ref, watch} from "vue";
+import {userCache} from "@/data/cache.js";
 
 export const icons = import.meta.glob('@/assets/icons/*.svg', { eager: true });// 引入所有图标 eager: true 提前加载
 export const isBack = ref(true);
@@ -15,7 +16,11 @@ export const isBack = ref(true);
  export const loadIcons = (iconName) => {
      return Object.keys(icons).filter(key => key.includes(iconName)).map(key => icons[key].default);
  }
-
+export const dynamicModeIcon = (dark, light) => {
+     let res;
+     res =  userCache.isDark.value ? loadIcon(dark) : loadIcon(light);
+     return res
+ }
  export const goToPage = (router, data) => {
      if (typeof data === 'number') {
          isBack.value = data < 0;

@@ -21,8 +21,10 @@
     "@capacitor/network": "^7.0.0",
     "@capacitor/preferences": "^7.0.0",
     "@capacitor/status-bar": "^7.0.0",
+    "axios": "^1.7.9",
     "codemirror": "^5.65.18",
     "dayjs": "^1.11.13",
+    "toml": "^3.0.0",
     "vue": "^3.5.13",
     "vue-router": "^4.4.5"
   },
