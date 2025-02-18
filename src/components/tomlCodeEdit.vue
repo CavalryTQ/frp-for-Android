@@ -13,10 +13,14 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  editorOptions: {
+    type: Object,
+  }
 });
-const emit = defineEmits(['update:modelValue', 'change']);
+const emit = defineEmits(['update:modelValue', 'update:editorOptions', 'change', 'focus', 'blur', 'keyDown']);
 console.log('codeEdit Value', props.modelValue);
 const edit = ref();
+const cursorPosition = ref();
 let editor; // CodeMirror编辑器实例, 不要用vue任何的响应式状态管理，否则会出现预期外错误， codeMirror有自己响应缓存机制
 const codeEditStyleEl = ref(document.createElement('style'));
 codeEditStyleEl.value.type = 'text/css';
@@ -39,11 +43,13 @@ const handleClick = () => {
   }, 200);  // 延迟 200ms
 };
 const handleKeyDown = (event) => {
-  console.log(event) // TODO: codeMirror5 编辑器在键盘输入完毕后focus会回到定点位置，所以需要设置焦点
+  console.log(event)
   if (editor){
     // editor.focus();
+    emit('keyDown', {event: event, editor: editor});
   }
 };
+
 
 watch(userCache.isDark,(newValue)=>{
   if (newValue){
@@ -58,6 +64,9 @@ watch(()=> props.modelValue, (newValue) => {
     editor.setValue(newValue);
   }
 });
+watch(cursorPosition, (newValue)=>{
+  console.log('cursorPosition', newValue);
+})
 
 onMounted(() => {
   nextTick(() =>{
@@ -71,19 +80,26 @@ onMounted(() => {
       document.head.appendChild(codeEditStyleEl.value); // 将样式添加到页面的 head 中
     }
     editor.setValue(props.modelValue);
+
     setTimeout(()=>{
       // editor.setSize(100, 100)
       editor.refresh();
       editor.focus();
-      console.log('editor',editor);
-    }, 1000);
+    }, 500);
 
     // 监听 CodeMirror 内容变化并更新到父组件
     editor.on('change', (cm) => {
-      // const cursorPosition = editor.getCursor();  // 保存当前光标位置
-      // editor.setCursor(cursorPosition);  // 恢复光标位置
+       cursorPosition.value = editor.getCursor();  // 保存当前光标位置
+    //  editor.setCursor(cursorPosition);  // 恢复光标位置
       emit('update:modelValue', cm.getValue());  // 向父组件传递更新的值
-      emit('change', cm.getValue());
+      emit('update:editorOptions', editor);
+      emit('change', cm);
+    });
+    editor.on("focus", (cm) => {
+      emit('focus', cm);
+    });
+    editor.on("blur", (cm) => {
+      emit('blur', cm);
     });
   });
 });
@@ -92,13 +108,19 @@ onUnmounted(() => {
    if (editor.options.theme === 'eclipse'){
      document.head.removeChild(codeEditStyleEl.value);
    }
-  editor = null;
+  // editor = null;
 });
 </script>
 
 <template>
   <!--  CodeMirror编辑器-->
- <div class="codeMirror-edit" ref="edit" @click="handleClick" @keydown="handleKeyDown"></div>
+ <div class="codeMirror-edit"
+      ref="edit"
+      @click="handleClick"
+      @keydown="handleKeyDown"
+      @blur="console.log('blur')"
+      @focus="console.log('focus')"
+ ></div>
 </template>
 
 <style scoped lang="scss">

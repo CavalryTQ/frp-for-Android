@@ -16,8 +16,8 @@
 }
 .header-scoped img{
     position: relative;
-    width: 60%;
-    height: 60%;
+    width: 60% !important;
+    height: 60% !important;
     z-index: -999;
 }
 

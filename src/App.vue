@@ -13,13 +13,7 @@ const route = useRoute();
 
 router.beforeEach((to, from, next) => {
   console.log(from.path === to.path, from.path, to.path);
-  // (from.path === '/' && to.path === '/index') || (from.path === to.path)
     if (from.path === '/'){
-      // if (to.path === '/config_edit'){
-      //   pageScale.value = 'scale-slide-go'
-      //   next();
-      //   return ;
-      // }
       // 初始化根路由重定向不需要加载动画
        pageScale.value = '';
       next();
@@ -37,6 +31,7 @@ router.afterEach(() => {
 App.addListener( 'backButton', ()=>{
   console.log('backButton监听！');
   if (route.path === '/' || route.path === '/index') {
+
     App.minimizeApp();
   }else {
     goToPage(router, -1);
@@ -52,12 +47,18 @@ const handleAppState = (state) => {
     console.log('App is in background');
   }
 };
+const unInstallCache = () => {
+  console.log('清除缓存！');
+  Model.styleElement = null;
+};
 onMounted(()=>{
   nextTick(()=>{
     console.log(Capacitor.getPlatform());
     if(Capacitor.getPlatform() === 'android'){
       console.log('属于安卓平台！');
-      App.addListener('appStateChange', ({ isActive }) => {
+      App.addListener('appStateChange', (state) => {
+        console.log('app状态：',JSON.stringify(state, null, 2));
+        const isActive = state.isActive;
         handleAppState(isActive ? 'active' : 'background');
       });
     }
