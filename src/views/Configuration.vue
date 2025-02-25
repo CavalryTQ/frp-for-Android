@@ -6,8 +6,6 @@ import DrawerDialog from "@/components/drawerDialog.vue";
 import {ref, watch} from "vue";
 import {userCache} from "@/data/cache.js";
 import {goToPage, loadIcon} from "@/mixins/mixin.js";
-import {lsDir, mkDir, readFilePath, readSecretFile, writeSecretFile} from "@/plugins/filesystem.js";
-import {Directory, Encoding} from "@capacitor/filesystem";
 import {useRouter} from "vue-router";
 
 const popup = ref(false);
@@ -23,24 +21,7 @@ const closeDialog = () => {
   popup.value = false;
 };
 const handleAdd = async (args) => {
-// await mkDir({
-//     path: '/Cavalry',
-//     directory: Directory.Documents,
-//     recursive: true,
-//   });
-// await writeSecretFile({
-//     path: '/text.txt',
-//     data: 'This is a test',
-//     directory: Directory.Data,
-//     encoding: Encoding.UTF8,
-//     recursive: true,
-//   });
-//  await readFilePath({
-//     path: '/',
-//     directory: Directory.Data,
-//     encoding: Encoding.UTF8,
-//   });
-//  await lsDir();
+
   goToPage(router,'/add_config');
 };
 watch(userCache.isDark, (newValue) => {
@@ -70,13 +51,8 @@ watch(userCache.isDark, (newValue) => {
         handlePopup(args);
       }"></config-item>
 
-<!--       <p>test</p>-->
      </form>
      <drawer-dialog :visible="popup" @close="args => {popup = args}" direction="bottom">
-       <!--    <div class="dialog">-->
-       <!--      <h2>Drawer Content</h2>-->
-       <!--      <button @click="closeDialog">Close</button>-->
-       <!--    </div>-->
        <h2>Drawer Content</h2>
        <button @click="closeDialog">Close</button>
      </drawer-dialog>

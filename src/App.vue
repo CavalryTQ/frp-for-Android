@@ -5,6 +5,7 @@ import {goToPage, isBack} from "@/mixins/mixin.js";
 import {Capacitor} from "@capacitor/core";
 import { App } from '@capacitor/app';
 import Model from "@/data/model.js";
+import {WriteFileOptions} from "@/plugins/filesystem.js";
 
 
 const pageScale = ref('');
@@ -27,7 +28,7 @@ router.afterEach(() => {
   isBack.value = true;
 });
 
-
+// new WriteFileOptions('index.html', 'DOCUMENTS', 'utf8', '', true);
 App.addListener( 'backButton', ()=>{
   console.log('backButton监听！');
   if (route.path === '/' || route.path === '/index') {
@@ -47,10 +48,11 @@ const handleAppState = (state) => {
     console.log('App is in background');
   }
 };
-const unInstallCache = () => {
-  console.log('清除缓存！');
-  Model.styleElement = null;
-};
+window.addEventListener('nativeMessage', (event) => {
+  console.log('收到来自原生的消息：', event.detail);
+  // 根据 event.detail 执行相应的逻辑
+});
+
 onMounted(()=>{
   nextTick(()=>{
     console.log(Capacitor.getPlatform());
@@ -61,11 +63,13 @@ onMounted(()=>{
         const isActive = state.isActive;
         handleAppState(isActive ? 'active' : 'background');
       });
+     const file = new FileSystem('/', 'Data', 'utf8', '', true)
     }
   })
 });
 onBeforeUnmount(() => {
   console.log('App.removeAllListeners')
+  window.removeEventListener('nativeMessage', (event) => {});
   App.removeAllListeners();
 });
 </script>
