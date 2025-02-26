@@ -11,7 +11,7 @@
    {
      label: '应用界面',
      title: userCache.isDark.value ? '黑暗模式' : '明亮模式',
-     text: '跟随系统Android 10+',
+     text: userCache.modelType.value === 0 ? '跟随系统Android 10+' : userCache.modelType.value === 1 ? '总是明亮模式' : '总是黑暗模式',
      icon: userCache.isDark.value ? loadIcon('brightness-4') : loadIcon('brightness-5'),
    },
    {
@@ -38,18 +38,18 @@
      text: '在通知中刷新流量',
      icon: userCache.isDark.value ? loadIcon('notes-w') : loadIcon('notes-b'),
    },
-   {
-     label: '666',
-     title: '显示通知',
-     text: '在通知中刷新流量',
-     icon: userCache.isDark.value ? loadIcon('notes-w') : loadIcon('notes-b'),
-   },
-   {
-     label: '666',
-     title: '显示通知',
-     text: '在通知中刷新流量',
-     icon: userCache.isDark.value ? loadIcon('notes-w') : loadIcon('notes-b'),
-   }
+   // {
+   //   label: '666',
+   //   title: '显示通知',
+   //   text: '在通知中刷新流量',
+   //   icon: userCache.isDark.value ? loadIcon('notes-w') : loadIcon('notes-b'),
+   // },
+   // {
+   //   label: '666',
+   //   title: '显示通知',
+   //   text: '在通知中刷新流量',
+   //   icon: userCache.isDark.value ? loadIcon('notes-w') : loadIcon('notes-b'),
+   // }
  ]);
 
 
@@ -66,6 +66,7 @@
 const handlePinterUpModel = (type, data) => {
   switch (type) { // 0:跟随系统 1:总明 2:总暗
     case 0:
+      userCache.set('modelType', 0);
       userCache.modelType.value = 0;
       userCache.isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches;
       Model.changeTheme(userCache.isDark.value);
@@ -75,6 +76,7 @@ const handlePinterUpModel = (type, data) => {
       }); // 卸载css
       break;
     case 1:
+      userCache.set('modelType', 1);
       userCache.modelType.value = 1;
       if (userCache.isDark.value){
         userCache.isDark.value = false;
@@ -83,6 +85,7 @@ const handlePinterUpModel = (type, data) => {
       appSetting.value[data.index].text = data.text;
       break;
     case 2:
+      userCache.set('modelType', 2);
       userCache.modelType.value = 2;
       if (!userCache.isDark.value){
         userCache.isDark.value = true;
@@ -137,7 +140,7 @@ const handlePinterUpModel = (type, data) => {
               <transition name="select-model" mode="in-out">
                 <div class="select-model" ref="selectModelRef" v-show="item.label === '应用界面' && popup">
                   <div class="select-item system" @pointerup="handlePinterUpModel(0, {index: index,text: '跟随系统(Android 10+)'})"><span>跟随系统(Android 10+)</span></div>
-                  <div class="select-item dark" @pointerup="handlePinterUpModel(1, {index: index,text: '总是明亮'})"><span>总是明亮模式</span></div>
+                  <div class="select-item dark" @pointerup="handlePinterUpModel(1, {index: index,text: '总是明亮模式'})"><span>总是明亮模式</span></div>
                   <div class="select-item light" @pointerup="handlePinterUpModel(2, {index: index,text: '总是黑暗模式'})"><span>总是黑暗模式</span></div>
                 </div>
               </transition>

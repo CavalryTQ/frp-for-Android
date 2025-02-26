@@ -7,6 +7,8 @@ import {nextTick, onMounted, onUnmounted, ref, watch} from "vue";
 import axios from "axios";
 import {userCache} from "@/data/cache.js";
 import {dynamicModeIcon} from "@/mixins/mixin.js";
+import {FileSystem} from "@/plugins/filesystem.js";
+import {Directory, Encoding, Filesystem} from "@capacitor/filesystem";
 
 // TODO：用户退出当前路由未编辑完成的内容会清空，编辑器需要缓存未编辑完的内容，需要保存到本地 2025-2-14
 const code = ref();
@@ -15,8 +17,19 @@ const editor = ref();
 
 const loadData = async () => {
   const response = await axios.get(`/frpc.toml`);
-  code.value = response.data;
+   const file = new FileSystem('/', 'Data');
+  const data = await file.lsDir();
+  console.log('data', data);
+
+    // const contents = await Filesystem.readdir({
+    //     path: '/',
+    //     directory: Directory.Data,
+    //     // encoding: Encoding.UTF8,
+    // });
+    // console.log('secrets:', contents);
+    code.value = response.data;
 };
+
 const handleSave = () => {
     if (editor.value){
       editor.value.getInputField().blur();

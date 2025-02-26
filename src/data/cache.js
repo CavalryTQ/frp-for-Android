@@ -18,30 +18,36 @@ export const userCache = new class Cache {
         systemDarkMode.addEventListener("change", this.handleSystemDarkModeChange);
         this.init();
         watch(this.isDark, (newValue) => {
+            console.log("cache isDark:", newValue);
             this.set("isDark", newValue);
         });
     }
 
     init(){
+        console.log('cache modelType:', this.modelType.value)
         this.modelType.value = this.get("modelType") === null || this.get("modelType") === undefined ?
             this.initSettings("modelType", 0) : this.initGetter("modelType");
     }
 
     initSettings(key, value){
+        if (this[key]){
+            console.log(this[key]);
+            this[key].value = value;
+        }
         this.set(key, value);
         return value;
     }
 
     initGetter(key){
         watch(this[key], (newValue) => {
+            console.log("initGetter666" + key + " " + newValue);
             this.set(key, newValue);
         });
+            console.log(this[key]);
         return this.get(key);
     }
 
     updateSystemDarkMode(event) {
-        // console.log("System dark mode changed:", event.matches);
-        // console.log(this.handleSystemDarkModeChange);
         this.dark.value = event.matches;
         // modelType:0 跟随系统，1跟随用户设置，即使以外切换系统模式也跟随缓存设置
         if (this.modelType.value === 0) {
@@ -58,6 +64,7 @@ export const userCache = new class Cache {
 
     set(key, value) {
         try {
+
             this.storage.setItem(key, JSON.stringify(value));
         } catch (e) {
             console.error("Failed to set cache:", e);

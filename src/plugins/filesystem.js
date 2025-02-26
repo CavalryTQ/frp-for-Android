@@ -9,6 +9,7 @@ export class FileSystem{
         this.instance = this.isApp ? Filesystem : new Error('Platform not supported');
         this.readFileOptions = new ReadFileOptions(path, directoryEnumKey, encodingEnumKey);
         this.writeFileOptions = new WriteFileOptions(path, directoryEnumKey, encodingEnumKey, data, recursive);
+        this.readdirOptions = new ReaddirOptions(path, directoryEnumKey);
     }
 
 
@@ -20,12 +21,8 @@ export class FileSystem{
      });
 };
 
- readSecretFile = async () => {
-    const contents = await Filesystem.readFile({
-        path: 'secrets/text.txt',
-        directory: Directory.Documents,
-        encoding: Encoding.UTF8,
-    });
+ readSecretFile = async (options = this.readFileOptions) => {
+    const contents = await Filesystem.readFile(options);
     await this.checkPermissions();
     console.log('secrets:', contents);
 };
@@ -50,12 +47,9 @@ mkDir = async (options = {
     console.log('result:', JSON.stringify(result, null, 2));
 };
 
-lsDir = async (options = {
-    path: '/',
-    directory: Directory.Data,
-}) => {
+lsDir = async (options = this.readdirOptions) => {
     await this.checkPermissions();
-    console.log('lsDir');
+    console.log('lsDir', options);
     console.log(JSON.stringify(options, null, 2));
     const result = await Filesystem.readdir(options);
     console.log('result:', JSON.stringify(result, null, 2));
@@ -88,11 +82,25 @@ export class WriteFileOptions {
         this.data = data;
         this.recursive = recursive;
         initEnumKey(directoryEnumKey, encodingEnumKey, this);
-        rex(this);
+        // rex(this);
+    }
+}
+
+export class ReaddirOptions{
+    constructor(path, directoryEnumKey) {
+        this.path = path;
+        this.directory = Directory[directoryEnumKey];
+        initEnumKey(directoryEnumKey, undefined, this);
     }
 }
 
 const initEnumKey = (directoryEnumKey, encodingEnumKey, that) => {
+    if (encodingEnumKey === undefined){
+        return;
+    }
+    if (directoryEnumKey === undefined){
+        throw new Error(`${directoryEnumKey} is required`);
+    }
     if (that.directory === undefined){
         let key = directoryEnumKey.toLocaleLowerCase();
         key = key.slice(0, 1).toUpperCase() + key.slice(1);

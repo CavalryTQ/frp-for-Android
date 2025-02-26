@@ -43,7 +43,7 @@ export default new class Model{
      * 更新CSS
      */
     async updateCSS(css) {
-        console.log('updateCss',css);
+        // console.log('updateCss',css);
       try{
           const CSS_CONTENT = ref(`
             :root {
@@ -55,7 +55,7 @@ export default new class Model{
             }
         `);
           const result = await this.loadCSS();
-          console.log('updateCss',result);
+          // console.log('updateCss',result);
           this.styleElement.value.innerHTML =  CSS_CONTENT.value + css;
           return result;
       }catch (e) {
@@ -119,7 +119,7 @@ export default new class Model{
                        this.textColor.value = userCache.isDark.value ? this.APP_TEXT_LIGHT : this.APP_TEXT_DARK;
                        this.borderColor.value = userCache.isDark.value ? this.APP_BORDER_LIGHT : this.APP_BORDER_DARK;
                        this.updateCSS(':)').then((result) => {
-                           console.log(result)
+                           // console.log(result)
                        });
                    break;
                case 'object':
@@ -131,7 +131,8 @@ export default new class Model{
                      // this.textColor.value = userCache.isDark.value ? this.APP_TEXT_LIGHT : this.APP_TEXT_DARK;
                      // this.borderColor.value = userCache.isDark.value ? this.APP_BORDER_LIGHT : this.APP_BORDER_DARK;
                      this.updateCSS(objData['css']).then((result) => {
-                         console.log(result)});
+                         // console.log(result)
+                     });
                    break;
                case 'string':
                    break;
