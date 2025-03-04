@@ -23,10 +23,18 @@ export const userCache = new class Cache {
         });
     }
 
-    init(){
-        console.log('cache modelType:', this.modelType.value)
-        this.modelType.value = this.get("modelType") === null || this.get("modelType") === undefined ?
-            this.initSettings("modelType", 0) : this.initGetter("modelType");
+    init(attr, value){
+        if (attr === undefined){
+            this.modelType.value = this.get("modelType") === null || this.get("modelType") === undefined ?
+                this.initSettings("modelType", 0) : this.initGetter("modelType");
+        }else {
+           if (this[attr].value === undefined || this[attr].value === null){
+               this[attr] = ref(this.initSettings(attr, value));
+           }else {
+               this[attr].value = this.initSettings(attr, value);
+           }
+        }
+
     }
 
     initSettings(key, value){

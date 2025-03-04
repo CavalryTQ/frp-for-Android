@@ -16,9 +16,15 @@ export class FileSystem{
  writeSecretFile = async (options = this.writeFileOptions) => {
     console.log('writeSecretFile')
      await this.checkPermissions();
-     await Filesystem.writeFile(options).then((result) => {
-         console.log('writeFile:', JSON.stringify(result, null, 2));
-     });
+     return await new Promise((resolve, reject) => {
+       Filesystem.writeFile(options).then((result) => {
+             console.log('writeFile:', JSON.stringify(result, null, 2));
+             resolve(result);
+         }).catch((e) => {
+             console.log('error:', JSON.stringify(e, null, 2));
+             reject(e);
+         });
+     })
 };
 
  readSecretFile = async (options = this.readFileOptions) => {
@@ -53,6 +59,7 @@ lsDir = async (options = this.readdirOptions) => {
     console.log(JSON.stringify(options, null, 2));
     const result = await Filesystem.readdir(options);
     console.log('result:', JSON.stringify(result, null, 2));
+    return result;
 };
  checkPermissions = async () => {
     const status = await Filesystem.checkPermissions();

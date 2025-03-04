@@ -8,32 +8,37 @@ import axios from "axios";
 import {userCache} from "@/data/cache.js";
 import {dynamicModeIcon} from "@/mixins/mixin.js";
 import {FileSystem} from "@/plugins/filesystem.js";
-import {Directory, Encoding, Filesystem} from "@capacitor/filesystem";
+import {Directory, Encoding} from "@capacitor/filesystem";
+import StatusToast from "@/components/statusToast.vue";
 
 // TODO：用户退出当前路由未编辑完成的内容会清空，编辑器需要缓存未编辑完的内容，需要保存到本地 2025-2-14
 const code = ref();
 const saveIcon = ref(dynamicModeIcon('ic--baseline-save-w', 'ic--baseline-save-b'));
 const editor = ref();
+const prop = ref(false);
 
 const loadData = async () => {
   const response = await axios.get(`/frpc.toml`);
-   const file = new FileSystem('/', 'Data');
-  const data = await file.lsDir();
-  console.log('data', data);
+  code.value = response.data;
+  // const file = new FileSystem('/', 'Data');
+  // await file.lsDir();
 
-    // const contents = await Filesystem.readdir({
-    //     path: '/',
-    //     directory: Directory.Data,
-    //     // encoding: Encoding.UTF8,
-    // });
-    // console.log('secrets:', contents);
-    code.value = response.data;
 };
 
-const handleSave = () => {
-    if (editor.value){
-      editor.value.getInputField().blur();
-    }
+const handleSave = async () => {
+    // if (editor.value){
+    //   editor.value.getInputField().blur();
+    //   const file = new FileSystem('/', 'Data');
+    //   const res = await file.writeSecretFile({
+    //       data: editor.value.getValue(),
+    //       path: 'frpc.toml',
+    //       directory Directory.Data,
+    //       encoding: Encoding.UTF8,
+    //       recursive: true
+    //   });
+    //   console.log('res', res);
+    // }
+  prop.value = !prop.value;
 }
 const handleBlur = (args) => {
     // 获取文本内容
@@ -72,6 +77,7 @@ onUnmounted(()=>{
         </div>
       </template>
     </app-header>
+    <status-toast :is-show="prop"/>
     <div class="config-edit-content">
        <code-edit v-model="code" @blur="args => {handleBlur(args)}" v-model:editor-options="editor" ></code-edit>
     </div>

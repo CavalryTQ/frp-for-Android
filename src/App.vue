@@ -5,7 +5,6 @@ import {goToPage, isBack} from "@/mixins/mixin.js";
 import {Capacitor} from "@capacitor/core";
 import { App } from '@capacitor/app';
 import Model from "@/data/model.js";
-import {WriteFileOptions} from "@/plugins/filesystem.js";
 
 
 const pageScale = ref('');
@@ -51,6 +50,7 @@ const handleAppState = (state) => {
 window.addEventListener('nativeMessage', (event) => {
   console.log('收到来自原生的消息：', event.detail);
   // 根据 event.detail 执行相应的逻辑
+
 });
 
 onMounted(()=>{
@@ -58,12 +58,12 @@ onMounted(()=>{
     console.log(Capacitor.getPlatform());
     if(Capacitor.getPlatform() === 'android'){
       console.log('属于安卓平台！');
+
       App.addListener('appStateChange', (state) => {
         console.log('app状态：',JSON.stringify(state, null, 2));
         const isActive = state.isActive;
         handleAppState(isActive ? 'active' : 'background');
       });
-     const file = new FileSystem('/', 'Data', 'utf8', '', true)
     }
   })
 });
