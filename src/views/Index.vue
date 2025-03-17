@@ -10,12 +10,12 @@ import {useRouter} from "vue-router";
 import About from "@/components/about.vue";
 import {BootSuccessNotification} from "@/plugins/notifications.js";
 import {LocalNotifications} from "@capacitor/local-notifications";
+import { frp } from 'frp-plugin';
 
 const router = useRouter();
 const popupAbout = ref(false);
 const content = ref(null);
 const configIcon = userCache.isDark.value ? ref(loadIcon('view-w')) : ref(loadIcon('view-b'));
-
 
 const handlePointerUp = () => {
   goToPage(router, "/config");
@@ -30,13 +30,21 @@ const handleActive = async args => {
   console.log('点击推送通知');
   if (args){
     const result = await BootSuccessNotification.schedule();
-    console.log('result',JSON.stringify(result, null, 2));
+    await startFrpc();
+    // console.log('result',JSON.stringify(result, null, 2));
   }else {
    const result = await BootSuccessNotification.removeDeliveredNotifications();
-    console.log('result',JSON.stringify(result, null, 2));
+    // console.log('result',JSON.stringify(result, null, 2));
   }
 }
-
+const startFrpc = async () => {
+  try {
+    const result =  await frp.startFrpc();
+    console.log('startFrpc',result)
+  }catch (e) {
+    console.log(e);
+  }
+}
 watch(userCache.isDark, (newValue) => {
   configIcon.value = newValue ? loadIcon('view-w') : loadIcon('view-b');
 });
@@ -47,7 +55,7 @@ onMounted(() => {
  LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
     console.log('通知被点击:', JSON.stringify(notification, null, 2));
   });
-})
+});
 </script>
 
 <template>
