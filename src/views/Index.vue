@@ -10,6 +10,7 @@ import {useRouter} from "vue-router";
 import About from "@/components/about.vue";
 import {BootSuccessNotification} from "@/plugins/notifications.js";
 import {LocalNotifications} from "@capacitor/local-notifications";
+import { frp } from 'frp-plugin';
 
 const router = useRouter();
 const popupAbout = ref(false);
@@ -31,10 +32,19 @@ const handleActive = async args => {
   if (args){
     const result = await BootSuccessNotification.schedule();
     console.log('result',JSON.stringify(result, null, 2));
+    await starFrpc();
   }else {
    const result = await BootSuccessNotification.removeDeliveredNotifications();
     console.log('result',JSON.stringify(result, null, 2));
   }
+}
+const starFrpc = async () => {
+    try {
+      const result = await frp.startFrpc();
+      console.log('result',result);
+    }catch (e) {
+      console.log(e);
+    }
 }
 
 watch(userCache.isDark, (newValue) => {
