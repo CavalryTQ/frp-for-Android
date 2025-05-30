@@ -8,7 +8,7 @@ import {userCache} from "@/data/cache.js";
 import {goToPage, loadIcon} from "@/mixins/mixin.js";
 import {useRouter} from "vue-router";
 import About from "@/components/about.vue";
-import {BootSuccessNotification} from "@/plugins/notifications.js";
+import Notifications, {BootFailedNotification, BootSuccessNotification} from "@/plugins/notifications.js";
 import {LocalNotifications} from "@capacitor/local-notifications";
 import { frp } from 'frp-plugin';
 
@@ -16,6 +16,9 @@ const router = useRouter();
 const popupAbout = ref(false);
 const content = ref(null);
 const configIcon = userCache.isDark.value ? ref(loadIcon('view-w')) : ref(loadIcon('view-b'));
+const isRunFrp = ref(false);
+const isActive = ref(false);
+// isActive.value = isRunFrp.value;
 
 
 const handlePointerUp = () => {
@@ -29,22 +32,60 @@ const handleGoToSetting = (info) => {
 }
 const handleActive = async args => {
   console.log('点击推送通知');
+  // const result =  await frp.requestNotificationPermission({value: true});
+  // console.log('申请通知权限结果：', result);
+
+
   if (args){
-    const result = await BootSuccessNotification.schedule();
-    console.log('result',JSON.stringify(result, null, 2));
-    await starFrpc();
+
+    const resultVPN = await frp.requestVpnPermission({value: true}).catch(e => {
+      console.log('requestVpnPermission error', e);
+      BootFailedNotification.schedule(
+          {notifications: [{
+              id: 2,
+              title: "Frp应用启动失败",
+              body: "Frp客户端应用启动失败，请允许vpn网络权限并重新开启。",
+            }]});
+      isActive.value  = false;
+    });
+    console.log('申请vpn权限结果：', resultVPN);
+    if (resultVPN?.status  === 'granted'){
+      // await starFrpc();
+      await BootSuccessNotification.schedule();
+      isActive.value = true;
+    }
   }else {
-   const result = await BootSuccessNotification.removeDeliveredNotifications();
-    console.log('result',JSON.stringify(result, null, 2));
+    await BootSuccessNotification.removeDeliveredNotifications();
+    await BootFailedNotification.removeDeliveredNotifications();
+    isActive.value = false;
   }
 }
-const starFrpc = async () => {
-    try {
-      const result = await frp.startFrpc();
-      console.log('result',result);
-    }catch (e) {
-      console.log(e);
-    }
+
+const starFrpc = () => {
+  return new Promise((resolve, reject) => {
+    frp.startDummyVpn().then((result) => {
+      console.log('startDummyVpn授权 result', result);
+      if (result.status  !== 'requested'){
+        frp.testStartFrpc();
+        resolve(result);
+      }else {
+        BootFailedNotification.schedule(
+            {notifications: [{
+                    id: 2,
+                    title: "Frp应用启动失败",
+                    body: "Frp客户端应用启动失败，请允许vpn网络权限并重新开启。",
+                  }]});
+        isActive.value  = false;
+        reject('未获取vpn权限');
+      }
+    }).catch((error) => {
+      reject(error);
+    });
+  });
+}
+
+const changeActive = () => {
+  isActive.value =  !isActive.value;
 }
 
 watch(userCache.isDark, (newValue) => {
@@ -52,7 +93,6 @@ watch(userCache.isDark, (newValue) => {
 });
 
 onMounted(() => {
-  // initializeNotifications();
   // 监听通知点击事件
  LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
     console.log('通知被点击:', JSON.stringify(notification, null, 2));
@@ -64,7 +104,7 @@ onMounted(() => {
   <div class="content">
     <index-header></index-header>
      <div class="body-content" ref="content">
-       <mainButton :type="true" @isActive="args => {handleActive(args)}"/>
+       <mainButton :type="true" @pointerdown="changeActive()" :is-active="isActive" @isActive="args => {handleActive(args)}"/>
        <mainButton v-model:icon="configIcon" title="配置" text="点击编辑" @pointerup="handlePointerUp"/>
        <function-group @about="args => {popupAbout = args}"
                        @log="args => {handleGoToLog(args)}"

@@ -27,12 +27,12 @@ const mainBtn = ref(null);
 const Icon = ref(props.icon !== undefined ? props.icon : '');
 const title = props.title !== undefined ? ref(props.title) : ref('功能名称');
 const text = props.text !== undefined ? ref(props.text) : ref('功能描述');
-const isActive = props.isActive !== undefined ? ref(props.isActive) : ref(false);
+// const isActive = props.isActive !== undefined ? ref(props.isActive) : ref(false);
 const isDarkModel = userCache.isDark;
 
 if (props.type){
   if (props.isActive){
-    isDarkModel.value ? icon.value = loadIcon('circle-w') : icon.value = loadIcon('circle-b');
+    isDarkModel.value ? Icon.value = loadIcon('circle-w') : Icon.value = loadIcon('circle-b');
     title.value = '运行中';
     text.value = '点击停止';
     emit('isActive', true);
@@ -45,21 +45,40 @@ if (props.type){
 }
 
 
-watch(isActive, (newValue) =>{
+// watch(isActive, (newValue) =>{
+//   console.log('isActive', newValue);
+//   if (props.type){
+//     if (newValue){
+//       isDarkModel.value ? Icon.value = loadIcon('circle-w') : Icon.value = loadIcon('circle-b');
+//        title.value = '运行中';
+//        text.value = '点击停止';
+//        emit('isActive', true);
+//     }else {
+//       isDarkModel.value ? Icon.value = loadIcon('ic--baseline-block-w') : Icon.value = loadIcon('ic--baseline-block-b');
+//       title.value = '已停止';
+//       text.value = '点击启动';
+//       emit('isActive', false);
+//     }
+//   }
+// });
+
+watch(()=>props.isActive, (newValue) =>{
+  console.log('isActiveProp属性变化', newValue);
   if (props.type){
     if (newValue){
       isDarkModel.value ? Icon.value = loadIcon('circle-w') : Icon.value = loadIcon('circle-b');
-       title.value = '运行中';
-       text.value = '点击停止';
-       emit('isActive', true);
+      title.value = '运行中';
+      text.value = '点击停止';
+      // emit('isActive', true);
     }else {
       isDarkModel.value ? Icon.value = loadIcon('ic--baseline-block-w') : Icon.value = loadIcon('ic--baseline-block-b');
       title.value = '已停止';
       text.value = '点击启动';
-      emit('isActive', false);
+      // emit('isActive', false);
     }
   }
-});
+  emit('isActive', newValue);
+})
 
 watch(isDarkModel, (newValue) =>{
 
@@ -81,13 +100,11 @@ onMounted(async ()=>{
  })
 })
 
-const handleActive = () =>{
-  props.type ? isActive.value = !isActive.value : null;
-}
+
 </script>
 
 <template>
-  <div class="main-button" ref="mainBtn" @pointerdown="rippleEffect($event, mainBtn);handleActive();">
+  <div class="main-button" ref="mainBtn" @pointerdown="rippleEffect($event, mainBtn)">
     <slot name="default">
       <div class="main-button-content">
         <div class="main-button-icon">

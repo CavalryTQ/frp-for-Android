@@ -3,15 +3,27 @@
 import ConfigItem from "@/components/configItem.vue";
 import AppHeader from "@/components/appHeader.vue";
 import DrawerDialog from "@/components/drawerDialog.vue";
-import {ref, watch} from "vue";
+import {nextTick, onMounted, ref, watch} from "vue";
 import {userCache} from "@/data/cache.js";
 import {goToPage, loadIcon} from "@/mixins/mixin.js";
 import {useRouter} from "vue-router";
+import {FileSystem} from "@/plugins/filesystem.js";
 
 const popup = ref(false);
 const router = useRouter();
 const renewIcon = ref(userCache.isDark.value ? loadIcon('auto renew-w') : loadIcon('auto renew-b'));
 const addIcon = ref(userCache.isDark.value ? loadIcon('add-w') : loadIcon('add-b'));
+const configFileList = new FileSystem('/frpc', 'Data', 'utf8', '', true);
+const configList = ref([
+  {
+    name: 'default.toml',
+    type:  'file',
+    size: 0,
+    ctime: 0,
+    mtime: 0,
+    uri: '/frpc/frpc.toml'
+  }
+]);
 
 const handlePopup = (args) => {
   console.log(args, "handlePopup", popup.value);
@@ -21,9 +33,27 @@ const closeDialog = () => {
   popup.value = false;
 };
 const handleAdd = async (args) => {
-
   goToPage(router,'/add_config');
 };
+const loadConfigFileList = async () => {
+ const res = await configFileList.lsDir();
+  console.log(res, "loadConfigFileList");
+  if (res?.files && res.files.length > 0){
+    configList.value = res.files;
+  }else {
+    configList.value = [
+      {
+        name: 'No File',
+        type:  null,
+        size: 0,
+        ctime: 0,
+        mtime: 0,
+        uri: undefined
+      }
+    ];
+  }
+};
+
 watch(userCache.isDark, (newValue) => {
   if (newValue){
     renewIcon.value = loadIcon('auto renew-w');
@@ -33,6 +63,12 @@ watch(userCache.isDark, (newValue) => {
     addIcon.value = loadIcon('add-b');
   }
 });
+
+onMounted(()=>{
+  nextTick(()=>{
+    loadConfigFileList();
+  });
+})
 </script>
 
 <template>
@@ -45,11 +81,15 @@ watch(userCache.isDark, (newValue) => {
      </app-header>
      <form class="config-list">
 
-       <config-item></config-item>
-       <config-item></config-item>
+<!--       <config-item></config-item>-->
+<!--       <config-item></config-item>-->
        <config-item @handle-more="args => {
         handlePopup(args);
-      }"></config-item>
+      }"
+                    v-for="(item, index) in configList"
+                    :key="item.uri"
+                    :config-file="item"
+       ></config-item>
 
      </form>
      <drawer-dialog :visible="popup" @close="args => {popup = args}" direction="bottom">

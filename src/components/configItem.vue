@@ -4,11 +4,29 @@ import {ref, defineProps, watch, defineEmits} from "vue";
 import {userCache} from "@/data/cache.js";
 import {rippleEffect} from "@/animations/customAnimation.js";
 import {loadIcon} from "@/mixins/mixin.js";
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/zh-cn';
 
+dayjs.extend(relativeTime);
+dayjs.locale('zh-cn');
 const props = defineProps({
    disabled: {
     type: Boolean,
     default: true
+  },
+  configFile:{
+     type: Object,
+     default: () => {
+       return   {
+         name: 'default.toml',
+         type:  'file',
+         size: 0,
+         ctime: 0,
+         mtime: 0,
+         uri: '/frpc/frpc.toml'
+       }
+     }
   }
 });
 const emit = defineEmits(['handleMore']);
@@ -50,10 +68,10 @@ watch(isDarkMode, (newValue) => {
           <div class="radio" select-radio="config" disabled="true" ref="radioStyle">
             <input type="radio" id="config" name="config" value="" @pointerdown="handleRadioStyle($event, radioStyle)"/>
           </div>
-          <label style="margin-left: 10px" for="kraken">新配置1</label>
+          <label style="margin-left: 10px" for="kraken">{{ props.configFile.name }}</label>
         </div>
         <div class="item-right">
-          <div class="last-time">1小时前</div>
+          <div class="last-time">{{ dayjs(props.configFile.mtime).fromNow()}}</div>
           <div :class="{'line': !isDarkMode, 'line-dark' : true}"></div>
           <div class="item-more" @pointerdown="emit('handleMore', true)"><img :src="moreIcon" alt="more"></div>
         </div>

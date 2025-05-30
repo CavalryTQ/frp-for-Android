@@ -1,5 +1,5 @@
 <script setup>
-
+// 提示框组件
 import {ref, defineExpose, defineProps, onMounted, nextTick, watch} from "vue";
 
 
