@@ -71,6 +71,7 @@
   /*
     --scale-factor-width: calc(100vw / var(--app-base-width));
   --scale-factor-height: calc(100vh / var(--app-base-height));
+  竖屏状态下有postcss插件处理
 */
 
 }
@@ -78,8 +79,8 @@
 @media (orientation: landscape) {
   :root{
     /*横屏比例为高/宽*/
-    --scale-factor-width: calc(100vh / var(--app-base-width));
-    --scale-factor-height: calc(100vw / var(--app-base-height));
+    --scale-factor-width: calc(100vw / var(--app-base-width));
+    --scale-factor-height: calc(100vh / var(--app-base-height));
   }
 }
 

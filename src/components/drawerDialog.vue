@@ -1,6 +1,6 @@
 <script setup>
 // 抽屉组件
-import {ref, defineProps, defineEmits, watch} from 'vue';
+import {ref, defineProps, defineEmits, watch, onMounted, nextTick} from 'vue';
 import {userCache} from "@/data/cache.js";
 
 const props = defineProps({
@@ -15,14 +15,14 @@ const props = defineProps({
       return ['bottom', 'top', 'left', 'right'].includes(value);
     },
   },
-  enterDuration: {
+  enterDuration: { // 进入动画时长
     type: Number,
     default: 500, // 校验，只允许数字单位毫秒
     validator(value) {
       return value >= 0;
     },
   },
-  leaveDuration: {
+  leaveDuration: { // 离开动画时长
     type: Number,
     default: 500,
     validator(value) {
@@ -44,6 +44,34 @@ const closeDialog = () => {
 const transitioning = ref(false);
 const drawer = ref(null);
 
+const initDrawer = () => {
+  console.log('initDrawer',  drawer.value)
+  switch (props.direction) {
+    case 'bottom':
+      drawer.value.style.bottom = '0';
+      drawer.value.style.width = '100%';
+      drawer.value.style.height = 'auto';
+      break
+    case 'top':
+      drawer.value.style.top = '0';
+      drawer.value.style.width = '100%';
+      drawer.value.style.height = 'auto';
+      break
+    case 'left':
+      drawer.value.style.left = '0';
+      drawer.value.style.height = '100%';
+      drawer.value.style.width = 'auto';
+      break
+    case 'right':
+      drawer.value.style.right = '0';
+      drawer.value.style.height = '100%';
+      drawer.value.style.width = 'auto';
+      break
+    default:
+      drawer.value.style.position = 'absolute';
+      break
+  }
+};
 // 动画开始前的钩子
 const beforeEnter = (e) => {
   e.style.transitionDuration = `${props.enterDuration}ms`;
@@ -60,7 +88,13 @@ const afterLeave = () => {
 
 watch(isDarkModel, (newValue) => {
   console.log('isDark', newValue)
-})
+});
+
+onMounted(()=>{
+  nextTick(()=>{
+    initDrawer();
+  });
+});
 </script>
 
 <template>
@@ -77,12 +111,13 @@ watch(isDarkModel, (newValue) => {
                 @after-leave="afterLeave"
     >
       <div
-          v-if="visible"
+          v-show="visible"
           class="drawer-content"
           ref="drawer"
           :class="{'drawer-content-bottom': direction === 'bottom', 'drawer-content-top': direction === 'top', 'drawer-content-left': direction === 'left', 'drawer-content-right': direction === 'right'}"
           @pointerup.stop
       >
+        <div class="drawer-close" @pointerup="closeDialog"></div>
         <slot></slot>
       </div>
     </transition>
@@ -105,10 +140,23 @@ watch(isDarkModel, (newValue) => {
 
 /* 抽屉内容动画 */
 .drawer-content {
-  width: 100%;
-  height: 100%;
-  padding: 30px;
+  position: absolute;
+  bottom: 0;
+  //width: 100%;
+  height: auto;
   background-color: var(--app-darwer-dialog-bg);
+  display: flex;
+  flex-direction: column;
+  .drawer-close{
+    position: absolute;
+    width: 150px;
+    height: 15px;
+    border-radius: 10px 10px 10px 10px;
+    background-color: #4d4d4d;
+    display: flex;
+    align-self: center;
+    top: 30px;
+  }
 }
 @media (prefers-color-scheme: dark){
   .drawer-content {
@@ -117,7 +165,7 @@ watch(isDarkModel, (newValue) => {
 }
 .drawer-content-bottom{
   border-radius: 4vw 4vw 0 0;
-  transform: translateY(50%); /* 保持最终状态 */
+  transform: translateY(0%); /* 保持最终状态 */
   transform-origin: bottom;
   /*flex顶部部对齐*/
   display: flex;
@@ -164,9 +212,10 @@ watch(isDarkModel, (newValue) => {
 .drawer-content-bottom-enter-from {
   transform: translateY(100%);
 }
+/*
 .drawer-content-bottom-enter-to {
-  transform: translateY(50%);
-}
+  transform: translateY(100%);
+} */
 .drawer-content-bottom-leave-to {
   transform: translateY(100%);
 }

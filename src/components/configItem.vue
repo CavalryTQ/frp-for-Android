@@ -15,6 +15,7 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
+  modelValue: String,
   configFile:{
      type: Object,
      default: () => {
@@ -29,24 +30,29 @@ const props = defineProps({
      }
   }
 });
-const emit = defineEmits(['handleMore']);
+const emit = defineEmits(['update:modelValue', 'handleMore']);
 
 const configItem = ref(null);
 const radioStyle = ref(null);
 const isDarkMode = userCache.isDark;
 const moreIcon = ref(isDarkMode.value ? loadIcon('more-w') : loadIcon('more-b'));
 
+/**
+ * radio样式切换
+ * @param e
+ * @param radio
+ */
 const handleRadioStyle = (e, radio) => {
   e.target.checked = true;
   // 获取radio disabled属性 disabled为true时不激活样式
-
+ // TODO: 根据插件返回uri确定正在选中的配置 2025-06-04
   const checkedRadio = document.querySelectorAll('div[select-radio="config"]');
   checkedRadio.forEach(item => {
     const disabledAttr = item.attributes.getNamedItem('disabled');
     disabledAttr.nodeValue = "true";
     item.attributes.setNamedItem(disabledAttr);
   });
-
+// 激活样式
   const newAttr = radio.attributes.getNamedItem('disabled');
   newAttr.nodeValue = String(!e.target.checked);
   radio.attributes.setNamedItem(newAttr);
