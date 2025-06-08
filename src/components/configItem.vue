@@ -1,6 +1,6 @@
 <script setup>
 // 配置列表Item
-import {ref, defineProps, watch, defineEmits} from "vue";
+import {ref, defineProps, watch, defineEmits, onMounted, nextTick} from "vue";
 import {userCache} from "@/data/cache.js";
 import {rippleEffect} from "@/animations/customAnimation.js";
 import {loadIcon} from "@/mixins/mixin.js";
@@ -16,6 +16,7 @@ const props = defineProps({
     default: true
   },
   modelValue: String,
+  value: String,
   configFile:{
      type: Object,
      default: () => {
@@ -36,35 +37,54 @@ const configItem = ref(null);
 const radioStyle = ref(null);
 const isDarkMode = userCache.isDark;
 const moreIcon = ref(isDarkMode.value ? loadIcon('more-w') : loadIcon('more-b'));
-
+const isTarget = ref(false);
 /**
  * radio样式切换
- * @param e
  * @param radio
  */
-const handleRadioStyle = (e, radio) => {
-  e.target.checked = true;
+const handleRadioStyle = (radio) => {
+  // console.log(props.modelValue);
+  // console.log(props.value)
+  // e.target.checked = true;
   // 获取radio disabled属性 disabled为true时不激活样式
  // TODO: 根据插件返回uri确定正在选中的配置 2025-06-04
   const checkedRadio = document.querySelectorAll('div[select-radio="config"]');
   checkedRadio.forEach(item => {
     const disabledAttr = item.attributes.getNamedItem('disabled');
     disabledAttr.nodeValue = "true";
-    item.attributes.setNamedItem(disabledAttr);
+    item.attributes.setNamedItem(disabledAttr); // 用于取消之前的样式
   });
 // 激活样式
+if (radio.attributes?.getNamedItem('disabled')){
   const newAttr = radio.attributes.getNamedItem('disabled');
-  newAttr.nodeValue = String(!e.target.checked);
+  console.log(newAttr);
+  newAttr.nodeValue = "false"
   radio.attributes.setNamedItem(newAttr);
-
-  // checkedRadio.forEach(item => {
-  //   const disabledAttr = item.attributes.getNamedItem('disabled');
-  //   console.log(disabledAttr);
-  // });
+}else {
+  checkedRadio.forEach(item => {
+    const inputValue = item.children[0].value;
+    if (inputValue === props.modelValue){
+      const disabledAttr = item.attributes.getNamedItem('disabled');
+      disabledAttr.nodeValue = "false";
+      item.attributes.setNamedItem(disabledAttr);
+    }
+    // disabledAttr.nodeValue = "false";
+    // item.attributes.setNamedItem(disabledAttr);
+  });
+}
+  isTarget.value = props.modelValue === props.value;
+  emit('update:modelValue', props.value);
 }
 
 watch(isDarkMode, (newValue) => {
   newValue ? moreIcon.value = loadIcon('more-w') : moreIcon.value = loadIcon('more-b');
+});
+onMounted(()=>{
+  nextTick( ()=>{
+    setTimeout(() => {
+      handleRadioStyle(radioStyle);
+    }, 200);
+  });
 });
 </script>
 
@@ -72,7 +92,14 @@ watch(isDarkMode, (newValue) => {
       <div class="config-item" ref="configItem" @pointerdown="rippleEffect($event, configItem, {isDark: isDarkMode})">
         <div class="item-left">
           <div class="radio" select-radio="config" disabled="true" ref="radioStyle">
-            <input type="radio" id="config" name="config" value="" @pointerdown="handleRadioStyle($event, radioStyle)"/>
+            <input
+                type="radio"
+                id="config"
+                name="config"
+                :value="props.value"
+                :checked="isTarget"
+                @change="handleRadioStyle(radioStyle)"
+            />
           </div>
           <label style="margin-left: 10px" for="kraken">{{ props.configFile.name }}</label>
         </div>

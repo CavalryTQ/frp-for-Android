@@ -8,7 +8,7 @@ import {userCache} from "@/data/cache.js";
 import {goToPage, loadIcon} from "@/mixins/mixin.js";
 import {useRouter} from "vue-router";
 import About from "@/components/about.vue";
-import Notifications, {BootFailedNotification, BootSuccessNotification} from "@/plugins/notifications.js";
+import  {BootFailedNotification, BootSuccessNotification} from "@/plugins/notifications.js";
 import {LocalNotifications} from "@capacitor/local-notifications";
 import { frp } from 'frp-plugin';
 
@@ -32,33 +32,42 @@ const handleGoToSetting = (info) => {
 }
 const handleActive = async args => {
   console.log('点击推送通知');
-  // const result =  await frp.requestNotificationPermission({value: true});
+  // try {
+  //   await frp.requestNotificationPermission({value: true});
+  // } catch (e) {
+  //   if (e.message.includes('Redirected to settings')) {
+  //     alert('通知权限被永久拒绝，请前往设置手动开启。');
+  //   } else {
+  //     alert('通知权限请求失败：' + e.message);
+  //   }
+  // }
   // console.log('申请通知权限结果：', result);
 
 
-  if (args){
 
-    const resultVPN = await frp.requestVpnPermission({value: true}).catch(e => {
-      console.log('requestVpnPermission error', e);
-      BootFailedNotification.schedule(
-          {notifications: [{
-              id: 2,
-              title: "Frp应用启动失败",
-              body: "Frp客户端应用启动失败，请允许vpn网络权限并重新开启。",
-            }]});
-      isActive.value  = false;
-    });
-    console.log('申请vpn权限结果：', resultVPN);
-    if (resultVPN?.status  === 'granted'){
-      // await starFrpc();
-      await BootSuccessNotification.schedule();
-      isActive.value = true;
-    }
-  }else {
-    await BootSuccessNotification.removeDeliveredNotifications();
-    await BootFailedNotification.removeDeliveredNotifications();
-    isActive.value = false;
-  }
+  // if (args){
+  //
+  //   const resultVPN = await frp.requestVpnPermission({value: true}).catch(e => {
+  //     console.log('requestVpnPermission error', e);
+  //     BootFailedNotification.schedule(
+  //         {notifications: [{
+  //             id: 2,
+  //             title: "Frp应用启动失败",
+  //             body: "Frp客户端应用启动失败，请允许vpn网络权限并重新开启。",
+  //           }]});
+  //     isActive.value  = false;
+  //   });
+  //   console.log('申请vpn权限结果：', resultVPN);
+  //   if (resultVPN?.status  === 'granted'){
+  //     // await starFrpc();
+  //     await BootSuccessNotification.schedule();
+  //     isActive.value = true;
+  //   }
+  // }else {
+  //   await BootSuccessNotification.removeDeliveredNotifications();
+  //   await BootFailedNotification.removeDeliveredNotifications();
+  //   isActive.value = false;
+  // }
 }
 
 const starFrpc = () => {

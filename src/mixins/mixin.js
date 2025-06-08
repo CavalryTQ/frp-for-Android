@@ -27,7 +27,12 @@ export const dynamicModeIcon = (dark, light) => {
          router.go(data);
      }else {
          isBack.value = false;
-         typeof data === 'string' ? router.push(data) : router.push(data.path)
+         typeof data === 'string' ? router.push(data) : router.push({path:  data.path, query: data.query});
      }
+ }
+
+ // 获取当前路由的参数
+ export const getCurrentRouteQuery = (route, attribute) => {
+     return JSON.parse(route.query[attribute]);
  }
 

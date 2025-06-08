@@ -6,29 +6,36 @@ import {nextTick, onMounted, onUnmounted, ref, watch} from "vue";
  //import toml from "toml"; // 引入toml库解析
 import axios from "axios";
 import {userCache} from "@/data/cache.js";
-import {dynamicModeIcon} from "@/mixins/mixin.js";
-import {FileSystem, frpcConfigFile} from "@/plugins/filesystem.js";
+import {dynamicModeIcon, getCurrentRouteQuery} from "@/mixins/mixin.js";
+import {frpcConfigDir, frpcConfigFile} from "@/plugins/filesystem.js";
 import StatusToast from "@/components/statusToast.vue";
-import {Directory} from "@capacitor/filesystem";
+import {loadFrpcConfigFile, loadFrpcConfigDir} from "@/plugins/configMethods.js";
+import {useRoute} from "vue-router";
+import {cloneDeep} from "lodash/lang.js";
 
 // TODO：用户退出当前路由未编辑完成的内容会清空，编辑器需要缓存未编辑完的内容，需要保存到本地 2025-2-14
 const code = ref();
 const saveIcon = ref(dynamicModeIcon('ic--baseline-save-w', 'ic--baseline-save-b'));
 const editor = ref();
 const prop = ref(false);
-// const frpcConfigFile = new FileSystem('/frpc/frpc.toml', 'Data', 'UTF8', '', true);
-// const frpsConfigFile = new ReaddirOptions('/frpc', 'Data');
+const routeQuery = getCurrentRouteQuery(useRoute(), 'file');
 
 const loadData = async () => {
-  const res = await frpcConfigFile.lsDir({
-    path: '/frpc',
-    directory: Directory.Data,
-  });
+  console.log('当前路由参数：', routeQuery);
+  // alert('加载配置文件' + JSON.stringify(routeQuery));
+  const res = await loadFrpcConfigDir();
   const response = await axios.get(`/frpc.toml`);
   if (res.code === 0){
     code.value = response.data;
   }else {
-    const sourceCode = await frpcConfigFile.readSecretFile();
+    // const sourceCode = await frpcConfigFile.readSecretFile();
+    const readFileOptions = cloneDeep(frpcConfigFile.readdirOptions);
+    const uri = routeQuery.uri;
+    const base = '/files';
+    const index = uri.indexOf(base);
+    routeQuery?.uri ?  readFileOptions.path = uri.substring(index + base.length) : readFileOptions.path = '/frpc/frpc.toml';
+    console.log('readFileOptions', readFileOptions);
+    const sourceCode = await loadFrpcConfigFile();
     console.log('读取文件内容', sourceCode.data);
     code.value = sourceCode.data;
     if (!sourceCode.data){

@@ -45,7 +45,7 @@ const transitioning = ref(false);
 const drawer = ref(null);
 
 const initDrawer = () => {
-  console.log('initDrawer',  drawer.value)
+  // console.log('initDrawer',  drawer.value)
   switch (props.direction) {
     case 'bottom':
       drawer.value.style.bottom = '0';

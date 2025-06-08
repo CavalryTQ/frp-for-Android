@@ -30,6 +30,11 @@ export class FileSystem{
      })
 };
 
+    /**
+     *  读取文件
+     * @param options
+     * @returns {Promise<ReadFileResult>}
+     */
  readSecretFile = async (options = this.readFileOptions) => {
      await this.checkPermissions();
      const contents = await this.instance.readFile(options);
@@ -119,7 +124,7 @@ export class FileSystem{
  }
 }
 
-class ReadFileOptions {
+export class ReadFileOptions {
     constructor(path, directoryEnumKey, encodingEnumKey) {
         this.path = path;
         this.directory = Directory[directoryEnumKey];
@@ -129,7 +134,7 @@ class ReadFileOptions {
 
 }
 
- class WriteFileOptions{
+export class WriteFileOptions{
     constructor(path, directoryEnumKey, encodingEnumKey, data, recursive) {
         this.path = path;
         this.directory = Directory[directoryEnumKey];
@@ -155,7 +160,7 @@ class ReadFileOptions {
     }
 }
 
- class ReaddirOptions{
+export class ReaddirOptions{
     constructor(path, directoryEnumKey) {
         this.path = path;
         this.directory = Directory[directoryEnumKey];
@@ -195,6 +200,8 @@ const initEnumKey = (directoryEnumKey, encodingEnumKey, that) => {
 }
 
 export const frpcConfigFile = new FileSystem('/frpc/frpc.toml', 'Data', 'UTF8', '', true);
+export const frpcConfigDir = new FileSystem('/frpc', 'Data', 'UTF8', '', true);
+
 // const rex = (that)=>{
 //     // 校验成员属性....
 //     Object.entries(that).forEach(([key, value]) => {

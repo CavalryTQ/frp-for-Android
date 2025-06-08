@@ -14,8 +14,9 @@ export const userCache = new class Cache {
                 ? cachedDark
                 : this.dark.value
         );
-        this.handleSystemDarkModeChange = this.updateSystemDarkMode.bind(this);
-        systemDarkMode.addEventListener("change", this.handleSystemDarkModeChange);
+        this.selectFrpcConfigName = ref(this.get("selectFrpcConfigName") ? this.get("selectFrpcConfigName") : this.initSettings("selectFrpcConfigName", "frpc.toml"));
+        this.handleSystemDarkModeChange = this.updateSystemDarkMode.bind(this); // 绑定this
+        systemDarkMode.addEventListener("change", this.handleSystemDarkModeChange); // 添加监听器
         this.init();
         watch(this.isDark, (newValue) => {
             console.log("cache isDark:", newValue);

@@ -24,8 +24,11 @@ const router = createRouter({
         component: () => import('@/views/AddConfiguration.vue')
       },
       {
-        path: '/config_edit',
+        path: '/config_edit:',
         name: 'ConfigEdit',
+          props: route => ({
+              file: route.query.file
+          }),
         component: () => import('@/views/ConfigurationEdit.vue')
       },
       {
