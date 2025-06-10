@@ -12,6 +12,7 @@ export class FileSystem{
         this.readFileOptions = new ReadFileOptions(path, directoryEnumKey, encodingEnumKey);
         this.writeFileOptions = new WriteFileOptions(path, directoryEnumKey, encodingEnumKey, this.data, this.recursive);
         this.readdirOptions = new ReaddirOptions(path, directoryEnumKey);
+        this.deleteFileOptions = new DeleteFileOptions(path, directoryEnumKey);
     }
 
 
@@ -37,16 +38,18 @@ export class FileSystem{
      */
  readSecretFile = async (options = this.readFileOptions) => {
      await this.checkPermissions();
-     const contents = await this.instance.readFile(options);
+     const contents = await this.instance.readFile(options).catch((e) => {
+         return e;
+     });
+     console.log('readSecretsFileOptions', options)
     console.log('secrets:', contents);
      console.log('readFile:', contents.data)
      return contents;
 };
 
- deleteSecretFile = async () => {
-    await Filesystem.deleteFile({
-        path: 'secrets/text.txt',
-        directory: Directory.Documents,
+ deleteSecretFile = async (options = this.deleteFileOptions) => {
+    await Filesystem.deleteFile(options).catch((e) => {
+        console.log('deleteFile', e);
     });
 };
 
@@ -177,6 +180,14 @@ export class ReaddirOptions{
             }
         });
         console.log('当前ReaddirOptions', this);
+    }
+}
+
+export class DeleteFileOptions{
+    constructor(path, directoryEnumKey) {
+        this.path = path;
+        this.directory = Directory[directoryEnumKey];
+        initEnumKey(directoryEnumKey, undefined, this);
     }
 }
 

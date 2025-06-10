@@ -33,6 +33,7 @@ export const dynamicModeIcon = (dark, light) => {
 
  // 获取当前路由的参数
  export const getCurrentRouteQuery = (route, attribute) => {
-     return JSON.parse(route.query[attribute]);
+    if (route.query[attribute]) return JSON.parse(route.query[attribute]);
+    else return JSON.parse('{}');
  }
 

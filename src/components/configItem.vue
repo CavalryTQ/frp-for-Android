@@ -37,25 +37,22 @@ const configItem = ref(null);
 const radioStyle = ref(null);
 const isDarkMode = userCache.isDark;
 const moreIcon = ref(isDarkMode.value ? loadIcon('more-w') : loadIcon('more-b'));
-const isTarget = ref(false);
+const isTarget = ref(false); // 是否选中
 /**
  * radio样式切换
  * @param radio
  */
 const handleRadioStyle = (radio) => {
-  // console.log(props.modelValue);
-  // console.log(props.value)
-  // e.target.checked = true;
   // 获取radio disabled属性 disabled为true时不激活样式
- // TODO: 根据插件返回uri确定正在选中的配置 2025-06-04
   const checkedRadio = document.querySelectorAll('div[select-radio="config"]');
   checkedRadio.forEach(item => {
     const disabledAttr = item.attributes.getNamedItem('disabled');
     disabledAttr.nodeValue = "true";
     item.attributes.setNamedItem(disabledAttr); // 用于取消之前的样式
   });
+  console.log(checkedRadio)
 // 激活样式
-if (radio.attributes?.getNamedItem('disabled')){
+if (radio.attributes?.getNamedItem('disabled')){ // 存在disabled属性时取消样式
   const newAttr = radio.attributes.getNamedItem('disabled');
   console.log(newAttr);
   newAttr.nodeValue = "false"
@@ -64,6 +61,12 @@ if (radio.attributes?.getNamedItem('disabled')){
   checkedRadio.forEach(item => {
     const inputValue = item.children[0].value;
     if (inputValue === props.modelValue){
+      // console.log('刷新后遍历：')
+      // console.log(inputValue);
+      // console.log(userCache.selectFrpcConfigName.value);
+      // console.log(props.modelValue);
+      // console.log(props.value);
+      // console.log(item);
       const disabledAttr = item.attributes.getNamedItem('disabled');
       disabledAttr.nodeValue = "false";
       item.attributes.setNamedItem(disabledAttr);
@@ -73,7 +76,7 @@ if (radio.attributes?.getNamedItem('disabled')){
   });
 }
   isTarget.value = props.modelValue === props.value;
-  emit('update:modelValue', props.value);
+  // emit('update:modelValue', props.value);
 }
 
 watch(isDarkMode, (newValue) => {
@@ -81,15 +84,16 @@ watch(isDarkMode, (newValue) => {
 });
 onMounted(()=>{
   nextTick( ()=>{
-    setTimeout(() => {
-      handleRadioStyle(radioStyle);
-    }, 200);
+    handleRadioStyle(radioStyle);
+    // setTimeout( () => {
+    //    // handleRadioStyle(radioStyle);
+    // }, 100);
   });
 });
 </script>
 
 <template>
-      <div class="config-item" ref="configItem" @pointerdown="rippleEffect($event, configItem, {isDark: isDarkMode})">
+      <div class="config-item" ref="configItem" @pointerdown="rippleEffect($event, configItem, {isDark: isDarkMode});emit('update:modelValue', props.value);handleRadioStyle(radioStyle)">
         <div class="item-left">
           <div class="radio" select-radio="config" disabled="true" ref="radioStyle">
             <input
@@ -97,7 +101,7 @@ onMounted(()=>{
                 id="config"
                 name="config"
                 :value="props.value"
-                :checked="isTarget"
+                :checked="props.modelValue === props.value"
                 @change="handleRadioStyle(radioStyle)"
             />
           </div>

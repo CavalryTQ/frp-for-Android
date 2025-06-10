@@ -9,9 +9,10 @@ import {userCache} from "@/data/cache.js";
 import {dynamicModeIcon, getCurrentRouteQuery} from "@/mixins/mixin.js";
 import {frpcConfigDir, frpcConfigFile} from "@/plugins/filesystem.js";
 import StatusToast from "@/components/statusToast.vue";
-import {loadFrpcConfigFile, loadFrpcConfigDir} from "@/plugins/configMethods.js";
+import {loadFrpcConfigFile, loadFrpcConfigDir, saveConfigFile} from "@/plugins/configMethods.js";
 import {useRoute} from "vue-router";
 import {cloneDeep} from "lodash/lang.js";
+import FrpDialog from "@/components/frpDialog.vue";
 
 // TODO：用户退出当前路由未编辑完成的内容会清空，编辑器需要缓存未编辑完的内容，需要保存到本地 2025-2-14
 const code = ref();
@@ -19,42 +20,48 @@ const saveIcon = ref(dynamicModeIcon('ic--baseline-save-w', 'ic--baseline-save-b
 const editor = ref();
 const prop = ref(false);
 const routeQuery = getCurrentRouteQuery(useRoute(), 'file');
+const show = ref(false);
+const dialogType = ref( 'normal'); // textarea normal
+const value  = ref('');
 
 const loadData = async () => {
   console.log('当前路由参数：', routeQuery);
   // alert('加载配置文件' + JSON.stringify(routeQuery));
-  const res = await loadFrpcConfigDir();
+  const res = await routeQuery?.uri ? {code: 1} : {code: 0};
   const response = await axios.get(`/frpc.toml`);
   if (res.code === 0){
     code.value = response.data;
   }else {
-    // const sourceCode = await frpcConfigFile.readSecretFile();
-    const readFileOptions = cloneDeep(frpcConfigFile.readdirOptions);
+    const readFileOptions = cloneDeep(frpcConfigFile.readFileOptions);
     const uri = routeQuery.uri;
     const base = '/files';
     const index = uri.indexOf(base);
     routeQuery?.uri ?  readFileOptions.path = uri.substring(index + base.length) : readFileOptions.path = '/frpc/frpc.toml';
     console.log('readFileOptions', readFileOptions);
-    const sourceCode = await loadFrpcConfigFile();
+    const sourceCode = await loadFrpcConfigFile(readFileOptions);
     console.log('读取文件内容', sourceCode.data);
     code.value = sourceCode.data;
     if (!sourceCode.data){
       code.value = response.data;
     }
   }
-
-
-
-
 };
 
 const handleSave = async () => {
     if (editor.value){
-      editor.value.getInputField().blur();
-     await frpcConfigFile.setData(editor.value.getValue());
-     const res = await frpcConfigFile.writeSecretFile();
-     frpcConfigFile.setReadDirOptions({path: '/frpc', directory: 'Data'});
-      console.log(res.message)
+      editor.value.getInputField().blur(); // 触发blur事件
+      if (routeQuery?.uri){
+        console.log('写入已有文件', routeQuery.uri, routeQuery.name);
+         await saveConfigFile(routeQuery.name, editor.value.getValue())
+      }else {
+        console.log('保存新文件')
+        dialogType.value  = 'textarea';
+        show.value = true;
+      }
+     // await frpcConfigFile.setData(editor.value.getValue());
+     // const res = await frpcConfigFile.writeSecretFile();
+     // frpcConfigFile.setReadDirOptions({path: '/frpc', directory: 'Data'});
+     //  console.log(res.message)
     }
   prop.value = !prop.value;
 }
@@ -65,14 +72,21 @@ const handleBlur = (args) => {
       userCache.set('configCache', text);
     }
 }
-
+const handleConfirm = (args) => {
+  console.log('handleConfirm', args.value);
+  saveConfigFile(args.value + '.toml', editor.value.getValue()).then(res => {
+    console.log(res);
+  }).catch(e=>{
+    console.log(e);
+  });
+};
 
 
 watch(userCache.isDark, () => {
   saveIcon.value = dynamicModeIcon('ic--baseline-save-w', 'ic--baseline-save-b')
 });
-watch(editor, (newValue)=>{
-  console.log('editor', newValue);
+watch(value, (newValue)=>{
+  console.log('FileNameValue', newValue);
 });
 
 onMounted( ()=>{
@@ -96,6 +110,16 @@ onUnmounted(()=>{
       </template>
     </app-header>
     <status-toast :is-show="prop"/>
+    <frp-dialog v-model="value" :type="dialogType"
+                :visible="show"
+                @close="args => {show = args}"
+                @confirm="args => {handleConfirm(args)}"
+    >
+      <template #title>
+        保存配置文件
+      </template>
+      <template #content></template>
+    </frp-dialog>
     <div class="config-edit-content">
        <code-edit v-model="code" @blur="args => {handleBlur(args)}" v-model:editor-options="editor" ></code-edit>
     </div>

@@ -1,5 +1,5 @@
 # Frp client config
-serverAddr = "117.72.118.87"
+serverAddr = "your.domain.name"
 serverPort = 3244
 auth.token = "3244228202"
 

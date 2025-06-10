@@ -7,7 +7,7 @@ import {nextTick, onMounted, ref, watch} from "vue";
 import {userCache} from "@/data/cache.js";
 import {goToPage, loadIcon} from "@/mixins/mixin.js";
 import {useRouter} from "vue-router";
-import {loadFrpcConfigDir} from "@/plugins/configMethods.js";
+import {deleteConfigFile, loadFrpcConfigDir} from "@/plugins/configMethods.js";
 
 const popup = ref(false);
 const router = useRouter();
@@ -28,7 +28,7 @@ const configList = ref([
     mtime: 0,
     uri: '/frpc/frpc.toml'
   }
-]); // TODO：配置详细操作，需要对接插件方法 2025-06-04 改为前端封装 20250608
+]);
 const dialogOperate = ref([
   {
     name: '编辑',
@@ -63,7 +63,7 @@ const handleSelectFile = (file, index) => {
   console.log(file, index, "handleSelectFile");
   selectConfigFile.value = file;
 };
-const handleGoTOEdit = (args) => {
+const handleGoTOEdit = async (args) => {
   switch (args.name) {
     case '编辑':
       goToPage(router,{path: '/config_edit', query: {file: JSON.stringify(selectConfigFile.value)}})
@@ -71,6 +71,9 @@ const handleGoTOEdit = (args) => {
     case '复制':
       break;
     case '删除':
+      await deleteConfigFile(selectConfigFile.value.name);
+      // 重新加载文件列表
+      await loadConfigFileList();
       break;
   }
 };
@@ -148,8 +151,8 @@ onMounted(()=>{
                     :config-file="item"
                     v-model="configValue"
                     :value="item.name"
-                    v-memo="item.uri"
                     @update:modelValue="args => {
+                      console.log(args, 'update:modelValue');
                       userCache.init('selectFrpcConfigName', args);
                     }"
                     @pointerdown="handleSelectFile(item,  index)"
