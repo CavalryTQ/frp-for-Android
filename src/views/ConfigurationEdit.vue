@@ -85,9 +85,6 @@ const handleConfirm = (args) => {
 watch(userCache.isDark, () => {
   saveIcon.value = dynamicModeIcon('ic--baseline-save-w', 'ic--baseline-save-b')
 });
-watch(value, (newValue)=>{
-  console.log('FileNameValue', newValue);
-});
 
 onMounted( ()=>{
   nextTick(()=>{

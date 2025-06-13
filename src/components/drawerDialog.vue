@@ -144,7 +144,7 @@ onMounted(()=>{
   bottom: 0;
   //width: 100%;
   height: auto;
-  background-color: var(--app-darwer-dialog-bg);
+  background-color: var(--app-background);
   display: flex;
   flex-direction: column;
   .drawer-close{
@@ -160,7 +160,7 @@ onMounted(()=>{
 }
 @media (prefers-color-scheme: dark){
   .drawer-content {
-    background-color: var(--app-darwer-dialog-bg);
+    background-color: var(--app-background);
   }
 }
 .drawer-content-bottom{

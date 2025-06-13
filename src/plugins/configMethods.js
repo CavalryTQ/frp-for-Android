@@ -36,8 +36,8 @@ export const saveConfigFile = async (
            writeFileOptions.data = data;
            // 加载是否有同名配置
            const configWriteFile = await frpcConfigFile.writeSecretFile(writeFileOptions);
-           console.log("writeFileOptions", writeFileOptions)
-           console.log("saveConfig", configWriteFile, data);
+           // console.log("writeFileOptions", writeFileOptions)
+           // console.log("saveConfig", configWriteFile, data);
            // const configFile = await frpcConfigFile.writeSecretFile(writeFileOptions);
        } catch (e) {
            reject(e);
@@ -51,7 +51,7 @@ export  const deleteConfigFile = async (fileName = 'frpc.toml') => {
             const deleteFileOptions = await cloneDeep(frpcConfigDir.deleteFileOptions);
             deleteFileOptions.path = '/frpc/' + fileName;
             const configDeleteFile = await frpcConfigFile.deleteSecretFile(deleteFileOptions);
-            console.log("deleteConfig", configDeleteFile);
+            // console.log("deleteConfig", configDeleteFile);
             resolve(configDeleteFile);
         } catch (e) {
             reject(e);

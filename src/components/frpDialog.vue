@@ -67,19 +67,20 @@ const handleConfirm = (e) => {
 <style scoped lang="scss">
   .dialog-cover{
     position: fixed;
+    top: 0;
+    left: 0;
     background: rgb(0,0,0,0.5);
-    width: 100%;
-    height: 100%;
-    z-index: 999;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     .dialog-box{
       width: 1032px;
       height: auto;
       background: var(--app-btn-bg);
-      position: absolute;
+
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -90,8 +91,11 @@ const handleConfirm = (e) => {
         font-size: 55px;
       }
       .dialog-content{
-        color: #b3b3b3;
+        color: #7c7c7c;
         font-size: 45px;
+      }
+      @media (prefers-color-scheme: dark) {
+        color: #b3b3b3;
       }
       .dialog-textarea{
         position: relative;

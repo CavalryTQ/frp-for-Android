@@ -35,13 +35,12 @@ if (props.type){
     isDarkModel.value ? Icon.value = loadIcon('circle-w') : Icon.value = loadIcon('circle-b');
     title.value = '运行中';
     text.value = '点击停止';
-    emit('isActive', true);
   }else {
     isDarkModel.value ? Icon.value = loadIcon('ic--baseline-block-w') : Icon.value = loadIcon('ic--baseline-block-b');
     title.value = '已停止';
     text.value = '点击启动';
-    emit('isActive', false);
   }
+  emit('isActive', props.isActive);
 }
 
 

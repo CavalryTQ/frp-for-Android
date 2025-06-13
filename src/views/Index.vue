@@ -11,13 +11,16 @@ import About from "@/components/about.vue";
 import  {BootFailedNotification, BootSuccessNotification} from "@/plugins/notifications.js";
 import {LocalNotifications} from "@capacitor/local-notifications";
 import { frp } from 'frp-plugin';
+import FrpDialog from "@/components/frpDialog.vue";
+import {getFrpcStatus, starFrpc, stopFrpc} from "@/frp/frpc.js";
 
 const router = useRouter();
 const popupAbout = ref(false);
 const content = ref(null);
 const configIcon = userCache.isDark.value ? ref(loadIcon('view-w')) : ref(loadIcon('view-b'));
-const isRunFrp = ref(false);
+const dialog = ref(false);
 const isActive = ref(false);
+const isOpened = ref(false);
 // isActive.value = isRunFrp.value;
 
 
@@ -25,77 +28,82 @@ const handlePointerUp = () => {
   goToPage(router, "/config");
 }
 const handleGoToLog = (info) => {
-  goToPage(router, info.path)
+  // goToPage(router, info.path)
 }
 const handleGoToSetting = (info) => {
   goToPage(router, info.path)
 }
-const handleActive = async args => {
+// const handleActive = async args => {
+//
+// }
+
+const confirmActive = async () => {
+  // console.log('beforeActive');
+  const {status} =  await getFrpcStatus().catch(e => {
+     isActive.value = false;
+   });
+   isActive.value = !status; // 状态取反
+   isOpened.value = status;
+  console.log('Active前后最终状态：', isActive.value, 'isOpened', isOpened.value);
+};
+
+const handleActive = async (options) => {
+  await confirmActive();
   console.log('点击推送通知');
-  // try {
-  //   await frp.requestNotificationPermission({value: true});
-  // } catch (e) {
-  //   if (e.message.includes('Redirected to settings')) {
-  //     alert('通知权限被永久拒绝，请前往设置手动开启。');
-  //   } else {
-  //     alert('通知权限请求失败：' + e.message);
-  //   }
-  // }
+  try {
+    await frp.requestNotificationPermission({value: true});
+  } catch (e) {
+    // console.log('requestNotificationPermission error', e);
+    if (e.message.includes('Redirected to settings')) {
+      // alert('通知权限被永久拒绝，请前往设置手动开启。');
+      dialog.value = true;
+    } else {
+      alert('通知权限请求失败：' + e.message);
+    }
+  }
   // console.log('申请通知权限结果：', result);
 
-
-
-  // if (args){
-  //
-  //   const resultVPN = await frp.requestVpnPermission({value: true}).catch(e => {
-  //     console.log('requestVpnPermission error', e);
-  //     BootFailedNotification.schedule(
-  //         {notifications: [{
-  //             id: 2,
-  //             title: "Frp应用启动失败",
-  //             body: "Frp客户端应用启动失败，请允许vpn网络权限并重新开启。",
-  //           }]});
-  //     isActive.value  = false;
-  //   });
-  //   console.log('申请vpn权限结果：', resultVPN);
-  //   if (resultVPN?.status  === 'granted'){
-  //     // await starFrpc();
-  //     await BootSuccessNotification.schedule();
-  //     isActive.value = true;
-  //   }
-  // }else {
-  //   await BootSuccessNotification.removeDeliveredNotifications();
-  //   await BootFailedNotification.removeDeliveredNotifications();
-  //   isActive.value = false;
-  // }
-}
-
-const starFrpc = () => {
-  return new Promise((resolve, reject) => {
-    frp.startDummyVpn().then((result) => {
-      console.log('startDummyVpn授权 result', result);
-      if (result.status  !== 'requested'){
-        frp.testStartFrpc();
-        resolve(result);
-      }else {
+  if (isActive.value){
+    const resultVPN = await frp.requestVpnPermission({value: true}).catch(e => {
+      console.log('requestVpnPermission error', e);
+      BootFailedNotification.schedule(
+          {notifications: [{
+              id: 2,
+              title: "Frp应用启动失败",
+              body: "Frp客户端应用启动失败，请允许vpn网络权限并重新开启。",
+            }]});
+      // isActive.value  = false;
+    });
+    console.log('申请vpn权限结果：', resultVPN);
+    if (resultVPN?.granted || resultVPN?.status === 'granted'){ // 两种状态可放行，resultVPN?.status == 'granted'为用户首次授权，resultVPN?.granted为true为已授权状态
+      const res = await starFrpc().catch(e => {
+        // console.log('启动frpc结果：', e);
         BootFailedNotification.schedule(
             {notifications: [{
-                    id: 2,
-                    title: "Frp应用启动失败",
-                    body: "Frp客户端应用启动失败，请允许vpn网络权限并重新开启。",
-                  }]});
-        isActive.value  = false;
-        reject('未获取vpn权限');
-      }
-    }).catch((error) => {
-      reject(error);
+              id: 1,
+              title: "Frp应用启动失败",
+              body: "Frp客户端应用启动失败，请检查网络或配置并重新开启。",
+            }]});
+        // isActive.value  = false;
+      });
+      console.log('启动frpc结果：', res)
+      // await BootSuccessNotification.schedule();
+      // isActive.value = true;
+    }
+  }else {
+    await stopFrpc().catch(e => {
+      console.log('关闭frpc结果错误：', e);
+      // isActive.value  = true;
     });
-  });
+    await BootSuccessNotification.removeDeliveredNotifications();
+    await BootFailedNotification.removeDeliveredNotifications();
+    // isActive.value = false;
+  }
+  // await confirmActive();
 }
-
-const changeActive = () => {
-  isActive.value =  !isActive.value;
-}
+const handleConfirm = (args) => {
+  frp.openAppSettings();
+};
 
 watch(userCache.isDark, (newValue) => {
   configIcon.value = newValue ? loadIcon('view-w') : loadIcon('view-b');
@@ -106,6 +114,12 @@ onMounted(() => {
  LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
     console.log('通知被点击:', JSON.stringify(notification, null, 2));
   });
+  frp.addListener('frpOutput',  (data) => {
+   console.log('frp输出：', data);
+   // if (data?.FrpLine.include('Process exited with code')){
+   //   BootSuccessNotification.removeDeliveredNotifications();
+   // }
+ });
 })
 </script>
 
@@ -113,13 +127,24 @@ onMounted(() => {
   <div class="content">
     <index-header></index-header>
      <div class="body-content" ref="content">
-       <mainButton :type="true" @pointerdown="changeActive()" :is-active="isActive" @isActive="args => {handleActive(args)}"/>
+       <mainButton :type="true" @pointerdown="handleActive" :is-active="isActive" @isActive="args => {}"/>
        <mainButton v-model:icon="configIcon" title="配置" text="点击编辑" @pointerup="handlePointerUp"/>
        <function-group @about="args => {popupAbout = args}"
                        @log="args => {handleGoToLog(args)}"
                        @setting="args => {handleGoToSetting(args)}"
        ></function-group>
      </div>
+    <frp-dialog :visible="dialog"
+                @close="args => {dialog = args}"
+                @confirm="args => {handleConfirm(args)}"
+    >
+      <template #title>
+        权限提示
+      </template>
+      <template  #content>
+        通知权限被永久拒绝，请前往设置手动开启。
+      </template>
+    </frp-dialog>
     <about :show="popupAbout" @close="args => {popupAbout = args}"></about>
   </div>
 </template>

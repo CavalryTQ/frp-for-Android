@@ -32,7 +32,7 @@ App.addListener( 'backButton', ()=>{
   console.log('backButton监听！');
   if (route.path === '/' || route.path === '/index') {
 
-    App.minimizeApp();
+    App.minimizeApp();// 应用最小化
   }else {
     goToPage(router, -1);
   }
@@ -155,7 +155,7 @@ onBeforeUnmount(() => {
 .scale-slide-go-enter-active,
 .scale-slide-go-leave-active{
   position: absolute;
-  transition: all 0.8s ease;
+  transition: all 0.5s ease;
 }
 
 /*滑动组合动画 back（go-1)*/

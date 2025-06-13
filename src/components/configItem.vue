@@ -127,7 +127,7 @@ input[type="radio"]{
 }
 /*radio确认样式*/
 input[type="radio"]:checked{
-  background: #1976D3;
+  background: var(--app-label-color);
   width: 60%;
   height: 60%;
   border: none;
@@ -167,7 +167,7 @@ input[type="radio"]:checked{
          display: flex;
          justify-content: center;
          align-items: center;
-         border: 8px solid #1976D3;
+         border: 8px solid var(--app-label-color);
          border-radius: 50%;
          position: relative;
        }
@@ -223,7 +223,7 @@ input[type="radio"]:checked{
   }
   /*radio确认样式*/
   input[type="radio"]:checked{
-    background: #1976D3;
+    background: var(--app-label-color);
     width: 60%;
     height: 60%;
     border: none;
@@ -261,7 +261,7 @@ input[type="radio"]:checked{
         display: flex;
         justify-content: center;
         align-items: center;
-        border: calc(8 * var(--scale-factor-width)) solid #1976D3;
+        border: calc(8 * var(--scale-factor-width)) solid var(--app-label-color);
         border-radius: 50%;
         position: relative;
       }

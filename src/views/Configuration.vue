@@ -92,24 +92,7 @@ const loadConfigFileList = async () => {
     configList.value = res.files;
   }else {
     console.log('读取文件内容失败', "loadConfigFileList");
-    configList.value = [
-      {
-        name: 'default.toml',
-        type:  'file',
-        size: 0,
-        ctime: 0,
-        mtime: 0,
-        uri: '/frpc/frpc.toml'
-      },
-      {
-        name: 'default1.toml',
-        type:  'file1',
-        size: 0,
-        ctime: 0,
-        mtime: 0,
-        uri: '/frpc/frpc1.toml'
-      },
-    ];
+    configList.value = [];
   }
 };
 
