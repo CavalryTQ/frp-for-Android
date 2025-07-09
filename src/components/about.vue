@@ -27,7 +27,11 @@ const handleClose = (e) => {
        <p>
          A fast reverse proxy to help you expose a local server behind a NAT or firewall to the internet.
           <br>
+         <br>
          GitHub: <a href="https://github.com/fatedier/frp">https://github.com/fatedier/frp</a>
+         <br>
+         <br>
+         UI Ref: Clash for Android
          <br>
          <br>
          core version: {{ '0.61.0' }}
