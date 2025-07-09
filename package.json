@@ -19,6 +19,7 @@
     "@capacitor/keyboard": "^7.0.0",
     "@capacitor/local-notifications": "^7.0.0",
     "@capacitor/preferences": "^7.0.0",
+    "ansi-to-html": "^0.7.2",
     "axios": "^1.7.9",
     "codemirror": "^5.65.18",
     "dayjs": "^1.11.13",

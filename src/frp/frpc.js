@@ -1,5 +1,5 @@
 import {userCache} from "@/data/cache.js";
-import {frp} from "../../../frp-plugin/frp-plugin/dist/esm/index.js";
+import { frp } from 'frp-plugin';
 import {BootFailedNotification} from "@/plugins/notifications.js";
 
 
@@ -33,14 +33,14 @@ export const starFrpc = (options = {
 
 export const stopFrpc = (options) => {
     return new Promise(async (resolve, reject) => {
-       await frp.stopFrpc().then((result) => {
-            console.log('停止frpc结果：', result)
-            resolve(result);
+        await frp.stopDummyVpn().then((result) => {
+            console.log('停止DummyVpn结果：', result)
         }).catch((error) => {
             reject(error);
         });
-       await frp.stopDummyVpn().then((result) => {
-            console.log('停止DummyVpn结果：', result)
+       await frp.stopFrpc().then((result) => {
+            console.log('停止frpc结果：', result)
+            resolve(result);
         }).catch((error) => {
             reject(error);
         });

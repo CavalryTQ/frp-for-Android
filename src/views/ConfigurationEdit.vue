@@ -6,11 +6,11 @@ import {nextTick, onMounted, onUnmounted, ref, watch} from "vue";
  //import toml from "toml"; // 引入toml库解析
 import axios from "axios";
 import {userCache} from "@/data/cache.js";
-import {dynamicModeIcon, getCurrentRouteQuery} from "@/mixins/mixin.js";
+import {dynamicModeIcon, getCurrentRouteQuery, goToPage} from "@/mixins/mixin.js";
 import {frpcConfigDir, frpcConfigFile} from "@/plugins/filesystem.js";
 import StatusToast from "@/components/statusToast.vue";
 import {loadFrpcConfigFile, loadFrpcConfigDir, saveConfigFile} from "@/plugins/configMethods.js";
-import {useRoute} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import {cloneDeep} from "lodash/lang.js";
 import FrpDialog from "@/components/frpDialog.vue";
 
@@ -23,6 +23,7 @@ const routeQuery = getCurrentRouteQuery(useRoute(), 'file');
 const show = ref(false);
 const dialogType = ref( 'normal'); // textarea normal
 const value  = ref('');
+const router = useRouter();
 
 const loadData = async () => {
   console.log('当前路由参数：', routeQuery);
@@ -52,7 +53,12 @@ const handleSave = async () => {
       editor.value.getInputField().blur(); // 触发blur事件
       if (routeQuery?.uri){
         console.log('写入已有文件', routeQuery.uri, routeQuery.name);
-         await saveConfigFile(routeQuery.name, editor.value.getValue())
+        prop.value = true;
+         await saveConfigFile(routeQuery.name, editor.value.getValue()).then(res => {
+         });
+         setTimeout(() => {
+           
+         })
       }else {
         console.log('保存新文件')
         dialogType.value  = 'textarea';
@@ -63,7 +69,6 @@ const handleSave = async () => {
      // frpcConfigFile.setReadDirOptions({path: '/frpc', directory: 'Data'});
      //  console.log(res.message)
     }
-  prop.value = !prop.value;
 }
 const handleBlur = (args) => {
     // 获取文本内容
@@ -76,6 +81,10 @@ const handleConfirm = (args) => {
   console.log('handleConfirm', args.value);
   saveConfigFile(args.value + '.toml', editor.value.getValue()).then(res => {
     console.log(res);
+    prop.value = true;
+    setTimeout(() => {
+      goToPage(router,-2);
+    },  1000);
   }).catch(e=>{
     console.log(e);
   });

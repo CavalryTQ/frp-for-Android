@@ -23,22 +23,14 @@ const handleClose = (e) => {
   <div class="about-dialog" v-if="props.show" @pointerdown="handleClose">
     <div class="about-body" @pointerdown.stop>
        <h2>Fast Reverse Proxy</h2>
+      <br>
        <p>
-          Fast Reverse Proxy 是一个快速、轻量级的反向代理服务器，支持 HTTP/HTTPS 协议。
+         A fast reverse proxy to help you expose a local server behind a NAT or firewall to the internet.
           <br>
-          <br>
-          使用方法：
-          <br>
-          1. 将需要代理的网站域名添加到配置文件中。
-          <br>
-          2. 启动服务。
-          <br>
-          3. 访问 http://localhost:8080/[域名] 即可访问。
-          <br>
-          <br>
-          支持的协议：
-          <br>
-          HTTP/HTTPS
+         GitHub: <a href="https://github.com/fatedier/frp">https://github.com/fatedier/frp</a>
+         <br>
+         <br>
+         core version: {{ '0.61.0' }}
        </p>
     </div>
   </div>
@@ -61,9 +53,9 @@ const handleClose = (e) => {
      height: auto;
      display: flex;
      flex-direction: column;
-     padding: 32px;
+     padding: 50px;
      text-align: center;
-     background-color: var(--app-background);
+     background-color: var(--app-btn-bg);
      border-radius: 64px;
    }
  }

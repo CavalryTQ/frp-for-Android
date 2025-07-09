@@ -36,6 +36,7 @@ export const saveConfigFile = async (
            writeFileOptions.data = data;
            // 加载是否有同名配置
            const configWriteFile = await frpcConfigFile.writeSecretFile(writeFileOptions);
+           resolve(configWriteFile);
            // console.log("writeFileOptions", writeFileOptions)
            // console.log("saveConfig", configWriteFile, data);
            // const configFile = await frpcConfigFile.writeSecretFile(writeFileOptions);
