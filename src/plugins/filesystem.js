@@ -7,52 +7,82 @@ export class FileSystem{
     constructor(path, directoryEnumKey, encodingEnumKey, data, recursive) {
         this.isApp = Capacitor.getPlatform() !== 'web';
         this.instance = this.isApp ? Filesystem : new Error('Platform not supported');
+        this.data = data;
+        this.recursive = recursive;
         this.readFileOptions = new ReadFileOptions(path, directoryEnumKey, encodingEnumKey);
-        this.writeFileOptions = new WriteFileOptions(path, directoryEnumKey, encodingEnumKey, data, recursive);
+        this.writeFileOptions = new WriteFileOptions(path, directoryEnumKey, encodingEnumKey, this.data, this.recursive);
         this.readdirOptions = new ReaddirOptions(path, directoryEnumKey);
+        this.deleteFileOptions = new DeleteFileOptions(path, directoryEnumKey);
     }
 
 
  writeSecretFile = async (options = this.writeFileOptions) => {
     console.log('writeSecretFile')
      await this.checkPermissions();
-     await Filesystem.writeFile(options).then((result) => {
-         console.log('writeFile:', JSON.stringify(result, null, 2));
-     });
+     return await new Promise((resolve, reject) => {
+         console.log('writeFile', options);
+       Filesystem.writeFile(options).then((result) => {
+             console.log('writeFile:', JSON.stringify(result, null, 2));
+             resolve(result);
+         }).catch((e) => {
+             console.log('error:', JSON.stringify(e, null, 2));
+             reject(e);
+         });
+     })
 };
 
+    /**
+     *  读取文件
+     * @param options
+     * @returns {Promise<ReadFileResult>}
+     */
  readSecretFile = async (options = this.readFileOptions) => {
-    const contents = await Filesystem.readFile(options);
-    await this.checkPermissions();
+     await this.checkPermissions();
+     const contents = await this.instance.readFile(options).catch((e) => {
+         return e;
+     });
+     console.log('readSecretsFileOptions', options)
     console.log('secrets:', contents);
+     console.log('readFile:', contents.data)
+     return contents;
 };
 
- deleteSecretFile = async () => {
-    await Filesystem.deleteFile({
-        path: 'secrets/text.txt',
-        directory: Directory.Documents,
+ deleteSecretFile = async (options = this.deleteFileOptions) => {
+    await Filesystem.deleteFile(options).catch((e) => {
+        console.log('deleteFile', e);
     });
 };
 
-
-mkDir = async (options = {
-    path: '/storage/emulated/0/test',
-    directory: Directory.Documents,
-    recursive: true,
-}) => {
+    /**
+     *
+     * @param options
+     * @returns {Promise<void>}
+     */
+    mkDir = async (options = this.writeFileOptions) => {
     await this.checkPermissions();
     console.log('mkDir');
     console.log(JSON.stringify(options, null, 2));
-   const result =  await Filesystem.mkdir(options);
+   const result =  await this.instance.mkdir(options);
     console.log('result:', JSON.stringify(result, null, 2));
 };
 
-lsDir = async (options = this.readdirOptions) => {
+    /**
+     * 返回目录中的文件列表（非递归）
+     * @param options
+     * @returns {Promise<ReaddirResult>}
+     */
+    lsDir = async (options = this.readdirOptions) => {
     await this.checkPermissions();
     console.log('lsDir', options);
     console.log(JSON.stringify(options, null, 2));
-    const result = await Filesystem.readdir(options);
+    const result = await Filesystem.readdir(options).catch((e) => {
+        return {
+            code: 0,
+            message: e.message
+        }
+    });
     console.log('result:', JSON.stringify(result, null, 2));
+    return result;
 };
  checkPermissions = async () => {
     const status = await Filesystem.checkPermissions();
@@ -61,10 +91,43 @@ lsDir = async (options = this.readdirOptions) => {
         const { publicStorage } = await Filesystem.requestPermissions();
         console.log('publicStorage:', JSON.stringify(publicStorage, null, 2));
     }
+
 };
+
+ setData = async (data) => {
+    this.data = data;
+    this.writeFileOptions.data = data;
+ }
+
+ setReadDirOptions =  (options = {
+     path: '/',
+     directory: 'Documents'
+ }) => {
+     const Op = options;
+     Op.directory = Directory[options.directory];
+     this.readdirOptions.init(Op);
+     console.log('setReadDirOptions This', this.readdirOptions);
+ }
+ setWriteFileOptions = (options = {
+     path: '/',
+     directory: 'Documents',
+     encoding: 'UTF8',
+     data: '',
+     recursive: false
+ }) => {
+     const Op = Object.entries(options).map(([key, value]) => {
+         if (key === 'directory') {
+             value = Directory[value];
+         }
+         if (key === 'encoding') {
+             value = Encoding[value];
+         }
+     });
+     this.writeFileOptions.init(Op)
+ }
 }
 
-class ReadFileOptions {
+export class ReadFileOptions {
     constructor(path, directoryEnumKey, encodingEnumKey) {
         this.path = path;
         this.directory = Directory[directoryEnumKey];
@@ -74,7 +137,7 @@ class ReadFileOptions {
 
 }
 
-export class WriteFileOptions {
+export class WriteFileOptions{
     constructor(path, directoryEnumKey, encodingEnumKey, data, recursive) {
         this.path = path;
         this.directory = Directory[directoryEnumKey];
@@ -84,9 +147,43 @@ export class WriteFileOptions {
         initEnumKey(directoryEnumKey, encodingEnumKey, this);
         // rex(this);
     }
+
+    init(options = {
+        path: '/',
+        directory: Directory.Documents,
+        encoding: Encoding.UTF8,
+        data: '',
+        recursive: false
+    }){
+        Object.entries(options).forEach(([key, value]) => {
+            if (value !== undefined) {
+                this[key] = value;
+            }
+        });
+    }
 }
 
 export class ReaddirOptions{
+    constructor(path, directoryEnumKey) {
+        this.path = path;
+        this.directory = Directory[directoryEnumKey];
+        initEnumKey(directoryEnumKey, undefined, this);
+    }
+
+    init(options = {
+        path: '/',
+        directory: Directory.Documents
+    }){
+        Object.entries(options).forEach(([key, value]) => {
+            if (value !== undefined) {
+                this[key] = value;
+            }
+        });
+        console.log('当前ReaddirOptions', this);
+    }
+}
+
+export class DeleteFileOptions{
     constructor(path, directoryEnumKey) {
         this.path = path;
         this.directory = Directory[directoryEnumKey];
@@ -112,87 +209,27 @@ const initEnumKey = (directoryEnumKey, encodingEnumKey, that) => {
         that.encoding = Encoding[key];
     }
 }
-const rex = (that)=>{
-    // 校验成员属性....
-    Object.entries(that).forEach(([key, value]) => {
-        if (value === undefined) {
-            throw new Error(`${key} is required`);
-        }
-    });
-}
 
-// export const writeSecretFile = async (options = {
-//     path: 'secrets/text.txt',
-//     data: 'This is a test',
-//     directory: Directory.Documents,
-//     encoding: Encoding.UTF8,
-// }) => {
-//     console.log('writeSecretFile')
-//     await checkPermissions();
-//      await Filesystem.writeFile(options).then((result) => {
-//          console.log('writeFile:', JSON.stringify(result, null, 2));
-//      });
-// };
-//
-// export const readSecretFile = async () => {
-//     const contents = await Filesystem.readFile({
-//         path: 'secrets/text.txt',
-//         directory: Directory.Documents,
-//         encoding: Encoding.UTF8,
+export const frpcConfigFile = new FileSystem('/frpc/frpc.toml', 'Data', 'UTF8', '', true);
+export const frpcConfigDir = new FileSystem('/frpc', 'Data', 'UTF8', '', true);
+
+// const rex = (that)=>{
+//     // 校验成员属性....
+//     Object.entries(that).forEach(([key, value]) => {
+//         if (value === undefined) {
+//             throw new Error(`${key} is required`);
+//         }
 //     });
-//     await checkPermissions();
-//     console.log('secrets:', contents);
-// };
-//
-// const deleteSecretFile = async () => {
-//     await Filesystem.deleteFile({
-//         path: 'secrets/text.txt',
-//         directory: Directory.Documents,
-//     });
-// };
-//
-// export const readFilePath = async (options = {
-//     path: '/test.txt',
-//     directory: Directory.Documents,
-//     encoding: Encoding.UTF8,
-// }) => {
-//     // Here's an example of reading a file with a full file path. Use this to
-//     // read binary data (base64 encoded) from plugins that return File URIs, such as
-//     // the Camera.
-//     const contents = await Filesystem.readFile(options).catch((e) => {
-//         console.log('error:', JSON.stringify(e, null, 2));
-//     });
-//
-//     console.log('data:', JSON.stringify(contents, null, 2));
-// };
-//
-// export const mkDir = async (options = {
-//     path: '/storage/emulated/0/test',
-//     directory: Directory.Documents,
-//     recursive: true,
-// }) => {
-//     await checkPermissions();
-//     console.log('mkDir');
-//     console.log(JSON.stringify(options, null, 2));
-//    const result =  await Filesystem.mkdir(options);
-//     console.log('result:', JSON.stringify(result, null, 2));
-// };
-//
-// export const lsDir = async (options = {
-//     path: '/',
-//     directory: Directory.Data,
-// }) => {
-//     await checkPermissions();
-//     console.log('lsDir');
-//     console.log(JSON.stringify(options, null, 2));
-//     const result = await Filesystem.readdir(options);
-//     console.log('result:', JSON.stringify(result, null, 2));
-// };
-// const checkPermissions = async () => {
-//     const status = await Filesystem.checkPermissions();
-//     console.log('status:', JSON.stringify(status, null, 2));
-//     if (status.publicStorage !== 'granted') {
-//         const { publicStorage } = await Filesystem.requestPermissions();
-//         console.log('publicStorage:', JSON.stringify(publicStorage, null, 2));
+// }
+
+// class ReadFileResult  {
+//     constructor(data, path, directory, encoding) {
+//         this.data = data;
+//         this.path = path;
+//         this.directory = directory;
+//         this.encoding = encoding;
 //     }
-// };
+// }
+
+
+

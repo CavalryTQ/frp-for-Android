@@ -1,4 +1,6 @@
 import {ref, watch} from "vue";
+import { frp } from 'frp-plugin';
+import {getFrpcStatus} from "@/frp/frpc.js";
 
 export const userCache = new class Cache {
     constructor(storageType = "localStorage") {
@@ -14,24 +16,45 @@ export const userCache = new class Cache {
                 ? cachedDark
                 : this.dark.value
         );
-        this.handleSystemDarkModeChange = this.updateSystemDarkMode.bind(this);
-        systemDarkMode.addEventListener("change", this.handleSystemDarkModeChange);
+        this.selectFrpcConfigName = ref(this.get("selectFrpcConfigName") ? this.get("selectFrpcConfigName") : this.initSettings("selectFrpcConfigName", "frpc.toml"));
+        this.syncLogs = ref(this.get("syncLogs") ? this.get("syncLogs") : this.initSettings("syncLogs", [{FrpLine: ''}]));
+        this.lastOutPut = ref(this.get("outPut") ? this.get("outPut") : this.initSettings("lastOutPut", {FrpLine: ''}));
+        this.tempLogs = ref([]);
+        this.handleSystemDarkModeChange = this.updateSystemDarkMode.bind(this); // 绑定this
+        systemDarkMode.addEventListener("change", this.handleSystemDarkModeChange); // 添加监听器
         this.init();
         watch(this.isDark, (newValue) => {
             console.log("cache isDark:", newValue);
             this.set("isDark", newValue);
         });
+        frp.addListener('frpOutput', (data) => {
+            // console.log('frp输出：', data);
+            // console.log(data.FrpLine);
+            this.tempLogs.value.push(data);
+            this.initSettings("lastOutPut", data.FrpLine);
+            this.initSettings("syncLogs", this.tempLogs.value);
+        }).then(r =>{
+            console.log(r);
+        }) ;
     }
 
-    init(){
-        console.log('cache modelType:', this.modelType.value)
-        this.modelType.value = this.get("modelType") === null || this.get("modelType") === undefined ?
-            this.initSettings("modelType", 0) : this.initGetter("modelType");
+    init(attr, value){
+        if (attr === undefined){
+            this.modelType.value = this.get("modelType") === null || this.get("modelType") === undefined ?
+                this.initSettings("modelType", 0) : this.initGetter("modelType");
+        }else {
+           if (this[attr].value === undefined || this[attr].value === null){
+               this[attr] = ref(this.initSettings(attr, value));
+           }else {
+               this[attr].value = this.initSettings(attr, value);
+           }
+        }
+
     }
 
     initSettings(key, value){
         if (this[key]){
-            console.log(this[key]);
+            // console.log(this[key]);
             this[key].value = value;
         }
         this.set(key, value);
@@ -88,4 +111,9 @@ export const userCache = new class Cache {
     clear() {
         this.storage.clear();
     }
+
+
 };
+
+
+

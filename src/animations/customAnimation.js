@@ -4,7 +4,7 @@ export const rippleEffect = (event, element, options = {
     // 默认配置
     isDark: userCache.isDark.value, // 是否为暗黑模式
     color: 'rgba(0, 0, 0, 0.3)', // 涟漪颜色
-    duration: 5000, // 动画时长，单位 ms
+    duration: 500, // 动画时长，单位 ms
     sizeFactor: 2.5, // 涟漪扩散倍数
     rippleCenter: false, // 涟漪是否按照点击位置中心开始
 }) => {
@@ -14,7 +14,7 @@ export const rippleEffect = (event, element, options = {
      const defaultOptions = {
          isDark: userCache.isDark.value,
          color: 'rgba(0, 0, 0, 0.3)', // 涟漪颜色
-         duration: 5000, // 动画时长，单位 ms
+         duration: 500, // 动画时长，单位 ms
          sizeFactor: 2.5, // 涟漪扩散倍数
          rippleCenter: false, // 涟漪是否按照点击位置中心开始
      };

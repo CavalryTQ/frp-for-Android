@@ -27,7 +27,18 @@ export const dynamicModeIcon = (dark, light) => {
          router.go(data);
      }else {
          isBack.value = false;
-         typeof data === 'string' ? router.push(data) : router.push(data.path)
+         typeof data === 'string' ? router.push(data) : router.push({path:  data.path, query: data.query});
      }
+ }
+
+ // 获取当前路由的参数
+ export const getCurrentRouteQuery = (route, attribute, isJSON = true) => {
+     console.log('当前route',route.query);
+    // if (route.query[attribute]) return JSON.parse(route.query[attribute]);
+    // else return JSON.parse(route.query);
+     if (typeof attribute === 'undefined') return route.query;
+     if (route.query[attribute]){
+         return isJSON ? JSON.parse(route.query[attribute]) : route.query[attribute];
+     }else return route.query;
  }
 

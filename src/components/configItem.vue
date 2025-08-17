@@ -1,59 +1,114 @@
 <script setup>
 // 配置列表Item
-import {ref, defineProps, watch, defineEmits} from "vue";
+import {ref, defineProps, watch, defineEmits, onMounted, nextTick} from "vue";
 import {userCache} from "@/data/cache.js";
 import {rippleEffect} from "@/animations/customAnimation.js";
 import {loadIcon} from "@/mixins/mixin.js";
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/zh-cn';
 
+dayjs.extend(relativeTime);
+dayjs.locale('zh-cn');
 const props = defineProps({
    disabled: {
     type: Boolean,
     default: true
+  },
+  modelValue: String,
+  value: String,
+  configFile:{
+     type: Object,
+     default: () => {
+       return   {
+         name: 'default.toml',
+         type:  'file',
+         size: 0,
+         ctime: 0,
+         mtime: 0,
+         uri: '/frpc/frpc.toml'
+       }
+     }
   }
 });
-const emit = defineEmits(['handleMore']);
+const emit = defineEmits(['update:modelValue', 'handleMore']);
 
 const configItem = ref(null);
 const radioStyle = ref(null);
 const isDarkMode = userCache.isDark;
 const moreIcon = ref(isDarkMode.value ? loadIcon('more-w') : loadIcon('more-b'));
-
-const handleRadioStyle = (e, radio) => {
-  e.target.checked = true;
+const isTarget = ref(false); // 是否选中
+/**
+ * radio样式切换
+ * @param radio
+ */
+const handleRadioStyle = (radio) => {
   // 获取radio disabled属性 disabled为true时不激活样式
-
   const checkedRadio = document.querySelectorAll('div[select-radio="config"]');
   checkedRadio.forEach(item => {
     const disabledAttr = item.attributes.getNamedItem('disabled');
     disabledAttr.nodeValue = "true";
-    item.attributes.setNamedItem(disabledAttr);
+    item.attributes.setNamedItem(disabledAttr); // 用于取消之前的样式
   });
-
+  console.log(checkedRadio)
+// 激活样式
+if (radio.attributes?.getNamedItem('disabled')){ // 存在disabled属性时取消样式
   const newAttr = radio.attributes.getNamedItem('disabled');
-  newAttr.nodeValue = String(!e.target.checked);
+  console.log(newAttr);
+  newAttr.nodeValue = "false"
   radio.attributes.setNamedItem(newAttr);
-
-  // checkedRadio.forEach(item => {
-  //   const disabledAttr = item.attributes.getNamedItem('disabled');
-  //   console.log(disabledAttr);
-  // });
+}else {
+  checkedRadio.forEach(item => {
+    const inputValue = item.children[0].value;
+    if (inputValue === props.modelValue){
+      // console.log('刷新后遍历：')
+      // console.log(inputValue);
+      // console.log(userCache.selectFrpcConfigName.value);
+      // console.log(props.modelValue);
+      // console.log(props.value);
+      // console.log(item);
+      const disabledAttr = item.attributes.getNamedItem('disabled');
+      disabledAttr.nodeValue = "false";
+      item.attributes.setNamedItem(disabledAttr);
+    }
+    // disabledAttr.nodeValue = "false";
+    // item.attributes.setNamedItem(disabledAttr);
+  });
+}
+  isTarget.value = props.modelValue === props.value;
+  // emit('update:modelValue', props.value);
 }
 
 watch(isDarkMode, (newValue) => {
   newValue ? moreIcon.value = loadIcon('more-w') : moreIcon.value = loadIcon('more-b');
 });
+onMounted(()=>{
+  nextTick( ()=>{
+    handleRadioStyle(radioStyle);
+    // setTimeout( () => {
+    //    // handleRadioStyle(radioStyle);
+    // }, 100);
+  });
+});
 </script>
 
 <template>
-      <div class="config-item" ref="configItem" @pointerdown="rippleEffect($event, configItem, {isDark: isDarkMode})">
+      <div class="config-item" ref="configItem" @pointerdown="rippleEffect($event, configItem, {isDark: isDarkMode});emit('update:modelValue', props.value);handleRadioStyle(radioStyle)">
         <div class="item-left">
           <div class="radio" select-radio="config" disabled="true" ref="radioStyle">
-            <input type="radio" id="config" name="config" value="" @pointerdown="handleRadioStyle($event, radioStyle)"/>
+            <input
+                type="radio"
+                id="config"
+                name="config"
+                :value="props.value"
+                :checked="props.modelValue === props.value"
+                @change="handleRadioStyle(radioStyle)"
+            />
           </div>
-          <label style="margin-left: 10px" for="kraken">新配置1</label>
+          <label style="margin-left: 10px" for="kraken">{{ props.configFile.name }}</label>
         </div>
         <div class="item-right">
-          <div class="last-time">1小时前</div>
+          <div class="last-time">{{ dayjs(props.configFile.mtime).fromNow()}}</div>
           <div :class="{'line': !isDarkMode, 'line-dark' : true}"></div>
           <div class="item-more" @pointerdown="emit('handleMore', true)"><img :src="moreIcon" alt="more"></div>
         </div>
@@ -72,7 +127,7 @@ input[type="radio"]{
 }
 /*radio确认样式*/
 input[type="radio"]:checked{
-  background: #1976D3;
+  background: var(--app-label-color);
   width: 60%;
   height: 60%;
   border: none;
@@ -112,7 +167,7 @@ input[type="radio"]:checked{
          display: flex;
          justify-content: center;
          align-items: center;
-         border: 8px solid #1976D3;
+         border: 8px solid var(--app-label-color);
          border-radius: 50%;
          position: relative;
        }
@@ -168,7 +223,7 @@ input[type="radio"]:checked{
   }
   /*radio确认样式*/
   input[type="radio"]:checked{
-    background: #1976D3;
+    background: var(--app-label-color);
     width: 60%;
     height: 60%;
     border: none;
@@ -206,7 +261,7 @@ input[type="radio"]:checked{
         display: flex;
         justify-content: center;
         align-items: center;
-        border: calc(8 * var(--scale-factor-width)) solid #1976D3;
+        border: calc(8 * var(--scale-factor-width)) solid var(--app-label-color);
         border-radius: 50%;
         position: relative;
       }

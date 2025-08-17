@@ -19,8 +19,8 @@ coverage
 
 # Editor directories and files
 .vscode/*
-frp/*
-frp
+/frp/*
+/frp
 android
 android/*
 !.vscode/extensions.json

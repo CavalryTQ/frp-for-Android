@@ -1,11 +1,16 @@
 # Frp client config
-serverAddr = ""
-serverPort = 80
+serverAddr = "your.domain.name"
+serverPort = 3244
+auth.token = ""
 
-
-# http
-[[proxies]]
-name = "web"
-type = "http"
-localPort = 80
-customDomains = [""]
+[[visitors]]
+name = "p2p_ssh_visitor"
+type = "xtcp"
+# 要访问的 P2P 代理的名称
+serverName = "p2p_ssh"
+secretKey = ""
+# 绑定本地端口以访问 SSH 服务
+bindAddr = "127.0.0.1"
+bindPort = 7000
+# 如果需要自动保持隧道打开，将其设置为 true
+#keepTunnelOpen = false

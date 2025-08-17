@@ -21,8 +21,8 @@ class NotificationIdGenerator {
 }
 
 export default class Notifications {
-    constructor(options) {
-        this.instance = LocalNotifications;
+     constructor(options) {
+        this.instance =  LocalNotifications;
         this._validateOptions(options);
         this.notifications = this._processNotifications(options.notifications || []);
         this.id = this.notifications[0].id
@@ -133,6 +133,12 @@ export default class Notifications {
     static resetIdCounter() {
         localStorage.removeItem(ID_COUNTER_KEY)
     }
+
+    /**
+     * 删除已投递的指定通知
+     * @param delivered
+     * @returns {Promise<unknown>}
+     */
     removeDeliveredNotifications(delivered = {
         notifications: this.notifications
     }){
@@ -145,6 +151,25 @@ export default class Notifications {
                reject(e);
            });
        });
+    }
+
+    /**
+     * 请求权限
+     * @returns {Promise<unknown>}
+     */
+ requestPermissions() {
+        return new Promise((resolve, reject) => {
+            this.instance.requestPermissions().then(r => {
+                console.log("requestPermissions", r);
+                resolve(r);
+            }).catch(e => {
+                console.log("requestPermissions", e);
+                reject(e);
+            });
+        });
+ }
+    setNotificationId(id){
+        this.id = id;
     }
 }
 

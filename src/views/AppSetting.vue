@@ -14,30 +14,30 @@
      text: userCache.modelType.value === 0 ? '跟随系统Android 10+' : userCache.modelType.value === 1 ? '总是明亮模式' : '总是黑暗模式',
      icon: userCache.isDark.value ? loadIcon('brightness-4') : loadIcon('brightness-5'),
    },
-   {
-     label: '应用服务',
-     title: '显示通知',
-     text: '在通知中刷新流量',
-     icon: userCache.isDark.value ? loadIcon('notes-w') : loadIcon('notes-b'),
-   },
-   {
-     label: '应用服务',
-     title: '显示通知',
-     text: '在通知中刷新流量',
-     icon: userCache.isDark.value ? loadIcon('notes-w') : loadIcon('notes-b'),
-   },
-   {
-     label: '应用服务',
-     title: '显示通知',
-     text: '在通知中刷新流量',
-     icon: userCache.isDark.value ? loadIcon('notes-w') : loadIcon('notes-b'),
-   },
-   {
-     label: '应用服务',
-     title: '显示通知',
-     text: '在通知中刷新流量',
-     icon: userCache.isDark.value ? loadIcon('notes-w') : loadIcon('notes-b'),
-   },
+   // {
+   //   label: '应用服务',
+   //   title: '显示通知',
+   //   text: '在通知中刷新流量',
+   //   icon: userCache.isDark.value ? loadIcon('notes-w') : loadIcon('notes-b'),
+   // },
+   // {
+   //   label: '应用服务',
+   //   title: '显示通知',
+   //   text: '在通知中刷新流量',
+   //   icon: userCache.isDark.value ? loadIcon('notes-w') : loadIcon('notes-b'),
+   // },
+   // {
+   //   label: '应用服务',
+   //   title: '显示通知',
+   //   text: '在通知中刷新流量',
+   //   icon: userCache.isDark.value ? loadIcon('notes-w') : loadIcon('notes-b'),
+   // },
+   // {
+   //   label: '应用服务',
+   //   title: '显示通知',
+   //   text: '在通知中刷新流量',
+   //   icon: userCache.isDark.value ? loadIcon('notes-w') : loadIcon('notes-b'),
+   // },
    // {
    //   label: '666',
    //   title: '显示通知',
@@ -119,7 +119,7 @@ const handlePinterUpModel = (type, data) => {
 
 <template>
   <div class="app-setting">
-      <app-header></app-header>
+      <app-header title="应用设置"></app-header>
     <form class="setting-content">
        <div class="setting-item" v-for = "(item, index) in appSetting"
                                  :key = "item.label"
