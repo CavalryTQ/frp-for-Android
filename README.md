@@ -12,19 +12,26 @@
 
 ## 项目简介
 
-本项目是一个运行在 Android 平台上的 Frp 客户端应用程序，旨在让用户能够方便地在移动设备上使用 Frp 内网穿透功能。项目使用 Vue 3 构建用户界面，通过 Capacitor 打包为 Android 应用，并与原生 Android 功能进行交互。
+本项目是一个运行在 Android 平台上的 Frp 客户端应用程序，如果你不知道什么是Frp请参阅：
 
-> Frp (Fast Reverse Proxy) 是一个高性能的反向代理应用，可以帮助您轻松地将内网服务暴露到公网。
+> https://github.com/fatedier/frp
 
-## 功能特性
+[//]: # (## 功能特性)
 
-- ✅ Frp 客户端配置管理（TOML格式）
-- ✅ 一键启动/停止 Frp 服务
-- ✅ 实时日志查看
-- ✅ 通知权限和 VPN 权限管理
-- ✅ 深色/浅色主题切换
-- ✅ 多配置文件管理
-- ✅ 本地文件系统操作
+[//]: # ()
+[//]: # (- ✅ Frp 客户端配置管理（TOML格式）)
+
+[//]: # (- ✅ 一键启动/停止 Frp 服务)
+
+[//]: # (- ✅ 实时日志查看)
+
+[//]: # (- ✅ 通知权限和 VPN 权限管理)
+
+[//]: # (- ✅ 深色/浅色主题切换)
+
+[//]: # (- ✅ 多配置文件管理)
+
+[//]: # (- ✅ 本地文件系统操作)
 
 ## 技术栈
 
@@ -35,12 +42,14 @@
 - [Toml](https://www.npmjs.com/package/toml) - TOML 解析库
 - [CodeMirror](https://codemirror.net/) - 代码编辑器
 
-## 环境要求
+## 我的环境
 
-- Node.js >= 16
+- Node.js >= 20.11.0
 - npm 或 yarn
-- Android Studio (用于构建 Android 应用)
-- JDK 11 或更高版本
+- Android Studio version = 2024.3.1 Meerkat
+- JDK 21 或更高版本
+- targetSdkVersion = 35
+- distributionUrl=file:/D:/gradle-8.12/gradle-8.12-all.zip
 
 ## 项目设置
 
@@ -50,32 +59,23 @@
 npm install
 ```
 
-### 安装 Capacitor 核心插件
+### 核心插件
 
 > ⚠️ **重要提示**: 本项目依赖自定义的 `frp-capacitor-plugin` 插件来与原生 Android 功能交互，必须安装此插件才能正常运行。
 
 ```bash
 npm install frp-capacitor-plugin
 ```
-
-### 开发环境运行
-
-```bash
-npm run dev
-```
-
-### 构建生产版本
-
-```bash
-npm run build
-```
-
-### 构建并同步到 Android 项目
+### build and sync
 
 ```bash
 npm run build-sync-android
 ```
-
+### Android
+```bash
+cd ./android
+```
+打开Android Studio导入
 
 ## 使用说明
 
