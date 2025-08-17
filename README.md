@@ -1,5 +1,5 @@
 # Frp for Android
-
+[![frp 0.61.0](https://img.shields.io/github/v/release/fatedier/frp)](https://github.com/fatedier/frp/releases/tag/v0.61.0)
 [![Vue.js](https://img.shields.io/badge/Vue.js-3.x-brightgreen)](https://vuejs.org/)
 [![Capacitor](https://img.shields.io/badge/Capacitor-7.x-blue)](https://capacitorjs.com/)
 [![License](https://img.shields.io/badge/license-MIT-blue)](https://opensource.org/licenses/MIT)
@@ -33,14 +33,20 @@
 
 [//]: # (- ✅ 本地文件系统操作)
 
-## 技术栈
+[//]: # (## 技术栈)
 
-- [Vue 3](https://vuejs.org/) - 前端框架
-- [Capacitor](https://capacitorjs.com/) - 跨平台原生运行时
-- [Vite](https://vitejs.dev/) - 构建工具
-- [frp-plugin](file:../frp-plugin/frp-plugin) - 自定义 Capacitor 插件
-- [Toml](https://www.npmjs.com/package/toml) - TOML 解析库
-- [CodeMirror](https://codemirror.net/) - 代码编辑器
+[//]: # ()
+[//]: # (- [Vue 3]&#40;https://vuejs.org/&#41; - 前端框架)
+
+[//]: # (- [Capacitor]&#40;https://capacitorjs.com/&#41; - 跨平台原生运行时)
+
+[//]: # (- [Vite]&#40;https://vitejs.dev/&#41; - 构建工具)
+
+[//]: # (- [frp-plugin]&#40;file:../frp-plugin/frp-plugin&#41; - 插件)
+
+[//]: # (- [Toml]&#40;https://www.npmjs.com/package/toml&#41; - TOML 解析库)
+
+[//]: # (- [CodeMirror]&#40;https://codemirror.net/&#41; - 代码编辑器)
 
 ## 我的环境
 
