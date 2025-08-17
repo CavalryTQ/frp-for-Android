@@ -14,6 +14,7 @@ import { frp } from 'frp-plugin';
 import FrpDialog from "@/components/frpDialog.vue";
 import {getFrpcStatus, starFrpc, stopFrpc} from "@/frp/frpc.js";
 import {Capacitor} from "@capacitor/core";
+import {ChatUI} from "frp-chat-ui"
 
 const router = useRouter();
 const popupAbout = ref(false);
@@ -147,6 +148,7 @@ onUnmounted(()=>{
                        @setting="args => {handleGoToSetting(args)}"
        ></function-group>
      </div>
+    <ChatUI></ChatUI>
     <frp-dialog :visible="dialog"
                 @close="args => {dialog = args}"
                 @confirm="args => {handleConfirm(args)}"

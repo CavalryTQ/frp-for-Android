@@ -1,29 +1,124 @@
-# frp
+# Frp for Android
 
-This template should help get you started developing with Vue 3 in Vite.
+[![Vue.js](https://img.shields.io/badge/Vue.js-3.x-brightgreen)](https://vuejs.org/)
+[![Capacitor](https://img.shields.io/badge/Capacitor-7.x-blue)](https://capacitorjs.com/)
+[![License](https://img.shields.io/badge/license-MIT-blue)](https://opensource.org/licenses/MIT)
 
-## Recommended IDE Setup
+一个基于 Vue 3 和 Capacitor 的 Android 平台 Frp 客户端应用，界面设计参考 Clash for Android。
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+<p align="center">
+  <img src="public/favicon.ico" alt="Frp for Android Logo" width="120" />
+</p>
 
-## Customize configuration
+## 项目简介
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+本项目是一个运行在 Android 平台上的 Frp 客户端应用程序，旨在让用户能够方便地在移动设备上使用 Frp 内网穿透功能。项目使用 Vue 3 构建用户界面，通过 Capacitor 打包为 Android 应用，并与原生 Android 功能进行交互。
 
-## Project Setup
+> Frp (Fast Reverse Proxy) 是一个高性能的反向代理应用，可以帮助您轻松地将内网服务暴露到公网。
 
-```sh
+## 功能特性
+
+- ✅ Frp 客户端配置管理（TOML格式）
+- ✅ 一键启动/停止 Frp 服务
+- ✅ 实时日志查看
+- ✅ 通知权限和 VPN 权限管理
+- ✅ 深色/浅色主题切换
+- ✅ 多配置文件管理
+- ✅ 本地文件系统操作
+
+## 技术栈
+
+- [Vue 3](https://vuejs.org/) - 前端框架
+- [Capacitor](https://capacitorjs.com/) - 跨平台原生运行时
+- [Vite](https://vitejs.dev/) - 构建工具
+- [frp-plugin](file:../frp-plugin/frp-plugin) - 自定义 Capacitor 插件
+- [Toml](https://www.npmjs.com/package/toml) - TOML 解析库
+- [CodeMirror](https://codemirror.net/) - 代码编辑器
+
+## 环境要求
+
+- Node.js >= 16
+- npm 或 yarn
+- Android Studio (用于构建 Android 应用)
+- JDK 11 或更高版本
+
+## 项目设置
+
+### 安装依赖
+
+```bash
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+### 安装 Capacitor 核心插件
 
-```sh
+> ⚠️ **重要提示**: 本项目依赖自定义的 `frp-capacitor-plugin` 插件来与原生 Android 功能交互，必须安装此插件才能正常运行。
+
+```bash
+npm install frp-capacitor-plugin
+```
+
+### 开发环境运行
+
+```bash
 npm run dev
 ```
 
-### Compile and Minify for Production
+### 构建生产版本
 
-```sh
+```bash
 npm run build
 ```
+
+### 构建并同步到 Android 项目
+
+```bash
+npm run build-sync-android
+```
+
+
+## 使用说明
+
+1. 在应用中创建或导入 FRP 配置文件（TOML格式）
+2. 选择要使用的配置文件
+3. 点击启动按钮并授予必要的权限（通知权限和VPN权限）
+4. 查看实时日志以监控连接状态
+
+示例配置文件：
+```toml
+# Frp client config
+serverAddr = "your.domain.name"
+serverPort = 3244
+auth.token = ""
+
+[[visitors]]
+name = "p2p_ssh_visitor"
+type = "xtcp"
+serverName = "p2p_ssh"
+secretKey = ""
+bindAddr = "127.0.0.1"
+bindPort = 7000
+```
+
+[//]: # (## 注意事项)
+
+[//]: # ()
+[//]: # (1. 本项目需要配合 `frp-capacitor-plugin` 插件使用)
+
+[//]: # (2. 需要在 Android 设备上运行以获得完整功能)
+
+[//]: # (3. 需要网络权限和 VPN 权限才能正常工作)
+
+[//]: # (4. 项目目前仅支持 Android 平台)
+
+## 相关链接
+
+- [Frp 官方项目](https://github.com/fatedier/frp)
+- [Clash for Android](https://github.com/Kr328/ClashForAndroid) (UI 参考)
+- [Vue 3](https://vuejs.org/)
+- [Capacitor](https://capacitorjs.com/)
+
+
+## 开源许可证
+
+### MIT License
