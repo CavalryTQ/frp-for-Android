@@ -1,5 +1,5 @@
 import {ref, watch} from "vue";
-import { frp } from 'frp-plugin';
+import { frp } from 'frp-capacitor-plugin';
 import {getFrpcStatus} from "@/frp/frpc.js";
 
 export const userCache = new class Cache {

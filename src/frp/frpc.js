@@ -1,5 +1,5 @@
 import {userCache} from "@/data/cache.js";
-import { frp } from 'frp-plugin';
+import { frp } from 'frp-capacitor-plugin';
 import {BootFailedNotification} from "@/plugins/notifications.js";
 
 
