@@ -108,12 +108,14 @@ onMounted(()=>{
 <style scoped lang="scss">
 .toast{
   position: fixed;
-  width: auto;
+  /* 用 left/right + margin auto 居中，避开 JS 内联写入的 transform */
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+  width: max-content;
   height: auto;
   display: flex;
   align-items: center;
-  align-self: center;
-  justify-self: center;
   top: 10%;
   z-index: 999999;
   padding: 30px 60px;

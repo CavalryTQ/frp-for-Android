@@ -127,8 +127,7 @@ onMounted(()=>{
 <style scoped lang="scss">
 .drawer-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0; /* 遮罩铺满真实视口，不受舞台宽度影响 */
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
@@ -164,7 +163,13 @@ onMounted(()=>{
   }
 }
 .drawer-content-bottom{
-  border-radius: 4vw 4vw 0 0;
+  /* 原 4vw 会绕过 rem 封顶，改用设计稿 px（4% × 1264 ≈ 50） */
+  border-radius: 50px 50px 0 0;
+  /* 平板上与舞台同宽并居中；JS 内联的 width:100% 会被 max-width 收敛 */
+  left: 0;
+  right: 0;
+  max-width: var(--app-stage-width);
+  margin-inline: auto;
   transform: translateY(0%); /* 保持最终状态 */
   transform-origin: bottom;
   /*flex顶部部对齐*/
@@ -173,7 +178,11 @@ onMounted(()=>{
   align-items: flex-start;
 }
 .drawer-content-top{
-  border-radius: 0 0 4vw 4vw;
+  border-radius: 0 0 50px 50px;
+  left: 0;
+  right: 0;
+  max-width: var(--app-stage-width);
+  margin-inline: auto;
   transform: translateY(-50%);
   transform-origin: top;
   /*flex底部对齐*/
@@ -183,7 +192,7 @@ onMounted(()=>{
 }
 
 .drawer-content-left{
-  border-radius: 0 4vw 4vw 0;
+  border-radius: 0 50px 50px 0;
   transform: translateX(-50%);
   transform-origin: left;
   /*flex右侧对齐*/
@@ -193,7 +202,7 @@ onMounted(()=>{
   justify-content: right;
 }
 .drawer-content-right{
-  border-radius: 4vw 0 0 4vw;
+  border-radius: 50px 0 0 50px;
   transform: translateX(50%);
   transform-origin: right;
   /*flex左侧对齐*/

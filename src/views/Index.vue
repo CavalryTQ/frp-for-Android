@@ -211,31 +211,4 @@ onUnmounted(()=>{
     }
   }
 
-/*小于2040width 大于1480width*/
-  @media ( min-width: 2040px) and (max-width: 1480px) {
-    .content{
-      .body-content{
-        //padding: calc(120 * var(--scale-factor-width)) calc(105 * var(--scale-factor-width)) 0 calc(120 * var(--scale-factor-width)) !important;
-        padding: 0 calc(350 * var(--scale-factor-width));
-        padding-top: calc(105 * var(--scale-factor-width));
-        :deep(.main-button:first-child){
-          margin-bottom: calc(60 * var(--scale-factor-width)) !important;
-        }
-        :deep(.func-group:last-child){
-          margin-top: calc(30 * var(--scale-factor-width)) !important;
-        }
-      }
-    }
-  }
-
-  /*小于1480 大于764*/
-  @media (min-width: 1480px) and (max-width: 764px) {
-    .content{
-      .body-content{
-        padding: 0 calc(150 * var(--scale-factor-width));
-        padding-top: calc(105 * var(--scale-factor-width));
-      }
-    }
-  }
-
 </style>

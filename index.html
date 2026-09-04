@@ -8,7 +8,7 @@
     <title>Vite App</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app" style="margin: 0;width: 100dvh;height: 100dvh;"></div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
@@ -18,7 +18,7 @@
     }
    body {
        padding: 0;
-       margin: 0;
+       margin: 0 !important;
        box-sizing: border-box;
 
        /*touch-action: none;*/
@@ -30,6 +30,9 @@
        &::-webkit-scrollbar {
            display: none !important;/* 隐藏滚动条 */
        }
+       display: flex;
+       align-items: center;
+       justify-content: center;
     }
 
 

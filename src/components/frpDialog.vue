@@ -67,11 +67,9 @@ const handleConfirm = (e) => {
 <style scoped lang="scss">
   .dialog-cover{
     position: fixed;
-    top: 0;
-    left: 0;
+    /* 遮罩铺满真实视口，与舞台宽度解耦（dialog-box 本身是 rem，已自动封顶） */
+    inset: 0;
     background: rgb(0,0,0,0.5);
-    width: 100vw;
-    height: 100vh;
     z-index: 9999;
     display: flex;
     justify-content: center;

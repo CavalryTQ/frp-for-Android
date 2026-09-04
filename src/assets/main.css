@@ -1,8 +1,12 @@
 @import './base.css';
 
 #app {
-
   font-weight: normal;
+  /* 手机 = 100vw 铺满；平板 = 封顶宽度并水平居中，两侧留白由 body 背景填充 */
+  width: var(--app-stage-width);
+  max-width: 100%; /* 保险：100vw 包含滚动条宽度时不会造成横向溢出 */
+  margin-inline: auto;
+  min-height: 100vh;
 }
 /* 针对所有滚动条 */
 ::-webkit-scrollbar {

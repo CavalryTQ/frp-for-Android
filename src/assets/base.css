@@ -23,6 +23,16 @@
   --app-base-width: 1264;
   --app-base-height: 2780;
 
+  /* ===== 适配舞台：全站唯一缩放旋钮 ===== */
+  /* 手机（含横屏）：舞台 = 视口宽度，与旧的 px→vw 行为逐像素一致 */
+  --app-stage-max-w: 100vw;
+  --app-stage-width: min(100vw, var(--app-stage-max-w));
+  /* 1 设计稿 px = --app-scale 个 CSS px */
+  --app-scale: calc(var(--app-stage-width) / var(--app-base-width));
+
+  /* 1rem = 100 设计稿 px（与 postcss.config.cjs 的 rootValue 对应） */
+  font-size: calc(var(--app-stage-width) / 12.64);
+
   --app-text-light: #FFFFFF;
   --app-text-dark: #000000;
   /*app全局样式包含组件*/
@@ -69,18 +79,29 @@
   --app-darwer-dialog-bg: var(--app-darwer-dialog-bg-light);
 
   /*
-    --scale-factor-width: calc(100vw / var(--app-base-width));
-  --scale-factor-height: calc(100vh / var(--app-base-height));
-  竖屏状态下有postcss插件处理
-*/
-
+    缩放因子：竖屏 / 横屏统一定义，不再限定 landscape。
+    width 因子 = 舞台比例；height 因子取「舞台比例」与「视口高度比例」的较小值，
+    矮视口（手机横屏）会自动收缩，避免纵向溢出。
+  */
+  --scale-factor-width: var(--app-scale);
+  --scale-factor-height: min(var(--app-scale), calc(100vh / var(--app-base-height)));
 }
 
-@media (orientation: landscape) {
-  :root{
-    /*横屏比例为高/宽*/
-    --scale-factor-width: calc(100vw / var(--app-base-width));
-    --scale-factor-height: calc(100vh / var(--app-base-height));
+/*
+  平板 / 桌面分档。min-width + min-height 双条件，
+  避免手机横屏（如 915x412）被误判为平板。
+  调参：正文字号 ≈ 49 × stage / 1264
+    560px -> 21.7px    640px -> 24.8px    720px -> 27.9px
+*/
+@media (min-width: 600px) and (min-height: 600px) {
+  :root {
+    --app-stage-max-w: 560px; /* 折叠屏展开 / 小平板 / 平板竖屏 */
+  }
+}
+
+@media (min-width: 900px) and (min-height: 600px) {
+  :root {
+    --app-stage-max-w: 640px; /* 平板横屏 / 桌面浏览器 */
   }
 }
 
@@ -126,7 +147,8 @@
     box-sizing: border-box;
     margin: 0;
     font-weight: normal;
-    font-size: calc(59 * var(--scale-factor-width)) !important;
+    /* 不可加 !important：否则会覆盖 :root 的 font-size，直接摧毁 rem 基准 */
+    font-size: calc(59 * var(--scale-factor-width));
     -ms-overflow-style: none;
     scrollbar-width: none;
     &::-webkit-scrollbar {

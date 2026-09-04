@@ -43,17 +43,18 @@ const handleClose = (e) => {
 <style scoped lang="scss">
  .about-dialog{
    position: fixed;
-   top: 0;
-   left: 0;
+   /* 遮罩铺满真实视口，与舞台宽度解耦；inset 不受滚动条宽度影响，避免 100vw 横向溢出 */
+   inset: 0;
    z-index: 9999;
-    width: 100vw;
-    height: 100vh;
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
    .about-body{
      width: 85%;
+     /* 85% 是相对遮罩（=视口）算的，会绕过 rem 封顶；
+        按舞台宽度二次封顶，手机上舞台=100vw，结果与原来完全一致 */
+     max-width: calc(var(--app-stage-width) * 0.85);
      height: auto;
      display: flex;
      flex-direction: column;

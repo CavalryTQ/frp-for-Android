@@ -29,7 +29,7 @@
   justify-content: center;
   overflow: hidden;
   .title{
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-weight: 700;
   }
 }

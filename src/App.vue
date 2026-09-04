@@ -88,9 +88,17 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped lang="scss">
-@import "./assets/base.css";
+/* base.css 已由 main.js -> main.css 全局引入；
+   在 scoped 样式里重复 @import 会生成 :root[data-v-xxx] 等永远匹配不到 <html> 的死规则，
+   并干扰新增的 --app-stage-* 适配变量，故移除。 */
 .body{
   box-sizing: border-box;
+  /* 作为翻页动画中 position:absolute 元素的包含块。
+     不设时包含块是初始包含块（=整个视口），平板上动画期间页面会撑到全视口宽。
+     注意：必须放在 .body 而不是 .animation —— 动画期间 .animation 子元素全部脱离文档流，
+     其高度塌缩为 0，若由它做包含块，它自带的 overflow-y:scroll 会把动画元素整体裁掉。
+     position:relative + z-index:auto 不创建层叠上下文，不影响内部 fixed 弹层的 z-index。 */
+  position: relative;
   overflow-y: scroll;
   overflow-x: hidden;
   /*滑动隐藏滑动条*/

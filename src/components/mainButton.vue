@@ -168,17 +168,4 @@ onMounted(async ()=>{
   background: var(--app-label-color) !important;
   color: #ffffff;
 }
-/*超出768*/
-@media (min-width: 768px){
-  .main-button{
-    box-sizing: border-box;
-    width: 1054px;
-    height: 298px;
-    background: var(--app-btn-bg);
-    box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.10);
-    border-radius: 30px;
-    border: 1px solid var(--color-border);
-    overflow: hidden;
-  }
-}
 </style>
