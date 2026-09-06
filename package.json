@@ -25,7 +25,6 @@
     "dayjs": "^1.11.13",
     "frp-capacitor-plugin": "^0.0.2",
     "frp-chat-ui": "file:../frp-chat-ui/frp-chat-ui",
-    "frp-plugin": "file:../frp-plugin/frp-plugin",
     "lodash": "^4.17.21",
     "toml": "^3.0.0",
     "vue": "^3.5.13",
