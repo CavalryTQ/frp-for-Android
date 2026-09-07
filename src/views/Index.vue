@@ -44,7 +44,7 @@ const handleLog = () => {
 
 const confirmActive = async () => {
   // console.log('beforeActive');
-  const {status} =  await getFrpcStatus().catch(e => {
+  const {status} =  await getFrpcStatus().catch(() => {
      isActive.value = false;
    });
    isActive.value = !status; // 状态取反
@@ -79,7 +79,7 @@ const handleActive = async () => {
       });
       console.log('申请vpn权限结果：', resultVPN);
       if (resultVPN?.granted || resultVPN?.status === 'granted'){ // 两种状态可放行，resultVPN?.status == 'granted'为用户首次授权，resultVPN?.granted为true为已授权状态
-        const res = await starFrpc().catch(e => {
+        const res = await starFrpc().catch(() => {
           BootFailedNotification.schedule(
               {notifications: [{
                   id: 1,
@@ -104,7 +104,7 @@ const handleActive = async () => {
     console.log(configBtn.value);
   }
 }
-const handleConfirm = (args) => {
+const handleConfirm = () => {
   frp.openAppSettings();
 };
 
@@ -198,8 +198,10 @@ onUnmounted(()=>{
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        //padding: calc(120 * var(--scale-factor-width)) calc(105 * var(--scale-factor-width)) 0 calc(120 * var(--scale-factor-width)) !important;
-        padding: 0 calc(550 * var(--scale-factor-width));
+        /* 550 是「横屏用大内边距把内容收窄」的旧策略，但舞台已经封顶了宽度，
+           两者叠加会把内容区吃光（iPad 横屏：640 - 550×0.5063×2 = 83px）。
+           沿用 AppSetting.vue 已验证的 min(设计值, 百分比) 模式加封顶。 */
+        padding: 0 min(calc(550 * var(--scale-factor-width)), 20%);
         padding-top: calc(105 * var(--scale-factor-width));
         :deep(.main-button:first-child){
           margin-bottom: calc(60 * var(--scale-factor-width)) !important;

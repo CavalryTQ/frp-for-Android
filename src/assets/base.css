@@ -22,11 +22,37 @@
   
   --app-base-width: 1264;
   --app-base-height: 2780;
+  /*
+    横屏时「一屏希望容纳的设计稿高度」，是舞台宽度第三重封顶的分母，也是横屏观感唯一的旋钮。
+    1030 = indexHeader 329 + 主按钮 298×2 + padding-top 105 + 间距 ≈ 一屏能看到头部与两个主按钮。
+
+    调大 -> 横屏缩得更小、一屏装得更多、但字也越小；调小 -> 反之。
+    设成一个极小值（如 1）即可完全关闭横屏收缩（第三项会大到永远取不到），
+    回到「横屏按视口宽等比放大、靠滚动看」。
+
+    注意不能拿 --app-base-height(2780) 当这个值：那是竖屏整屏的设计高，横屏视口矮，
+    会算出 0.15 左右的缩放比，把控件压得无法辨认（这正是旧 --scale-factor-height 的毛病）。
+  */
+  --app-landscape-fit-h: 1030;
 
   /* ===== 适配舞台：全站唯一缩放旋钮 ===== */
-  /* 手机（含横屏）：舞台 = 视口宽度，与旧的 px→vw 行为逐像素一致 */
+  /* 手机竖屏：舞台 = 视口宽度，与旧的 px→vw 行为逐像素一致 */
   --app-stage-max-w: 100vw;
-  --app-stage-width: min(100vw, var(--app-stage-max-w));
+  /*
+    舞台宽度三重封顶：
+      100vw                        永不横向溢出；
+      --app-stage-max-w            平板 / 桌面按断点收窄，避免控件被等比放大到失真；
+      100vh * 1264 / 1030          矮视口（手机横屏）按可用高度收窄。
+
+    第三项是横屏观感的关键：把「横屏要缩小」这件事收敛到舞台宽度本身，
+    而不是另开一个缩放因子。于是 rem 基准（下面的 font-size）、--app-scale、
+    --scale-factor-width/height 四者自动同源，#app 也随之变窄并由 body 居中，
+    不会在右侧甩下一大片空白。
+
+    竖屏零影响的证明：竖屏恒有 h/w >= 1030/1264 ≈ 0.815（最扁的 3:2 平板也满足），
+    即 100vh * 1264 / 1030 >= 100vw，第三项永远是 min() 里最大的那个，取不到。
+  */
+  --app-stage-width: min(100vw, var(--app-stage-max-w), calc(100vh * var(--app-base-width) / var(--app-landscape-fit-h)));
   /* 1 设计稿 px = --app-scale 个 CSS px */
   --app-scale: calc(var(--app-stage-width) / var(--app-base-width));
 
@@ -79,17 +105,24 @@
   --app-darwer-dialog-bg: var(--app-darwer-dialog-bg-light);
 
   /*
-    缩放因子：竖屏 / 横屏统一定义，不再限定 landscape。
-    width 因子 = 舞台比例；height 因子取「舞台比例」与「视口高度比例」的较小值，
-    矮视口（手机横屏）会自动收缩，避免纵向溢出。
+    缩放因子：宽高必须同源，且必须恒等于 --app-scale。
+
+    旧写法是 width 用舞台比例、height 用 min(舞台比例, 100vh/2780)，横屏下两者相差
+    1.7~4.9 倍；而各组件的横屏块普遍是「容器高度用 height 因子、容器内元素用 width
+    因子」（mainButton / functionGroup / configItem / AppSetting 皆如此），于是容器
+    装不下内容 —— 图标被压成扁椭圆、文字被 overflow:hidden 裁掉、按钮显示不全。
+
+    现在横屏的收缩已上移到 --app-stage-width，这里只需让两个因子都指向 --app-scale，
+    容器与内容永远同比例，无需逐个组件改横屏块。
   */
   --scale-factor-width: var(--app-scale);
-  --scale-factor-height: min(var(--app-scale), calc(100vh / var(--app-base-height)));
+  --scale-factor-height: var(--app-scale);
 }
 
 /*
   平板 / 桌面分档。min-width + min-height 双条件，
   避免手机横屏（如 915x412）被误判为平板。
+  手机横屏不走这里，它由 --app-stage-width 的第三重封顶（按可用高度）接管。
   调参：正文字号 ≈ 49 × stage / 1264
     560px -> 21.7px    640px -> 24.8px    720px -> 27.9px
 */
